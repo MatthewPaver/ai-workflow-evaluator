@@ -1,0 +1,170 @@
+{
+  "generated_at": "2026-05-22T00:00:00+00:00",
+  "suite": "AI Workflow Evaluator sample suite",
+  "summary": {
+    "total": 3,
+    "average_score": 0.8493,
+    "ship": 2,
+    "review": 0,
+    "block": 1
+  },
+  "results": [
+    {
+      "id": "ai-news-brief-001",
+      "name": "AI news brief summary",
+      "model": "gpt-4.1-mini",
+      "workflow": "reader_summary",
+      "decision": "ship",
+      "overall_score": 1.0,
+      "scores": {
+        "accuracy": 1.0,
+        "source_grounding": 1.0,
+        "hallucination_control": 1.0,
+        "latency": 1.0,
+        "cost": 1.0,
+        "human_review": 1.0
+      },
+      "observability": {
+        "latency_ms": 1420,
+        "cost_usd": 0.0073,
+        "input_tokens": 920,
+        "output_tokens": 180,
+        "review_status": "approved"
+      },
+      "evidence": {
+        "matched_facts": [
+          "improves coding reliability",
+          "staged for enterprise customers",
+          "not universally available yet"
+        ],
+        "missing_facts": [],
+        "forbidden_hits": [],
+        "source_hits": [
+          "S1",
+          "S2"
+        ],
+        "source_term_hits": [
+          "coding reliability",
+          "enterprise customers",
+          "staged"
+        ]
+      },
+      "issues": []
+    },
+    {
+      "id": "hr-policy-answer-002",
+      "name": "HR policy answer",
+      "model": "gpt-4.1-mini",
+      "workflow": "internal_qa",
+      "decision": "block",
+      "overall_score": 0.6511,
+      "scores": {
+        "accuracy": 0.6667,
+        "source_grounding": 0.5667,
+        "hallucination_control": 0.5,
+        "latency": 0.8786,
+        "cost": 1.0,
+        "human_review": 0.55
+      },
+      "observability": {
+        "latency_ms": 2310,
+        "cost_usd": 0.00965,
+        "input_tokens": 1300,
+        "output_tokens": 210,
+        "review_status": "review_required"
+      },
+      "evidence": {
+        "matched_facts": [
+          "contractors must complete security training",
+          "before system access"
+        ],
+        "missing_facts": [
+          "policy owner reviews exceptions"
+        ],
+        "forbidden_hits": [
+          "annual leave carries over automatically for all staff"
+        ],
+        "source_hits": [
+          "S1"
+        ],
+        "source_term_hits": [
+          "security training",
+          "system access"
+        ]
+      },
+      "issues": [
+        {
+          "severity": "medium",
+          "type": "missing_facts",
+          "items": [
+            "policy owner reviews exceptions"
+          ]
+        },
+        {
+          "severity": "high",
+          "type": "forbidden_claims",
+          "items": [
+            "annual leave carries over automatically for all staff"
+          ]
+        },
+        {
+          "severity": "medium",
+          "type": "weak_grounding",
+          "items": [
+            "S1",
+            "S2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marketing-recommendation-003",
+      "name": "Marketing budget recommendation",
+      "model": "gpt-4.1",
+      "workflow": "analytics_recommendation",
+      "decision": "ship",
+      "overall_score": 0.8969,
+      "scores": {
+        "accuracy": 1.0,
+        "source_grounding": 1.0,
+        "hallucination_control": 1.0,
+        "latency": 0.2143,
+        "cost": 0.89,
+        "human_review": 1.0
+      },
+      "observability": {
+        "latency_ms": 5100,
+        "cost_usd": 0.0144,
+        "input_tokens": 2100,
+        "output_tokens": 260,
+        "review_status": "approved"
+      },
+      "evidence": {
+        "matched_facts": [
+          "campaign A has better ROAS",
+          "Increase campaign A budget by 15%",
+          "keep monitoring CPA"
+        ],
+        "missing_facts": [],
+        "forbidden_hits": [],
+        "source_hits": [
+          "S1"
+        ],
+        "source_term_hits": [
+          "ROAS",
+          "CPA",
+          "15%"
+        ]
+      },
+      "issues": [
+        {
+          "severity": "medium",
+          "type": "latency",
+          "items": [
+            "5100ms"
+          ]
+        }
+      ]
+    }
+  ]
+}

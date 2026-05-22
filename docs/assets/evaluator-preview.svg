@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
+  <title id="title">AI Workflow Evaluator preview</title>
+  <desc id="desc">A preview of a quality gate dashboard for LLM workflow outputs.</desc>
+  <rect width="1440" height="860" fill="#f7f4ee"/>
+  <path d="M0 136h1440M0 272h1440M0 408h1440M0 544h1440M0 680h1440M180 0v860M360 0v860M540 0v860M720 0v860M900 0v860M1080 0v860M1260 0v860" stroke="#e4ded2" stroke-width="2"/>
+  <rect x="92" y="84" width="1256" height="692" fill="#fffefa" stroke="#151412" stroke-width="4"/>
+  <text x="132" y="158" fill="#b84f31" font-family="Arial, sans-serif" font-size="24" font-weight="700">LLM OUTPUT QUALITY GATE</text>
+  <text x="132" y="252" fill="#151412" font-family="Arial, sans-serif" font-size="86" font-weight="900">AI Workflow Evaluator</text>
+  <text x="132" y="310" fill="#5f625c" font-family="Arial, sans-serif" font-size="28">Accuracy, grounding, hallucination risk, latency, cost, and review status in one run.</text>
+  <rect x="132" y="382" width="314" height="254" fill="#fbf8f1" stroke="#ded8cb" stroke-width="3"/>
+  <rect x="482" y="382" width="314" height="254" fill="#fbf8f1" stroke="#ded8cb" stroke-width="3"/>
+  <rect x="832" y="382" width="314" height="254" fill="#fbf8f1" stroke="#ded8cb" stroke-width="3"/>
+  <rect x="1168" y="382" width="80" height="254" fill="#151412"/>
+  <text x="162" y="442" fill="#167351" font-family="Arial, sans-serif" font-size="22" font-weight="800">SHIP</text>
+  <text x="512" y="442" fill="#b97800" font-family="Arial, sans-serif" font-size="22" font-weight="800">REVIEW</text>
+  <text x="862" y="442" fill="#a6342f" font-family="Arial, sans-serif" font-size="22" font-weight="800">BLOCK</text>
+  <text x="162" y="492" fill="#151412" font-family="Arial, sans-serif" font-size="34" font-weight="800">News brief</text>
+  <text x="512" y="492" fill="#151412" font-family="Arial, sans-serif" font-size="34" font-weight="800">Marketing rec</text>
+  <text x="862" y="492" fill="#151412" font-family="Arial, sans-serif" font-size="34" font-weight="800">Policy answer</text>
+  <rect x="162" y="546" width="238" height="14" fill="#e9e2d6"/>
+  <rect x="162" y="546" width="218" height="14" fill="#0c6f66"/>
+  <rect x="512" y="546" width="238" height="14" fill="#e9e2d6"/>
+  <rect x="512" y="546" width="166" height="14" fill="#0c6f66"/>
+  <rect x="862" y="546" width="238" height="14" fill="#e9e2d6"/>
+  <rect x="862" y="546" width="82" height="14" fill="#0c6f66"/>
+  <text x="162" y="604" fill="#5f625c" font-family="Arial, sans-serif" font-size="24">Grounded, fast, approved.</text>
+  <text x="512" y="604" fill="#5f625c" font-family="Arial, sans-serif" font-size="24">Slow enough for review.</text>
+  <text x="862" y="604" fill="#5f625c" font-family="Arial, sans-serif" font-size="24">Unsupported claim caught.</text>
+  <circle cx="1248" cy="510" r="42" fill="#0c6f66"/>
+  <circle cx="1248" cy="510" r="26" fill="#151412"/>
+  <text x="1218" y="610" fill="#fffefa" font-family="Arial, sans-serif" font-size="18" font-weight="700" transform="rotate(-90 1218 610)">QUALITY GATE</text>
+</svg>

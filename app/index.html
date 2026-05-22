@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="A small app for evaluating LLM workflow outputs against accuracy, grounding, hallucination risk, latency, cost, and review gates."
+    >
+    <title>AI Workflow Evaluator</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23151412'/%3E%3Cpath d='M14 35h10l5-18 8 30 6-12h7' fill='none' stroke='%23fffefa' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">LLM output quality gate</p>
+          <h1 id="page-title">AI Workflow Evaluator</h1>
+          <p class="lede">
+            A deterministic review console for checking whether AI workflow outputs are accurate,
+            sourced, affordable, fast enough, and ready for human approval.
+          </p>
+        </div>
+        <aside class="decision-panel" aria-label="Evaluation summary">
+          <span class="panel-label">Current suite</span>
+          <strong id="suite-name">Loading...</strong>
+          <div class="score-ring" id="score-ring" style="--score: 0">
+            <span id="average-score">0%</span>
+          </div>
+        </aside>
+      </section>
+
+      <section class="metrics" aria-label="Suite metrics">
+        <article>
+          <span>Total checks</span>
+          <strong id="total-count">0</strong>
+        </article>
+        <article class="ship">
+          <span>Ship</span>
+          <strong id="ship-count">0</strong>
+        </article>
+        <article class="review">
+          <span>Review</span>
+          <strong id="review-count">0</strong>
+        </article>
+        <article class="block">
+          <span>Block</span>
+          <strong id="block-count">0</strong>
+        </article>
+      </section>
+
+      <section class="workspace" aria-label="Evaluation workspace">
+        <div class="toolbar">
+          <div>
+            <p class="eyebrow">Workflow outputs</p>
+            <h2>Review Board</h2>
+          </div>
+          <div class="filters" role="group" aria-label="Filter decisions">
+            <button class="filter is-active" type="button" data-filter="all">All</button>
+            <button class="filter" type="button" data-filter="ship">Ship</button>
+            <button class="filter" type="button" data-filter="review">Review</button>
+            <button class="filter" type="button" data-filter="block">Block</button>
+          </div>
+        </div>
+        <div class="result-grid" id="result-grid" aria-live="polite"></div>
+      </section>
+
+      <section class="criteria" aria-labelledby="criteria-title">
+        <div>
+          <p class="eyebrow">Criteria</p>
+          <h2 id="criteria-title">What Gets Scored</h2>
+        </div>
+        <div class="criteria-grid">
+          <article>
+            <strong>Accuracy</strong>
+            <span>Required facts appear in the output.</span>
+          </article>
+          <article>
+            <strong>Hallucination control</strong>
+            <span>Known-bad claims are caught before release.</span>
+          </article>
+          <article>
+            <strong>Source grounding</strong>
+            <span>Sources and source terms support the response.</span>
+          </article>
+          <article>
+            <strong>Latency and cost</strong>
+            <span>Runtime and token spend stay inside workflow limits.</span>
+          </article>
+          <article>
+            <strong>Human review</strong>
+            <span>Reviewer status contributes to the final decision.</span>
+          </article>
+        </div>
+      </section>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>

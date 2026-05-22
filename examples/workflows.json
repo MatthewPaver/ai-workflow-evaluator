@@ -1,0 +1,129 @@
+{
+  "suite": "AI Workflow Evaluator sample suite",
+  "generated_at": "2026-05-22T00:00:00+00:00",
+  "config": {
+    "pricing": {
+      "input_per_1k": 0.005,
+      "output_per_1k": 0.015
+    },
+    "thresholds": {
+      "target_latency_ms": 1800,
+      "max_latency_ms": 6000,
+      "target_cost_usd": 0.01,
+      "max_cost_usd": 0.05,
+      "pass_score": 0.78,
+      "block_score": 0.45
+    }
+  },
+  "items": [
+    {
+      "id": "ai-news-brief-001",
+      "name": "AI news brief summary",
+      "workflow": "reader_summary",
+      "model": "gpt-4.1-mini",
+      "output": "Source S1 says the model update improves coding reliability. Source S2 notes the rollout is staged for enterprise customers. The safe summary is that the launch is useful but not universally available yet.",
+      "expected_facts": [
+        "improves coding reliability",
+        "staged for enterprise customers",
+        "not universally available yet"
+      ],
+      "forbidden_claims": [
+        "available to every user today",
+        "guaranteed to remove all bugs"
+      ],
+      "required_sources": ["S1", "S2"],
+      "source_terms": ["coding reliability", "enterprise customers", "staged"],
+      "sources": [
+        {
+          "id": "S1",
+          "title": "Model update notes",
+          "text": "The model update improves coding reliability in benchmarked editing tasks."
+        },
+        {
+          "id": "S2",
+          "title": "Rollout status",
+          "text": "The rollout is staged for enterprise customers and is not universally available yet."
+        }
+      ],
+      "tokens": {
+        "input": 920,
+        "output": 180
+      },
+      "latency_ms": 1420,
+      "human_review": {
+        "status": "approved"
+      }
+    },
+    {
+      "id": "hr-policy-answer-002",
+      "name": "HR policy answer",
+      "workflow": "internal_qa",
+      "model": "gpt-4.1-mini",
+      "output": "Source S1 says contractors must complete security training before system access. It also says annual leave carries over automatically for all staff.",
+      "expected_facts": [
+        "contractors must complete security training",
+        "before system access",
+        "policy owner reviews exceptions"
+      ],
+      "forbidden_claims": [
+        "annual leave carries over automatically for all staff",
+        "security training is optional"
+      ],
+      "required_sources": ["S1", "S2"],
+      "source_terms": ["security training", "system access", "exceptions"],
+      "sources": [
+        {
+          "id": "S1",
+          "title": "Access policy",
+          "text": "Contractors must complete security training before system access."
+        },
+        {
+          "id": "S2",
+          "title": "Exception handling",
+          "text": "The policy owner reviews exceptions before access is granted."
+        }
+      ],
+      "tokens": {
+        "input": 1300,
+        "output": 210
+      },
+      "latency_ms": 2310,
+      "human_review": {
+        "status": "review_required"
+      }
+    },
+    {
+      "id": "marketing-recommendation-003",
+      "name": "Marketing budget recommendation",
+      "workflow": "analytics_recommendation",
+      "model": "gpt-4.1",
+      "output": "The dashboard shows campaign A has better ROAS than campaign B. Increase campaign A budget by 15% and keep monitoring CPA. Source S1 supports the ROAS comparison.",
+      "expected_facts": [
+        "campaign A has better ROAS",
+        "Increase campaign A budget by 15%",
+        "keep monitoring CPA"
+      ],
+      "forbidden_claims": [
+        "increase budget by 100%",
+        "stop monitoring CPA"
+      ],
+      "required_sources": ["S1"],
+      "source_terms": ["ROAS", "CPA", "15%"],
+      "sources": [
+        {
+          "id": "S1",
+          "title": "Marketing lakehouse dashboard",
+          "text": "Campaign A has better ROAS than campaign B. CPA should continue to be monitored. Recommended budget increase is 15%."
+        }
+      ],
+      "tokens": {
+        "input": 2100,
+        "output": 260
+      },
+      "latency_ms": 5100,
+      "human_review": {
+        "status": "approved"
+      }
+    }
+  ]
+}

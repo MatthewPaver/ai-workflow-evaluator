@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="420" viewBox="0 0 1120 420" role="img" aria-labelledby="title desc">
+  <title id="title">AI Workflow Evaluator architecture</title>
+  <desc id="desc">Workflow outputs, expected facts, sources, and telemetry flow into a deterministic evaluator and produce risk scores and decisions.</desc>
+  <rect width="1120" height="420" fill="#fffefa"/>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#151412"/>
+    </marker>
+  </defs>
+  <g font-family="Arial, sans-serif">
+    <rect x="48" y="58" width="210" height="74" fill="#f7f4ee" stroke="#151412" stroke-width="2"/>
+    <rect x="48" y="172" width="210" height="74" fill="#f7f4ee" stroke="#151412" stroke-width="2"/>
+    <rect x="48" y="286" width="210" height="74" fill="#f7f4ee" stroke="#151412" stroke-width="2"/>
+    <text x="82" y="103" font-size="20" font-weight="700" fill="#151412">Output logs</text>
+    <text x="84" y="217" font-size="20" font-weight="700" fill="#151412">Facts + sources</text>
+    <text x="78" y="331" font-size="20" font-weight="700" fill="#151412">Cost + latency</text>
+    <rect x="424" y="132" width="272" height="156" fill="#151412"/>
+    <text x="470" y="202" font-size="26" font-weight="800" fill="#fffefa">Deterministic</text>
+    <text x="494" y="238" font-size="26" font-weight="800" fill="#fffefa">Evaluator</text>
+    <rect x="862" y="58" width="210" height="74" fill="#eaf4ef" stroke="#167351" stroke-width="2"/>
+    <rect x="862" y="172" width="210" height="74" fill="#fff4dd" stroke="#b97800" stroke-width="2"/>
+    <rect x="862" y="286" width="210" height="74" fill="#f8e7e5" stroke="#a6342f" stroke-width="2"/>
+    <text x="912" y="103" font-size="20" font-weight="700" fill="#151412">Ship</text>
+    <text x="904" y="217" font-size="20" font-weight="700" fill="#151412">Review</text>
+    <text x="908" y="331" font-size="20" font-weight="700" fill="#151412">Block</text>
+    <line x1="258" y1="95" x2="414" y2="175" stroke="#151412" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="258" y1="209" x2="414" y2="209" stroke="#151412" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="258" y1="323" x2="414" y2="245" stroke="#151412" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="696" y1="176" x2="852" y2="95" stroke="#151412" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="696" y1="210" x2="852" y2="210" stroke="#151412" stroke-width="3" marker-end="url(#arrow)"/>
+    <line x1="696" y1="244" x2="852" y2="323" stroke="#151412" stroke-width="3" marker-end="url(#arrow)"/>
+  </g>
+</svg>
