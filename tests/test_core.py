@@ -70,16 +70,23 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual(report["generated_at"], "2026-05-22T00:00:00+00:00")
         self.assertEqual(report["calibration"]["labelled"], 3)
         self.assertEqual(report["calibration"]["accuracy"], 1.0)
+        self.assertEqual(report["dataset"]["id"], "workflow-quality-fixtures")
+        self.assertEqual(report["scorers"]["version"], "deterministic-v1")
+        self.assertIn("baseline", report)
         self.assertEqual(len(report["results"]), 3)
         self.assertIn(report["results"][0]["decision"], {"ship", "review", "block"})
+        self.assertIn("trace", report["results"][0])
 
     def test_portfolio_dataset_catches_overclaim(self) -> None:
         payload = json.loads(Path("examples/portfolio-workflows.json").read_text())
         report = evaluate_dataset(payload)
         decisions = {item["id"]: item["decision"] for item in report["results"]}
+        overclaim = next(item for item in report["results"] if item["id"] == "repo-recommender-overclaim")
         self.assertEqual(report["summary"]["total"], 4)
         self.assertEqual(report["calibration"]["accuracy"], 1.0)
         self.assertEqual(decisions["repo-recommender-overclaim"], "block")
+        self.assertEqual(report["dataset"]["id"], "portfolio-copy-grounding")
+        self.assertTrue(any(item["type"] == "forbidden_claim" for item in overclaim["trace"]["explanations"]))
 
 
 if __name__ == "__main__":

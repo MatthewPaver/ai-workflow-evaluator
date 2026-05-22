@@ -16,6 +16,8 @@ DEFAULT_WEIGHTS = {
     "review": 0.06,
 }
 
+DEFAULT_SCORER_VERSION = "deterministic-v1"
+
 
 @dataclass(frozen=True)
 class Pricing:
@@ -89,6 +91,63 @@ def score_cost(cost: float, target_cost: float, max_cost: float) -> float:
 
 def source_blob(sources: list[dict[str, str]]) -> str:
     return " ".join(f"{source.get('id', '')} {source.get('title', '')} {source.get('text', '')}" for source in sources)
+
+
+def issue_explanations(
+    *,
+    output: str,
+    missing_facts: list[str],
+    forbidden_hits: list[str],
+    required_sources: list[str],
+    source_hits: list[str],
+    sources: list[dict[str, str]],
+) -> list[dict[str, Any]]:
+    source_lookup = {source.get("id", ""): source for source in sources}
+    explanations: list[dict[str, Any]] = []
+
+    for fact in missing_facts:
+        explanations.append(
+            {
+                "type": "missing_fact",
+                "expected": fact,
+                "actual": "Not found in the output.",
+                "source": next((source.get("title", "Source evidence") for source in sources if contains_phrase(source.get("text", ""), fact)), "Source evidence"),
+            }
+        )
+
+    for claim in forbidden_hits:
+        explanations.append(
+            {
+                "type": "forbidden_claim",
+                "expected": f"Output must not claim: {claim}",
+                "actual": claim,
+                "source": "Blocked claim list",
+            }
+        )
+
+    missing_sources = [source_id for source_id in required_sources if source_id not in source_hits]
+    for source_id in missing_sources:
+        source = source_lookup.get(source_id, {})
+        explanations.append(
+            {
+                "type": "missing_source",
+                "expected": f"Reference source {source_id}",
+                "actual": "Source ID was not cited in the output.",
+                "source": source.get("title", source_id),
+            }
+        )
+
+    if not explanations:
+        explanations.append(
+            {
+                "type": "passed",
+                "expected": "Required facts, sources, blocked claims, thresholds, and review status aligned.",
+                "actual": output[:220],
+                "source": "Evaluator checks",
+            }
+        )
+
+    return explanations
 
 
 def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -200,6 +259,21 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
             "source_hits": source_hits,
             "source_term_hits": source_term_hits,
         },
+        "trace": {
+            "output_excerpt": output[:360],
+            "expected_facts": expected_facts,
+            "forbidden_claims": forbidden_claims,
+            "required_sources": required_sources,
+            "source_titles": [f"{source.get('id', '')}: {source.get('title', '')}".strip() for source in sources],
+            "explanations": issue_explanations(
+                output=output,
+                missing_facts=missing_facts,
+                forbidden_hits=forbidden_hits,
+                required_sources=required_sources,
+                source_hits=source_hits,
+                sources=sources,
+            ),
+        },
         "issues": issues,
         "expected_decision": item.get("expected_decision"),
         "calibrated": item.get("expected_decision") in {None, decision},
@@ -214,9 +288,30 @@ def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
     calibrated_results = [item for item in results if item.get("expected_decision")]
     calibration_matches = sum(1 for item in calibrated_results if item["calibrated"])
     calibration_accuracy = score_ratio(calibration_matches, len(calibrated_results))
+    dataset_id = config.get("dataset_id", normalise(payload.get("suite", "ai-workflow-evaluator")).replace(" ", "-"))
+    scorer_version = config.get("scorer_version", DEFAULT_SCORER_VERSION)
+    baseline = config.get("baseline", {})
     return {
         "generated_at": payload.get("generated_at", datetime.now(timezone.utc).isoformat()),
         "suite": payload.get("suite", "AI Workflow Evaluator"),
+        "dataset": {
+            "id": dataset_id,
+            "version": config.get("dataset_version", "v1"),
+            "items": len(results),
+        },
+        "scorers": {
+            "version": scorer_version,
+            "type": "deterministic",
+            "count": 6,
+        },
+        "baseline": {
+            "label": baseline.get("label", "Previous accepted run"),
+            "average_score": float(baseline.get("average_score", avg_score)),
+            "ship": int(baseline.get("ship", decisions["ship"])),
+            "review": int(baseline.get("review", decisions["review"])),
+            "block": int(baseline.get("block", decisions["block"])),
+            "calibration": float(baseline.get("calibration", calibration_accuracy)),
+        },
         "summary": {
             "total": len(results),
             "average_score": avg_score,

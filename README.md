@@ -45,6 +45,57 @@ Then open `http://localhost:8017/app/`.
 python -m evaluator.cli examples/workflows.json --out reports/sample-report.json
 ```
 
+## Add Your Own Workflow
+
+Create a JSON file with a suite name, evaluator config, and one or more logged outputs:
+
+```json
+{
+  "suite": "Product copy grounding suite",
+  "config": {
+    "dataset_id": "product-copy-grounding",
+    "dataset_version": "v1",
+    "scorer_version": "deterministic-v1",
+    "baseline": {
+      "label": "Previous accepted run",
+      "average_score": 0.82,
+      "ship": 3,
+      "review": 1,
+      "block": 0,
+      "calibration": 0.75
+    }
+  },
+  "items": [
+    {
+      "id": "copy-001",
+      "name": "Launch page summary",
+      "workflow": "marketing_copy_review",
+      "model": "copy-model-v1",
+      "output": "Source S1 says the feature is in private beta.",
+      "expected_facts": ["feature is in private beta"],
+      "forbidden_claims": ["available to every customer"],
+      "required_sources": ["S1"],
+      "source_terms": ["private beta"],
+      "sources": [
+        { "id": "S1", "title": "Release note", "text": "The feature is in private beta." }
+      ],
+      "tokens": { "input": 900, "output": 120 },
+      "latency_ms": 1100,
+      "expected_decision": "ship",
+      "human_review": { "status": "approved" }
+    }
+  ]
+}
+```
+
+Then run:
+
+```bash
+python -m evaluator.cli path/to/workflows.json --out reports/my-report.json
+```
+
+Reports include dataset/scorer versions, baseline deltas, calibration, trace evidence, and the final `ship`, `review`, or `block` decision.
+
 ## Tests
 
 ```bash

@@ -1,6 +1,24 @@
 {
   "generated_at": "2026-05-22T00:00:00+00:00",
   "suite": "AI Workflow Evaluator sample suite",
+  "dataset": {
+    "id": "workflow-quality-fixtures",
+    "version": "v1",
+    "items": 3
+  },
+  "scorers": {
+    "version": "deterministic-v1",
+    "type": "deterministic",
+    "count": 6
+  },
+  "baseline": {
+    "label": "Previous prompt pass",
+    "average_score": 0.79,
+    "ship": 1,
+    "review": 1,
+    "block": 1,
+    "calibration": 0.67
+  },
   "summary": {
     "total": 3,
     "average_score": 0.8493,
@@ -54,6 +72,34 @@
           "staged"
         ]
       },
+      "trace": {
+        "output_excerpt": "Source S1 says the model update improves coding reliability. Source S2 notes the rollout is staged for enterprise customers. The safe summary is that the launch is useful but not universally available yet.",
+        "expected_facts": [
+          "improves coding reliability",
+          "staged for enterprise customers",
+          "not universally available yet"
+        ],
+        "forbidden_claims": [
+          "available to every user today",
+          "guaranteed to remove all bugs"
+        ],
+        "required_sources": [
+          "S1",
+          "S2"
+        ],
+        "source_titles": [
+          "S1: Model update notes",
+          "S2: Rollout status"
+        ],
+        "explanations": [
+          {
+            "type": "passed",
+            "expected": "Required facts, sources, blocked claims, thresholds, and review status aligned.",
+            "actual": "Source S1 says the model update improves coding reliability. Source S2 notes the rollout is staged for enterprise customers. The safe summary is that the launch is useful but not universally available yet.",
+            "source": "Evaluator checks"
+          }
+        ]
+      },
       "issues": [],
       "expected_decision": "ship",
       "calibrated": true
@@ -97,6 +143,46 @@
         "source_term_hits": [
           "security training",
           "system access"
+        ]
+      },
+      "trace": {
+        "output_excerpt": "Source S1 says contractors must complete security training before system access. It also says annual leave carries over automatically for all staff.",
+        "expected_facts": [
+          "contractors must complete security training",
+          "before system access",
+          "policy owner reviews exceptions"
+        ],
+        "forbidden_claims": [
+          "annual leave carries over automatically for all staff",
+          "security training is optional"
+        ],
+        "required_sources": [
+          "S1",
+          "S2"
+        ],
+        "source_titles": [
+          "S1: Access policy",
+          "S2: Exception handling"
+        ],
+        "explanations": [
+          {
+            "type": "missing_fact",
+            "expected": "policy owner reviews exceptions",
+            "actual": "Not found in the output.",
+            "source": "Exception handling"
+          },
+          {
+            "type": "forbidden_claim",
+            "expected": "Output must not claim: annual leave carries over automatically for all staff",
+            "actual": "annual leave carries over automatically for all staff",
+            "source": "Blocked claim list"
+          },
+          {
+            "type": "missing_source",
+            "expected": "Reference source S2",
+            "actual": "Source ID was not cited in the output.",
+            "source": "Exception handling"
+          }
         ]
       },
       "issues": [
@@ -163,6 +249,32 @@
           "ROAS",
           "CPA",
           "15%"
+        ]
+      },
+      "trace": {
+        "output_excerpt": "The dashboard shows campaign A has better ROAS than campaign B. Increase campaign A budget by 15% and keep monitoring CPA. Source S1 supports the ROAS comparison.",
+        "expected_facts": [
+          "campaign A has better ROAS",
+          "Increase campaign A budget by 15%",
+          "keep monitoring CPA"
+        ],
+        "forbidden_claims": [
+          "increase budget by 100%",
+          "stop monitoring CPA"
+        ],
+        "required_sources": [
+          "S1"
+        ],
+        "source_titles": [
+          "S1: Marketing lakehouse dashboard"
+        ],
+        "explanations": [
+          {
+            "type": "passed",
+            "expected": "Required facts, sources, blocked claims, thresholds, and review status aligned.",
+            "actual": "The dashboard shows campaign A has better ROAS than campaign B. Increase campaign A budget by 15% and keep monitoring CPA. Source S1 supports the ROAS comparison.",
+            "source": "Evaluator checks"
+          }
         ]
       },
       "issues": [

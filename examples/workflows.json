@@ -2,6 +2,17 @@
   "suite": "AI Workflow Evaluator sample suite",
   "generated_at": "2026-05-22T00:00:00+00:00",
   "config": {
+    "dataset_id": "workflow-quality-fixtures",
+    "dataset_version": "v1",
+    "scorer_version": "deterministic-v1",
+    "baseline": {
+      "label": "Previous prompt pass",
+      "average_score": 0.79,
+      "ship": 1,
+      "review": 1,
+      "block": 1,
+      "calibration": 0.67
+    },
     "pricing": {
       "input_per_1k": 0.005,
       "output_per_1k": 0.015

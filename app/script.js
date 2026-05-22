@@ -2,6 +2,9 @@ const fallbackReport = {
   suite: "AI Workflow Evaluator sample suite",
   generated_at: "2026-05-22T00:00:00+00:00",
   summary: { total: 0, average_score: 0, ship: 0, review: 0, block: 0 },
+  dataset: { id: "pending", version: "v1", items: 0 },
+  scorers: { version: "pending", type: "deterministic", count: 6 },
+  baseline: { label: "Previous accepted run", average_score: 0, ship: 0, review: 0, block: 0, calibration: 0 },
   results: []
 };
 
@@ -75,11 +78,36 @@ function setText(id, value) {
   if (element) element.textContent = value;
 }
 
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function signedNumber(value, suffix = "") {
+  const sign = value > 0 ? "+" : "";
+  return `${sign}${value}${suffix}`;
+}
+
+function setDelta(id, value, suffix = "", invert = false) {
+  const element = document.getElementById(id);
+  if (!element) return;
+  element.textContent = signedNumber(value, suffix);
+  const positive = invert ? value < 0 : value > 0;
+  const negative = invert ? value > 0 : value < 0;
+  element.classList.toggle("positive", positive);
+  element.classList.toggle("negative", negative);
+}
+
 function renderSummary() {
   const { summary } = report;
   const average = percent(summary.average_score);
   const labelled = Number(report.calibration?.labelled || 0);
   const matches = Number(report.calibration?.matches || 0);
+  const baseline = report.baseline || fallbackReport.baseline;
   const avgLatency = report.results.reduce((total, item) => total + item.observability.latency_ms, 0) / Math.max(report.results.length, 1);
   const avgCost = report.results.reduce((total, item) => total + item.observability.cost_usd, 0) / Math.max(report.results.length, 1);
   const note = suiteNotes[activeSuite] || suiteNotes.sample;
@@ -98,6 +126,13 @@ function renderSummary() {
   setText("avg-cost", formatCost(avgCost));
   setText("run-note-title", note.title);
   setText("run-note", note.body);
+  setText("baseline-label", baseline.label || "Previous accepted run");
+  setText("dataset-version", `${report.dataset?.id || "dataset"} · ${report.dataset?.version || "v1"} · ${report.dataset?.items || summary.total} cases`);
+  setText("scorer-version", `${report.scorers?.version || "deterministic-v1"} · ${report.scorers?.count || 6} scorers`);
+  setDelta("score-delta", average - percent(baseline.average_score), " pts");
+  setDelta("ship-delta", Number(summary.ship || 0) - Number(baseline.ship || 0));
+  setDelta("block-delta", Number(summary.block || 0) - Number(baseline.block || 0), "", true);
+  setDelta("calibration-delta", percent(report.calibration?.accuracy) - percent(baseline.calibration), " pts");
   document.getElementById("health-meter")?.style.setProperty("--score", average);
 }
 
@@ -109,9 +144,34 @@ function renderIssues(item) {
   return item.issues
     .map((issue) => {
       const content = issue.items.slice(0, 2).join("; ");
-      return `<p class="issue"><strong>${titleCase(issue.type)}:</strong> ${content}</p>`;
+      return `<p class="issue"><strong>${escapeHtml(titleCase(issue.type))}:</strong> ${escapeHtml(content)}</p>`;
     })
     .join("");
+}
+
+function renderTrace(item) {
+  const explanations = item.trace?.explanations || [];
+  const rows = explanations
+    .slice(0, 4)
+    .map((entry) => {
+      const type = entry.type || "trace";
+      return `
+        <div class="trace-row ${escapeHtml(type)}">
+          <span>${escapeHtml(titleCase(type))}</span>
+          <p><strong>Expected:</strong> ${escapeHtml(entry.expected)}</p>
+          <p><strong>Actual:</strong> ${escapeHtml(entry.actual)}</p>
+          <p><strong>Evidence:</strong> ${escapeHtml(entry.source)}</p>
+        </div>
+      `;
+    })
+    .join("");
+
+  return `
+    <details class="trace-detail">
+      <summary>Why This Decision</summary>
+      <div class="trace-table">${rows}</div>
+    </details>
+  `;
 }
 
 function renderScores(item) {
@@ -136,8 +196,8 @@ function renderCard(item, index) {
     <article class="run-card" data-decision="${item.decision}">
       <div class="run-index">${String(index + 1).padStart(2, "0")}</div>
       <div class="run-title">
-        <h3>${item.name}</h3>
-        <p class="run-subtitle">${item.workflow} · ${item.model}</p>
+        <h3>${escapeHtml(item.name)}</h3>
+        <p class="run-subtitle">${escapeHtml(item.workflow)} · ${escapeHtml(item.model)}</p>
         <span class="decision-pill ${item.decision}">${decisionCopy[item.decision] || item.decision}</span>
       </div>
       <div class="score-matrix">${renderScores(item)}</div>
@@ -150,6 +210,7 @@ function renderCard(item, index) {
         <div class="evidence">
           <span class="evidence-title">Evidence Notes</span>
           ${renderIssues(item)}
+          ${renderTrace(item)}
         </div>
       </div>
     </article>

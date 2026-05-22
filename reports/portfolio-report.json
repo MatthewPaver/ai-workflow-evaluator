@@ -1,6 +1,24 @@
 {
   "generated_at": "2026-05-22T00:00:00+00:00",
   "suite": "Portfolio repo summary grounding suite",
+  "dataset": {
+    "id": "portfolio-copy-grounding",
+    "version": "v1",
+    "items": 4
+  },
+  "scorers": {
+    "version": "deterministic-v1",
+    "type": "deterministic",
+    "count": 6
+  },
+  "baseline": {
+    "label": "Before evidence wording pass",
+    "average_score": 0.74,
+    "ship": 2,
+    "review": 1,
+    "block": 1,
+    "calibration": 0.75
+  },
   "summary": {
     "total": 4,
     "average_score": 0.8798,
@@ -56,6 +74,37 @@
           "make test"
         ]
       },
+      "trace": {
+        "output_excerpt": "Source R1 supports that Marketing ML Lakehouse turns raw marketing CSVs into a repeatable local analytics and ML workflow. It uses a DuckDB bronze, silver, and gold pipeline, XGBoost models, data-quality checks, and a Streamlit dashboard. Source R2 says make test rebuilds DuckDB/models from demo data, then runs pytest.",
+        "expected_facts": [
+          "turns raw marketing CSVs into a repeatable local analytics and ML workflow",
+          "DuckDB bronze, silver, and gold pipeline",
+          "XGBoost models",
+          "Streamlit dashboard",
+          "make test rebuilds DuckDB/models"
+        ],
+        "forbidden_claims": [
+          "connected to a live ad-platform API",
+          "hosted production SaaS product",
+          "real customer campaign data"
+        ],
+        "required_sources": [
+          "R1",
+          "R2"
+        ],
+        "source_titles": [
+          "R1: Marketing ML Lakehouse README status",
+          "R2: Marketing ML Lakehouse reviewer pack"
+        ],
+        "explanations": [
+          {
+            "type": "passed",
+            "expected": "Required facts, sources, blocked claims, thresholds, and review status aligned.",
+            "actual": "Source R1 supports that Marketing ML Lakehouse turns raw marketing CSVs into a repeatable local analytics and ML workflow. It uses a DuckDB bronze, silver, and gold pipeline, XGBoost models, data-quality checks, and a St",
+            "source": "Evaluator checks"
+          }
+        ]
+      },
       "issues": [],
       "expected_decision": "ship",
       "calibrated": true
@@ -104,6 +153,37 @@
           "Power BI"
         ]
       },
+      "trace": {
+        "output_excerpt": "Source R1 says ProjectLens turns project schedule files into delivery-risk reporting and dashboard outputs. It includes a Flask web interface, a data processing pipeline, and structured data folders. Source R2 supports slippage, milestone, changepoint, and forecasting analysis, with outputs suitable for downstream review and Power BI artefacts. This should b",
+        "expected_facts": [
+          "turns project schedule files into delivery-risk reporting",
+          "Flask web interface",
+          "data processing pipeline",
+          "slippage, milestone, changepoint, and forecasting analysis",
+          "Power BI artefacts"
+        ],
+        "forbidden_claims": [
+          "production SaaS",
+          "live customer scheduling platform",
+          "authentication and hardened storage included"
+        ],
+        "required_sources": [
+          "R1",
+          "R2"
+        ],
+        "source_titles": [
+          "R1: ProjectLens README quick read",
+          "R2: ProjectLens pipeline description"
+        ],
+        "explanations": [
+          {
+            "type": "passed",
+            "expected": "Required facts, sources, blocked claims, thresholds, and review status aligned.",
+            "actual": "Source R1 says ProjectLens turns project schedule files into delivery-risk reporting and dashboard outputs. It includes a Flask web interface, a data processing pipeline, and structured data folders. Source R2 supports s",
+            "source": "Evaluator checks"
+          }
+        ]
+      },
       "issues": [],
       "expected_decision": "ship",
       "calibrated": true
@@ -150,6 +230,60 @@
         "source_term_hits": [
           "swipe-style implicit feedback",
           "temporal holdouts"
+        ]
+      },
+      "trace": {
+        "output_excerpt": "Source R1 says this is a deployed dating-app recommender used in production with online feedback loops. It ranks unseen profiles from swipe-style implicit feedback and evaluates temporal holdouts with Top-K metrics.",
+        "expected_facts": [
+          "ranks unseen profiles from swipe-style implicit feedback",
+          "temporal holdouts",
+          "Top-K metrics",
+          "offline recommendation exercise"
+        ],
+        "forbidden_claims": [
+          "deployed dating-app recommender",
+          "used in production",
+          "online feedback loops"
+        ],
+        "required_sources": [
+          "R1",
+          "R2"
+        ],
+        "source_titles": [
+          "R1: Recommendation README reviewer pack",
+          "R2: Recommendation README notes"
+        ],
+        "explanations": [
+          {
+            "type": "missing_fact",
+            "expected": "offline recommendation exercise",
+            "actual": "Not found in the output.",
+            "source": "Recommendation README notes"
+          },
+          {
+            "type": "forbidden_claim",
+            "expected": "Output must not claim: deployed dating-app recommender",
+            "actual": "deployed dating-app recommender",
+            "source": "Blocked claim list"
+          },
+          {
+            "type": "forbidden_claim",
+            "expected": "Output must not claim: used in production",
+            "actual": "used in production",
+            "source": "Blocked claim list"
+          },
+          {
+            "type": "forbidden_claim",
+            "expected": "Output must not claim: online feedback loops",
+            "actual": "online feedback loops",
+            "source": "Blocked claim list"
+          },
+          {
+            "type": "missing_source",
+            "expected": "Reference source R2",
+            "actual": "Source ID was not cited in the output.",
+            "source": "Recommendation README notes"
+          }
         ]
       },
       "issues": [
@@ -221,6 +355,36 @@
           "cosine similarity",
           "101 factual statements",
           "factually correct"
+        ]
+      },
+      "trace": {
+        "output_excerpt": "Source R1 says Sentence Similarity Analysis uses transformer-based sentence embeddings and cosine similarity to rank 101 factual statements against a target sentence. Source R2 highlights the limitation: semantic similarity is not the same thing as factually correct text.",
+        "expected_facts": [
+          "transformer-based sentence embeddings",
+          "cosine similarity",
+          "101 factual statements",
+          "semantic similarity is not the same thing as factually correct text"
+        ],
+        "forbidden_claims": [
+          "fact-checking system",
+          "packaged retrieval API",
+          "guarantees factual agreement"
+        ],
+        "required_sources": [
+          "R1",
+          "R2"
+        ],
+        "source_titles": [
+          "R1: Sentence Similarity README overview",
+          "R2: Sentence Similarity README limitation"
+        ],
+        "explanations": [
+          {
+            "type": "passed",
+            "expected": "Required facts, sources, blocked claims, thresholds, and review status aligned.",
+            "actual": "Source R1 says Sentence Similarity Analysis uses transformer-based sentence embeddings and cosine similarity to rank 101 factual statements against a target sentence. Source R2 highlights the limitation: semantic similar",
+            "source": "Evaluator checks"
+          }
         ]
       },
       "issues": [],
