@@ -1,49 +1,74 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
-  <title id="title">AI Workflow Evaluator interface preview</title>
-  <desc id="desc">A dark evaluation operations console showing suite health, quality gates, and trace-level LLM output decisions.</desc>
-  <rect width="1440" height="860" fill="#0d0f0c"/>
-  <radialGradient id="g1" cx="85%" cy="5%" r="70%">
-    <stop offset="0" stop-color="#d9ff8c" stop-opacity=".18"/>
-    <stop offset=".55" stop-color="#0d0f0c" stop-opacity="0"/>
-  </radialGradient>
-  <rect width="1440" height="860" fill="url(#g1)"/>
-  <path d="M0 0h1440v860H0z" fill="none"/>
-  <path d="M0 0h1440v860H0z" fill="url(#grid)"/>
+  <title id="title">AI Workflow Evaluator workbench preview</title>
+  <desc id="desc">A dark enterprise evaluation workbench with suite navigation, calibration metrics, evaluator registry, and trace review cards.</desc>
   <defs>
+    <radialGradient id="halo" cx="82%" cy="0%" r="72%">
+      <stop offset="0" stop-color="#d9ff8c" stop-opacity=".16"/>
+      <stop offset=".58" stop-color="#0d0f0c" stop-opacity="0"/>
+    </radialGradient>
     <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
       <path d="M28 0H0v28" fill="none" stroke="#20251d" stroke-width="1"/>
     </pattern>
   </defs>
+  <rect width="1440" height="860" fill="#0d0f0c"/>
+  <rect width="1440" height="860" fill="url(#halo)"/>
+  <rect width="1440" height="860" fill="url(#grid)" opacity=".58"/>
   <g font-family="Avenir Next, Segoe UI, sans-serif">
-    <circle cx="106" cy="76" r="25" fill="#d9ff8c"/>
-    <text x="94" y="84" fill="#0d0f0c" font-size="16" font-weight="900">AE</text>
-    <text x="146" y="72" fill="#fffaf0" font-size="20" font-weight="800">AI Workflow Evaluator</text>
-    <text x="146" y="99" fill="#aaa89e" font-size="16">Quality gates for LLM outputs</text>
-    <rect x="100" y="150" width="825" height="474" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
-    <text x="154" y="219" fill="#d9ff8c" font-size="16" font-weight="900" letter-spacing="3">EVALUATION OPS CONSOLE</text>
-    <text x="154" y="326" fill="#fffaf0" font-family="Georgia, serif" font-size="96" font-weight="700">Decide what ships</text>
-    <text x="154" y="423" fill="#fffaf0" font-family="Georgia, serif" font-size="96" font-weight="700">before the model</text>
-    <text x="154" y="520" fill="#fffaf0" font-family="Georgia, serif" font-size="96" font-weight="700">reaches users.</text>
-    <text x="154" y="574" fill="#aaa89e" font-size="22">Facts, source grounding, hallucination checks, latency, cost, and review status.</text>
-    <rect x="948" y="150" width="392" height="474" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
-    <text x="990" y="216" fill="#747168" font-size="15" font-weight="900" letter-spacing="2">SUITE HEALTH</text>
-    <text x="1124" y="265" fill="#d9ff8c" font-size="86" font-weight="900">85%</text>
-    <rect x="990" y="405" width="308" height="16" fill="#0a0b09" stroke="#515a49"/>
-    <rect x="994" y="409" width="254" height="8" fill="#d9ff8c"/>
-    <rect x="990" y="504" width="140" height="74" fill="#22271f" stroke="#30352c"/>
-    <rect x="1150" y="504" width="140" height="74" fill="#22271f" stroke="#30352c"/>
-    <text x="1010" y="532" fill="#747168" font-size="13" font-weight="900">OUTPUTS</text>
-    <text x="1170" y="532" fill="#747168" font-size="13" font-weight="900">BLOCK</text>
-    <text x="1010" y="562" fill="#fffaf0" font-size="30" font-weight="900">3</text>
-    <text x="1170" y="562" fill="#fffaf0" font-size="30" font-weight="900">1</text>
-    <rect x="100" y="652" width="1240" height="146" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
-    <text x="132" y="704" fill="#d9ff8c" font-size="15" font-weight="900" letter-spacing="2">RUN REVIEW</text>
-    <text x="132" y="750" fill="#fffaf0" font-size="44" font-weight="900">Trace-Level Decisions</text>
-    <rect x="780" y="700" width="142" height="54" fill="#20251d"/>
-    <rect x="942" y="700" width="142" height="54" fill="#20251d"/>
-    <rect x="1104" y="700" width="142" height="54" fill="#20251d"/>
-    <text x="806" y="734" fill="#35d0b1" font-size="16" font-weight="900">Grounding</text>
-    <text x="968" y="734" fill="#35d0b1" font-size="16" font-weight="900">Latency</text>
-    <text x="1130" y="734" fill="#35d0b1" font-size="16" font-weight="900">Review</text>
+    <rect x="48" y="44" width="260" height="772" fill="#141711" stroke="#30352c" stroke-width="2"/>
+    <circle cx="92" cy="90" r="24" fill="#d9ff8c"/>
+    <text x="80" y="98" fill="#0d0f0c" font-size="16" font-weight="900">AE</text>
+    <text x="128" y="86" fill="#fffaf0" font-size="19" font-weight="900">AI Workflow</text>
+    <text x="128" y="112" fill="#aaa89e" font-size="15">Eval workbench</text>
+    <text x="72" y="164" fill="#77756c" font-size="13" font-weight="900" letter-spacing="2">SUITES</text>
+    <rect x="72" y="188" width="212" height="70" fill="#20251d" stroke="#30352c"/>
+    <text x="92" y="230" fill="#fffaf0" font-size="18" font-weight="900">Workflow Quality</text>
+    <rect x="72" y="270" width="212" height="70" fill="#d9ff8c"/>
+    <text x="92" y="304" fill="#0d0f0c" font-size="18" font-weight="900">Portfolio Grounding</text>
+    <text x="92" y="326" fill="#0d0f0c" font-size="13">Repo summary claims</text>
+    <rect x="72" y="370" width="212" height="162" fill="#0d0f0c" stroke="#30352c"/>
+    <text x="92" y="404" fill="#77756c" font-size="13" font-weight="900" letter-spacing="2">SCOPE</text>
+    <text x="92" y="446" fill="#aaa89e" font-size="16">Deterministic gate:</text>
+    <text x="92" y="474" fill="#aaa89e" font-size="16">facts, evidence,</text>
+    <text x="92" y="502" fill="#aaa89e" font-size="16">thresholds, review.</text>
+    <rect x="330" y="44" width="1062" height="160" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
+    <text x="356" y="92" fill="#d9ff8c" font-size="14" font-weight="900" letter-spacing="3">EVALUATION RUN</text>
+    <text x="356" y="154" fill="#fffaf0" font-family="Georgia, serif" font-size="66" font-weight="700">Portfolio repo summary grounding suite</text>
+    <rect x="330" y="224" width="256" height="142" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
+    <rect x="604" y="224" width="256" height="142" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
+    <rect x="878" y="224" width="238" height="142" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
+    <rect x="1134" y="224" width="258" height="142" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
+    <text x="356" y="264" fill="#77756c" font-size="13" font-weight="900" letter-spacing="2">RUN SCORE</text>
+    <text x="356" y="326" fill="#d9ff8c" font-size="58" font-weight="900">88%</text>
+    <text x="630" y="264" fill="#77756c" font-size="13" font-weight="900" letter-spacing="2">CALIBRATION</text>
+    <text x="630" y="326" fill="#fffaf0" font-size="54" font-weight="900">100%</text>
+    <text x="904" y="264" fill="#77756c" font-size="13" font-weight="900" letter-spacing="2">AVG LATENCY</text>
+    <text x="904" y="326" fill="#fffaf0" font-size="44" font-weight="900">1113ms</text>
+    <text x="1160" y="264" fill="#77756c" font-size="13" font-weight="900" letter-spacing="2">AVG COST</text>
+    <text x="1160" y="326" fill="#fffaf0" font-size="44" font-weight="900">$0.0103</text>
+    <rect x="330" y="388" width="684" height="214" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
+    <text x="356" y="435" fill="#d9ff8c" font-size="14" font-weight="900" letter-spacing="3">EVALUATOR REGISTRY</text>
+    <text x="356" y="482" fill="#fffaf0" font-size="34" font-weight="900">What Gets Scored</text>
+    <rect x="356" y="512" width="180" height="58" fill="#0d0f0c" stroke="#20251d"/>
+    <rect x="550" y="512" width="180" height="58" fill="#0d0f0c" stroke="#20251d"/>
+    <rect x="744" y="512" width="180" height="58" fill="#0d0f0c" stroke="#20251d"/>
+    <text x="378" y="548" fill="#fffaf0" font-size="17" font-weight="900">Accuracy</text>
+    <text x="572" y="548" fill="#fffaf0" font-size="17" font-weight="900">Grounding</text>
+    <text x="766" y="548" fill="#fffaf0" font-size="17" font-weight="900">Hallucination</text>
+    <rect x="1034" y="388" width="358" height="214" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
+    <text x="1060" y="435" fill="#77756c" font-size="14" font-weight="900" letter-spacing="3">SENSE CHECK</text>
+    <text x="1060" y="482" fill="#fffaf0" font-size="34" font-weight="900">Portfolio claim</text>
+    <text x="1060" y="520" fill="#fffaf0" font-size="34" font-weight="900">grounding</text>
+    <rect x="330" y="624" width="1062" height="192" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
+    <text x="356" y="670" fill="#d9ff8c" font-size="14" font-weight="900" letter-spacing="3">TRACE REVIEW</text>
+    <text x="356" y="718" fill="#fffaf0" font-size="36" font-weight="900">Outputs, Scores, and Evidence</text>
+    <rect x="356" y="748" width="252" height="42" fill="#20251d" stroke="#30352c"/>
+    <rect x="628" y="748" width="148" height="42" fill="#20251d"/>
+    <rect x="796" y="748" width="148" height="42" fill="#20251d"/>
+    <rect x="964" y="748" width="148" height="42" fill="#20251d"/>
+    <rect x="1132" y="748" width="148" height="42" fill="#0b0d0a"/>
+    <text x="378" y="775" fill="#fffaf0" font-size="16" font-weight="900">Recommendation overclaim</text>
+    <text x="650" y="775" fill="#35d0b1" font-size="16" font-weight="900">Accuracy 75%</text>
+    <text x="818" y="775" fill="#35d0b1" font-size="16" font-weight="900">Grounding 50%</text>
+    <text x="986" y="775" fill="#ff6b5a" font-size="16" font-weight="900">Blocked</text>
   </g>
 </svg>

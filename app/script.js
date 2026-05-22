@@ -25,6 +25,19 @@ const reportSources = {
   portfolio: "../reports/portfolio-report.json"
 };
 
+const suiteNotes = {
+  sample: {
+    title: "Workflow quality gate",
+    body:
+      "This suite checks live-style LLM outputs against facts, citations, hallucination traps, latency, token cost, and reviewer status."
+  },
+  portfolio: {
+    title: "Portfolio claim grounding",
+    body:
+      "This suite tests whether generated repo summaries stay faithful to the README evidence and blocks inflated claims such as describing an offline recommender as production software."
+  }
+};
+
 let activeFilter = new URLSearchParams(window.location.search).get("decision") || "all";
 let activeSuite = new URLSearchParams(window.location.search).get("suite") || "sample";
 let report = fallbackReport;
@@ -65,14 +78,26 @@ function setText(id, value) {
 function renderSummary() {
   const { summary } = report;
   const average = percent(summary.average_score);
+  const labelled = Number(report.calibration?.labelled || 0);
+  const matches = Number(report.calibration?.matches || 0);
+  const avgLatency = report.results.reduce((total, item) => total + item.observability.latency_ms, 0) / Math.max(report.results.length, 1);
+  const avgCost = report.results.reduce((total, item) => total + item.observability.cost_usd, 0) / Math.max(report.results.length, 1);
+  const note = suiteNotes[activeSuite] || suiteNotes.sample;
+
   setText("suite-name", report.suite);
   setText("generated-at", formatDate(report.generated_at));
+  setText("labelled-count", `${labelled} labelled`);
   setText("average-score", `${average}%`);
   setText("total-count", summary.total);
   setText("ship-count", summary.ship);
   setText("review-count", summary.review);
   setText("block-count", summary.block);
   setText("calibration-score", `${percent(report.calibration?.accuracy)}%`);
+  setText("calibration-detail", `${matches} / ${labelled} expected decisions`);
+  setText("avg-latency", `${Math.round(avgLatency)}ms`);
+  setText("avg-cost", formatCost(avgCost));
+  setText("run-note-title", note.title);
+  setText("run-note", note.body);
   document.getElementById("health-meter")?.style.setProperty("--score", average);
 }
 
