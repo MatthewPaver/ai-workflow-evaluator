@@ -3,58 +3,108 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0d0f0c">
     <meta
       name="description"
-      content="A small app for evaluating LLM workflow outputs against accuracy, grounding, hallucination risk, latency, cost, and review gates."
+      content="Evaluate LLM workflow outputs against accuracy, grounding, hallucination risk, latency, cost, and human review gates."
     >
     <title>AI Workflow Evaluator</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23151412'/%3E%3Cpath d='M14 35h10l5-18 8 30 6-12h7' fill='none' stroke='%23fffefa' stroke-width='6' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0f0c'/%3E%3Cpath d='M13 38h10l5-20 8 30 6-12h9' fill='none' stroke='%23f8f3e7' stroke-width='5' stroke-linejoin='round'/%3E%3Ccircle cx='47' cy='16' r='5' fill='%23d9ff8c'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <main class="shell">
-      <section class="hero" aria-labelledby="page-title">
-        <div>
-          <p class="eyebrow">LLM output quality gate</p>
-          <h1 id="page-title">AI Workflow Evaluator</h1>
-          <p class="lede">
-            A deterministic review console for checking whether AI workflow outputs are accurate,
-            sourced, affordable, fast enough, and ready for human approval.
-          </p>
+    <a class="skip-link" href="#review-board">Skip to Review Board</a>
+    <main class="workspace-shell">
+      <header class="topbar" aria-label="Application header">
+        <a class="brand" href="../README.md" aria-label="AI Workflow Evaluator README">
+          <span class="brand-mark" aria-hidden="true">AE</span>
+          <span>
+            <strong>AI Workflow Evaluator</strong>
+            <small>Quality gates for LLM outputs</small>
+          </span>
+        </a>
+        <div class="run-meta" aria-label="Suite metadata">
+          <span id="suite-name">Loading…</span>
+          <span id="generated-at">Report pending</span>
         </div>
-        <aside class="decision-panel" aria-label="Evaluation summary">
-          <span class="panel-label">Current suite</span>
-          <strong id="suite-name">Loading...</strong>
-          <div class="score-ring" id="score-ring" style="--score: 0">
-            <span id="average-score">0%</span>
+      </header>
+
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Evaluation Ops Console</p>
+          <h1 id="page-title">Decide what ships before the model reaches users.</h1>
+          <p class="lede">
+            Score AI workflow outputs with visible evidence: facts, source grounding,
+            hallucination checks, runtime cost, latency, and reviewer status.
+          </p>
+          <div class="hero-actions" aria-label="Primary actions">
+            <a class="button primary" href="#review-board">Inspect Runs</a>
+            <a class="button secondary" href="https://github.com/MatthewPaver/ai-workflow-evaluator">Open Repo</a>
           </div>
+        </div>
+
+        <aside class="health-card" aria-label="Suite health">
+          <div class="health-head">
+            <span>Suite Health</span>
+            <strong id="average-score">0%</strong>
+          </div>
+          <div class="health-meter" id="health-meter" style="--score: 0" aria-hidden="true">
+            <span></span>
+          </div>
+          <dl class="health-metrics">
+            <div>
+              <dt>Outputs</dt>
+              <dd id="total-count">0</dd>
+            </div>
+            <div>
+              <dt>Ship</dt>
+              <dd id="ship-count">0</dd>
+            </div>
+            <div>
+              <dt>Review</dt>
+              <dd id="review-count">0</dd>
+            </div>
+            <div>
+              <dt>Block</dt>
+              <dd id="block-count">0</dd>
+            </div>
+          </dl>
         </aside>
       </section>
 
-      <section class="metrics" aria-label="Suite metrics">
+      <section class="signal-strip" aria-label="Evaluation criteria">
         <article>
-          <span>Total checks</span>
-          <strong id="total-count">0</strong>
+          <span>01</span>
+          <strong>Accuracy</strong>
+          <small>Required facts present</small>
         </article>
-        <article class="ship">
-          <span>Ship</span>
-          <strong id="ship-count">0</strong>
+        <article>
+          <span>02</span>
+          <strong>Grounding</strong>
+          <small>Sources cited and aligned</small>
         </article>
-        <article class="review">
-          <span>Review</span>
-          <strong id="review-count">0</strong>
+        <article>
+          <span>03</span>
+          <strong>Hallucination</strong>
+          <small>Known-bad claims blocked</small>
         </article>
-        <article class="block">
-          <span>Block</span>
-          <strong id="block-count">0</strong>
+        <article>
+          <span>04</span>
+          <strong>Latency & Cost</strong>
+          <small>Operational limits checked</small>
+        </article>
+        <article>
+          <span>05</span>
+          <strong>Human Review</strong>
+          <small>Approval state included</small>
         </article>
       </section>
 
-      <section class="workspace" aria-label="Evaluation workspace">
-        <div class="toolbar">
+      <section id="review-board" class="review-board" aria-labelledby="board-title">
+        <div class="board-toolbar">
           <div>
-            <p class="eyebrow">Workflow outputs</p>
-            <h2>Review Board</h2>
+            <p class="eyebrow">Run Review</p>
+            <h2 id="board-title">Trace-Level Decisions</h2>
           </div>
           <div class="filters" role="group" aria-label="Filter decisions">
             <button class="filter is-active" type="button" data-filter="all">All</button>
@@ -63,36 +113,7 @@
             <button class="filter" type="button" data-filter="block">Block</button>
           </div>
         </div>
-        <div class="result-grid" id="result-grid" aria-live="polite"></div>
-      </section>
-
-      <section class="criteria" aria-labelledby="criteria-title">
-        <div>
-          <p class="eyebrow">Criteria</p>
-          <h2 id="criteria-title">What Gets Scored</h2>
-        </div>
-        <div class="criteria-grid">
-          <article>
-            <strong>Accuracy</strong>
-            <span>Required facts appear in the output.</span>
-          </article>
-          <article>
-            <strong>Hallucination control</strong>
-            <span>Known-bad claims are caught before release.</span>
-          </article>
-          <article>
-            <strong>Source grounding</strong>
-            <span>Sources and source terms support the response.</span>
-          </article>
-          <article>
-            <strong>Latency and cost</strong>
-            <span>Runtime and token spend stay inside workflow limits.</span>
-          </article>
-          <article>
-            <strong>Human review</strong>
-            <span>Reviewer status contributes to the final decision.</span>
-          </article>
-        </div>
+        <div class="run-list" id="result-grid" aria-live="polite"></div>
       </section>
     </main>
     <script src="script.js"></script>

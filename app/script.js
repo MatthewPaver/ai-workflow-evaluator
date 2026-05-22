@@ -14,7 +14,13 @@ const scoreLabels = {
   human_review: "Review"
 };
 
-let activeFilter = "all";
+const decisionCopy = {
+  ship: "Approved to ship",
+  review: "Needs review",
+  block: "Blocked"
+};
+
+let activeFilter = new URLSearchParams(window.location.search).get("decision") || "all";
 let report = fallbackReport;
 
 function percent(value) {
@@ -26,7 +32,23 @@ function titleCase(value) {
 }
 
 function formatCost(value) {
-  return `$${Number(value || 0).toFixed(4)}`;
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 4
+  }).format(Number(value || 0));
+}
+
+function formatDate(value) {
+  return new Intl.DateTimeFormat("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    timeZoneName: "short"
+  }).format(new Date(value));
 }
 
 function setText(id, value) {
@@ -38,17 +60,18 @@ function renderSummary() {
   const { summary } = report;
   const average = percent(summary.average_score);
   setText("suite-name", report.suite);
+  setText("generated-at", formatDate(report.generated_at));
   setText("average-score", `${average}%`);
   setText("total-count", summary.total);
   setText("ship-count", summary.ship);
   setText("review-count", summary.review);
   setText("block-count", summary.block);
-  document.getElementById("score-ring")?.style.setProperty("--score", average);
+  document.getElementById("health-meter")?.style.setProperty("--score", average);
 }
 
 function renderIssues(item) {
   if (!item.issues.length) {
-    return '<p class="issue">No scoring issues found in this run.</p>';
+    return '<p class="issue">No exceptions found. Facts, sources, thresholds, and review status are aligned.</p>';
   }
 
   return item.issues
@@ -59,41 +82,56 @@ function renderIssues(item) {
     .join("");
 }
 
-function renderCard(item) {
-  const scores = Object.entries(item.scores)
+function renderScores(item) {
+  return Object.entries(item.scores)
     .map(([key, value]) => {
       const pct = percent(value);
       return `
-        <div class="score-row">
-          <span>${scoreLabels[key] || titleCase(key)}</span>
-          <div class="bar" aria-hidden="true"><span style="--value: ${pct}"></span></div>
-          <strong>${pct}%</strong>
+        <div class="score-cell">
+          <div class="score-top">
+            <span class="score-label">${scoreLabels[key] || titleCase(key)}</span>
+            <strong class="score-value">${pct}%</strong>
+          </div>
+          <div class="score-bar" aria-hidden="true"><span style="--value: ${pct}"></span></div>
         </div>
       `;
     })
     .join("");
+}
 
+function renderCard(item, index) {
   return `
-    <article class="card" data-decision="${item.decision}">
-      <div class="card-head">
-        <div>
-          <h3>${item.name}</h3>
-          <p class="subtle">${item.workflow} · ${item.model}</p>
+    <article class="run-card" data-decision="${item.decision}">
+      <div class="run-index">${String(index + 1).padStart(2, "0")}</div>
+      <div class="run-title">
+        <h3>${item.name}</h3>
+        <p class="run-subtitle">${item.workflow} · ${item.model}</p>
+        <span class="decision-pill ${item.decision}">${decisionCopy[item.decision] || item.decision}</span>
+      </div>
+      <div class="score-matrix">${renderScores(item)}</div>
+      <div class="run-side">
+        <div class="observability" aria-label="Observability">
+          <div><span>Latency</span><strong>${item.observability.latency_ms}ms</strong></div>
+          <div><span>Cost</span><strong>${formatCost(item.observability.cost_usd)}</strong></div>
+          <div><span>Review</span><strong>${titleCase(item.observability.review_status)}</strong></div>
         </div>
-        <span class="pill ${item.decision}">${item.decision}</span>
-      </div>
-      <div class="score-list">${scores}</div>
-      <div class="meta" aria-label="Observability">
-        <div><span>Latency</span><strong>${item.observability.latency_ms}ms</strong></div>
-        <div><span>Cost</span><strong>${formatCost(item.observability.cost_usd)}</strong></div>
-        <div><span>Review</span><strong>${titleCase(item.observability.review_status)}</strong></div>
-      </div>
-      <div class="issues">
-        <span class="issue-label">Evidence notes</span>
-        ${renderIssues(item)}
+        <div class="evidence">
+          <span class="evidence-title">Evidence Notes</span>
+          ${renderIssues(item)}
+        </div>
       </div>
     </article>
   `;
+}
+
+function updateUrlFilter() {
+  const url = new URL(window.location.href);
+  if (activeFilter === "all") {
+    url.searchParams.delete("decision");
+  } else {
+    url.searchParams.set("decision", activeFilter);
+  }
+  window.history.replaceState({}, "", url);
 }
 
 function renderResults() {
@@ -106,10 +144,14 @@ function renderResults() {
 
 function bindFilters() {
   document.querySelectorAll(".filter").forEach((button) => {
+    const isActive = button.dataset.filter === activeFilter;
+    button.classList.toggle("is-active", isActive);
+
     button.addEventListener("click", () => {
       activeFilter = button.dataset.filter;
       document.querySelectorAll(".filter").forEach((item) => item.classList.remove("is-active"));
       button.classList.add("is-active");
+      updateUrlFilter();
       renderResults();
     });
   });

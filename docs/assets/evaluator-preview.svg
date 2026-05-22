@@ -1,32 +1,49 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="860" viewBox="0 0 1440 860" role="img" aria-labelledby="title desc">
-  <title id="title">AI Workflow Evaluator preview</title>
-  <desc id="desc">A preview of a quality gate dashboard for LLM workflow outputs.</desc>
-  <rect width="1440" height="860" fill="#f7f4ee"/>
-  <path d="M0 136h1440M0 272h1440M0 408h1440M0 544h1440M0 680h1440M180 0v860M360 0v860M540 0v860M720 0v860M900 0v860M1080 0v860M1260 0v860" stroke="#e4ded2" stroke-width="2"/>
-  <rect x="92" y="84" width="1256" height="692" fill="#fffefa" stroke="#151412" stroke-width="4"/>
-  <text x="132" y="158" fill="#b84f31" font-family="Arial, sans-serif" font-size="24" font-weight="700">LLM OUTPUT QUALITY GATE</text>
-  <text x="132" y="252" fill="#151412" font-family="Arial, sans-serif" font-size="86" font-weight="900">AI Workflow Evaluator</text>
-  <text x="132" y="310" fill="#5f625c" font-family="Arial, sans-serif" font-size="28">Accuracy, grounding, hallucination risk, latency, cost, and review status in one run.</text>
-  <rect x="132" y="382" width="314" height="254" fill="#fbf8f1" stroke="#ded8cb" stroke-width="3"/>
-  <rect x="482" y="382" width="314" height="254" fill="#fbf8f1" stroke="#ded8cb" stroke-width="3"/>
-  <rect x="832" y="382" width="314" height="254" fill="#fbf8f1" stroke="#ded8cb" stroke-width="3"/>
-  <rect x="1168" y="382" width="80" height="254" fill="#151412"/>
-  <text x="162" y="442" fill="#167351" font-family="Arial, sans-serif" font-size="22" font-weight="800">SHIP</text>
-  <text x="512" y="442" fill="#b97800" font-family="Arial, sans-serif" font-size="22" font-weight="800">REVIEW</text>
-  <text x="862" y="442" fill="#a6342f" font-family="Arial, sans-serif" font-size="22" font-weight="800">BLOCK</text>
-  <text x="162" y="492" fill="#151412" font-family="Arial, sans-serif" font-size="34" font-weight="800">News brief</text>
-  <text x="512" y="492" fill="#151412" font-family="Arial, sans-serif" font-size="34" font-weight="800">Marketing rec</text>
-  <text x="862" y="492" fill="#151412" font-family="Arial, sans-serif" font-size="34" font-weight="800">Policy answer</text>
-  <rect x="162" y="546" width="238" height="14" fill="#e9e2d6"/>
-  <rect x="162" y="546" width="218" height="14" fill="#0c6f66"/>
-  <rect x="512" y="546" width="238" height="14" fill="#e9e2d6"/>
-  <rect x="512" y="546" width="166" height="14" fill="#0c6f66"/>
-  <rect x="862" y="546" width="238" height="14" fill="#e9e2d6"/>
-  <rect x="862" y="546" width="82" height="14" fill="#0c6f66"/>
-  <text x="162" y="604" fill="#5f625c" font-family="Arial, sans-serif" font-size="24">Grounded, fast, approved.</text>
-  <text x="512" y="604" fill="#5f625c" font-family="Arial, sans-serif" font-size="24">Slow enough for review.</text>
-  <text x="862" y="604" fill="#5f625c" font-family="Arial, sans-serif" font-size="24">Unsupported claim caught.</text>
-  <circle cx="1248" cy="510" r="42" fill="#0c6f66"/>
-  <circle cx="1248" cy="510" r="26" fill="#151412"/>
-  <text x="1218" y="610" fill="#fffefa" font-family="Arial, sans-serif" font-size="18" font-weight="700" transform="rotate(-90 1218 610)">QUALITY GATE</text>
+  <title id="title">AI Workflow Evaluator interface preview</title>
+  <desc id="desc">A dark evaluation operations console showing suite health, quality gates, and trace-level LLM output decisions.</desc>
+  <rect width="1440" height="860" fill="#0d0f0c"/>
+  <radialGradient id="g1" cx="85%" cy="5%" r="70%">
+    <stop offset="0" stop-color="#d9ff8c" stop-opacity=".18"/>
+    <stop offset=".55" stop-color="#0d0f0c" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="1440" height="860" fill="url(#g1)"/>
+  <path d="M0 0h1440v860H0z" fill="none"/>
+  <path d="M0 0h1440v860H0z" fill="url(#grid)"/>
+  <defs>
+    <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+      <path d="M28 0H0v28" fill="none" stroke="#20251d" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <g font-family="Avenir Next, Segoe UI, sans-serif">
+    <circle cx="106" cy="76" r="25" fill="#d9ff8c"/>
+    <text x="94" y="84" fill="#0d0f0c" font-size="16" font-weight="900">AE</text>
+    <text x="146" y="72" fill="#fffaf0" font-size="20" font-weight="800">AI Workflow Evaluator</text>
+    <text x="146" y="99" fill="#aaa89e" font-size="16">Quality gates for LLM outputs</text>
+    <rect x="100" y="150" width="825" height="474" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
+    <text x="154" y="219" fill="#d9ff8c" font-size="16" font-weight="900" letter-spacing="3">EVALUATION OPS CONSOLE</text>
+    <text x="154" y="326" fill="#fffaf0" font-family="Georgia, serif" font-size="96" font-weight="700">Decide what ships</text>
+    <text x="154" y="423" fill="#fffaf0" font-family="Georgia, serif" font-size="96" font-weight="700">before the model</text>
+    <text x="154" y="520" fill="#fffaf0" font-family="Georgia, serif" font-size="96" font-weight="700">reaches users.</text>
+    <text x="154" y="574" fill="#aaa89e" font-size="22">Facts, source grounding, hallucination checks, latency, cost, and review status.</text>
+    <rect x="948" y="150" width="392" height="474" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
+    <text x="990" y="216" fill="#747168" font-size="15" font-weight="900" letter-spacing="2">SUITE HEALTH</text>
+    <text x="1124" y="265" fill="#d9ff8c" font-size="86" font-weight="900">85%</text>
+    <rect x="990" y="405" width="308" height="16" fill="#0a0b09" stroke="#515a49"/>
+    <rect x="994" y="409" width="254" height="8" fill="#d9ff8c"/>
+    <rect x="990" y="504" width="140" height="74" fill="#22271f" stroke="#30352c"/>
+    <rect x="1150" y="504" width="140" height="74" fill="#22271f" stroke="#30352c"/>
+    <text x="1010" y="532" fill="#747168" font-size="13" font-weight="900">OUTPUTS</text>
+    <text x="1170" y="532" fill="#747168" font-size="13" font-weight="900">BLOCK</text>
+    <text x="1010" y="562" fill="#fffaf0" font-size="30" font-weight="900">3</text>
+    <text x="1170" y="562" fill="#fffaf0" font-size="30" font-weight="900">1</text>
+    <rect x="100" y="652" width="1240" height="146" fill="#1b1f18" stroke="#30352c" stroke-width="2"/>
+    <text x="132" y="704" fill="#d9ff8c" font-size="15" font-weight="900" letter-spacing="2">RUN REVIEW</text>
+    <text x="132" y="750" fill="#fffaf0" font-size="44" font-weight="900">Trace-Level Decisions</text>
+    <rect x="780" y="700" width="142" height="54" fill="#20251d"/>
+    <rect x="942" y="700" width="142" height="54" fill="#20251d"/>
+    <rect x="1104" y="700" width="142" height="54" fill="#20251d"/>
+    <text x="806" y="734" fill="#35d0b1" font-size="16" font-weight="900">Grounding</text>
+    <text x="968" y="734" fill="#35d0b1" font-size="16" font-weight="900">Latency</text>
+    <text x="1130" y="734" fill="#35d0b1" font-size="16" font-weight="900">Review</text>
+  </g>
 </svg>
