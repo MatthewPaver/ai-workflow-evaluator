@@ -1,6 +1,6 @@
 # AI Workflow Evaluator
 
-Deterministic evaluation for LLM outputs before they reach users.
+Evidence gates for AI-generated outputs before they reach users.
 
 [![Validate](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml)
 [![Demo](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml)
@@ -11,9 +11,24 @@ Deterministic evaluation for LLM outputs before they reach users.
 
 ## What It Solves
 
-LLM demos often stop at a good-looking answer. This project checks whether an output is accurate, grounded in supplied sources, cheap enough to run, fast enough for the workflow, and ready for human approval.
+LLM demos often stop at a good-looking answer. Real workflows need a clearer decision: can this output ship, does it need review, or should it be blocked?
+
+This project checks whether an AI-generated summary, answer, recommendation, or repo description is accurate, grounded in supplied sources, cheap enough to run, fast enough for the workflow, and ready for human approval.
 
 It is intentionally deterministic. No paid API key is required to run the evaluator.
+
+Good fits:
+
+- AI-written portfolio cards checked against repo READMEs.
+- Support or operations summaries checked against source notes.
+- Product copy drafts checked against approved claims.
+- Internal assistant answers checked before a human signs them off.
+
+Poor fits:
+
+- Proving a model is universally accurate.
+- Evaluating open-ended creative writing.
+- Replacing semantic evals, trace stores, or human judgement in production.
 
 ## Quick Start
 
@@ -55,7 +70,7 @@ That suite is designed to catch inflated portfolio claims, for example describin
 
 ## Accuracy Model
 
-This is not an LLM-as-judge benchmark. It is a deterministic quality gate.
+This is not an LLM-as-judge benchmark. It is a deterministic quality gate for workflows where the expected evidence is known.
 
 The evaluator is accurate when the question is: did the output include required facts, cite or mention required sources, avoid known-bad claims, stay within latency/cost thresholds, and match the expected review decision?
 

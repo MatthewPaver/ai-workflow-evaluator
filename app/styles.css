@@ -7,7 +7,7 @@
   --ink: #f8f3e7;
   --ink-strong: #fffaf0;
   --muted: #aaa89e;
-  --dim: #77756c;
+  --dim: #969287;
   --line: #30352c;
   --line-strong: #515a49;
   --acid: #d9ff8c;
@@ -270,7 +270,7 @@ button {
 .run-header {
   display: flex;
   gap: 18px;
-  align-items: end;
+  align-items: start;
   justify-content: space-between;
   min-height: 148px;
   padding: 26px;
@@ -292,9 +292,9 @@ h3 {
 
 h1 {
   max-width: 920px;
-  margin-bottom: 0;
+  margin-bottom: 14px;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.2rem, 4.2vw, 4.4rem);
+  font-size: clamp(2rem, 3.8vw, 4.1rem);
   line-height: 0.95;
 }
 
@@ -316,6 +316,65 @@ h2 {
   padding: 8px 10px;
   background: rgba(248, 243, 231, 0.06);
   border: 1px solid var(--line);
+}
+
+.run-intro {
+  max-width: 760px;
+  margin-bottom: 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.35vw, 1.18rem);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+.process-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--line);
+  box-shadow: var(--shadow);
+}
+
+.process-strip article {
+  min-height: 132px;
+  padding: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.042), rgba(255, 255, 255, 0.016)),
+    rgba(20, 23, 17, 0.96);
+}
+
+.process-strip span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 18px;
+  color: var(--bg);
+  font-size: 0.72rem;
+  font-weight: 900;
+  background: var(--acid);
+  border-radius: 50%;
+  font-variant-numeric: tabular-nums;
+}
+
+.process-strip strong,
+.process-strip p {
+  display: block;
+}
+
+.process-strip strong {
+  color: var(--ink-strong);
+  font-size: 1.02rem;
+}
+
+.process-strip p {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
 }
 
 .scoreboard {
@@ -453,7 +512,7 @@ h2 {
 
 .run-card {
   display: grid;
-  grid-template-columns: 42px minmax(250px, 0.85fr) minmax(450px, 1.2fr) minmax(320px, 0.85fr);
+  grid-template-columns: 42px minmax(190px, 0.78fr) minmax(310px, 1.25fr) minmax(230px, 0.82fr);
   gap: 16px;
   align-items: stretch;
   padding: 16px;
@@ -650,7 +709,7 @@ h2 {
   }
 
   .run-card {
-    grid-template-columns: 42px minmax(220px, 0.9fr) minmax(360px, 1.2fr);
+    grid-template-columns: 42px minmax(210px, 0.9fr) minmax(320px, 1.2fr);
   }
 
   .run-side {
@@ -672,7 +731,8 @@ h2 {
 
   .scoreboard,
   .decision-grid,
-  .insight-grid {
+  .insight-grid,
+  .process-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -704,6 +764,7 @@ h2 {
   .scoreboard,
   .decision-grid,
   .insight-grid,
+  .process-strip,
   .registry-grid,
   .score-matrix,
   .observability {
@@ -718,6 +779,6 @@ h2 {
   }
 
   h1 {
-    font-size: clamp(2.2rem, 13vw, 3.4rem);
+    font-size: clamp(2rem, 11vw, 2.75rem);
   }
 }
