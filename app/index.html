@@ -68,6 +68,10 @@
               <dt>Block</dt>
               <dd id="block-count">0</dd>
             </div>
+            <div>
+              <dt>Calibration</dt>
+              <dd id="calibration-score">0%</dd>
+            </div>
           </dl>
         </aside>
       </section>
@@ -106,11 +110,17 @@
             <p class="eyebrow">Run Review</p>
             <h2 id="board-title">Trace-Level Decisions</h2>
           </div>
-          <div class="filters" role="group" aria-label="Filter decisions">
-            <button class="filter is-active" type="button" data-filter="all">All</button>
-            <button class="filter" type="button" data-filter="ship">Ship</button>
-            <button class="filter" type="button" data-filter="review">Review</button>
-            <button class="filter" type="button" data-filter="block">Block</button>
+          <div class="toolbar-actions">
+            <div class="suite-switcher" role="group" aria-label="Select report suite">
+              <button class="suite-button is-active" type="button" data-suite="sample">Workflow Suite</button>
+              <button class="suite-button" type="button" data-suite="portfolio">Portfolio Suite</button>
+            </div>
+            <div class="filters" role="group" aria-label="Filter decisions">
+              <button class="filter is-active" type="button" data-filter="all">All</button>
+              <button class="filter" type="button" data-filter="ship">Ship</button>
+              <button class="filter" type="button" data-filter="review">Review</button>
+              <button class="filter" type="button" data-filter="block">Block</button>
+            </div>
           </div>
         </div>
         <div class="run-list" id="result-grid" aria-live="polite"></div>

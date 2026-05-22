@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
 import re
+from difflib import SequenceMatcher
 
 
 DEFAULT_WEIGHTS = {
@@ -23,11 +24,38 @@ class Pricing:
 
 
 def normalise(text: str) -> str:
-    return re.sub(r"\s+", " ", text.casefold()).strip()
+    return re.sub(r"\s+", " ", re.sub(r"[-–—/]", " ", text.casefold())).strip()
 
 
 def contains_phrase(text: str, phrase: str) -> bool:
     return normalise(phrase) in normalise(text)
+
+
+def phrase_similarity(text: str, phrase: str) -> float:
+    text_normalised = normalise(text)
+    phrase_normalised = normalise(phrase)
+    if not phrase_normalised:
+        return 1.0
+    if phrase_normalised in text_normalised:
+        return 1.0
+
+    phrase_words = phrase_normalised.split()
+    if len(phrase_words) <= 1:
+        return 0.0
+
+    text_words = text_normalised.split()
+    if len(text_words) < len(phrase_words):
+        return SequenceMatcher(None, text_normalised, phrase_normalised).ratio()
+
+    window_scores = []
+    for index in range(0, len(text_words) - len(phrase_words) + 1):
+        window = " ".join(text_words[index : index + len(phrase_words)])
+        window_scores.append(SequenceMatcher(None, window, phrase_normalised).ratio())
+    return max(window_scores, default=0.0)
+
+
+def phrase_matches(text: str, phrase: str, threshold: float) -> bool:
+    return phrase_similarity(text, phrase) >= threshold
 
 
 def score_ratio(matches: int, total: int) -> float:
@@ -77,6 +105,8 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
     max_cost = float(thresholds.get("max_cost_usd", 0.05))
     pass_score = float(thresholds.get("pass_score", 0.78))
     block_score = float(thresholds.get("block_score", 0.45))
+    fact_match_threshold = float(thresholds.get("fact_match_threshold", 0.82))
+    source_match_threshold = float(thresholds.get("source_match_threshold", 0.9))
 
     output = item.get("output", "")
     expected_facts = item.get("expected_facts", [])
@@ -85,14 +115,16 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
     sources = item.get("sources", [])
     source_text = source_blob(sources)
 
-    fact_hits = [fact for fact in expected_facts if contains_phrase(output, fact)]
+    fact_hits = [fact for fact in expected_facts if phrase_matches(output, fact, fact_match_threshold)]
     missing_facts = [fact for fact in expected_facts if fact not in fact_hits]
     forbidden_hits = [claim for claim in forbidden_claims if contains_phrase(output, claim)]
     source_hits = [source_id for source_id in required_sources if contains_phrase(output, source_id)]
 
     source_terms = item.get("source_terms", [])
     source_term_hits = [
-        term for term in source_terms if contains_phrase(output, term) and contains_phrase(source_text, term)
+        term
+        for term in source_terms
+        if phrase_matches(output, term, source_match_threshold) and contains_phrase(source_text, term)
     ]
 
     accuracy = score_ratio(len(fact_hits), len(expected_facts))
@@ -169,6 +201,8 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
             "source_term_hits": source_term_hits,
         },
         "issues": issues,
+        "expected_decision": item.get("expected_decision"),
+        "calibrated": item.get("expected_decision") in {None, decision},
     }
 
 
@@ -177,6 +211,9 @@ def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
     results = [evaluate_item(item, config) for item in payload.get("items", [])]
     decisions = {name: sum(1 for item in results if item["decision"] == name) for name in ["ship", "review", "block"]}
     avg_score = round(sum(item["overall_score"] for item in results) / max(len(results), 1), 4)
+    calibrated_results = [item for item in results if item.get("expected_decision")]
+    calibration_matches = sum(1 for item in calibrated_results if item["calibrated"])
+    calibration_accuracy = score_ratio(calibration_matches, len(calibrated_results))
     return {
         "generated_at": payload.get("generated_at", datetime.now(timezone.utc).isoformat()),
         "suite": payload.get("suite", "AI Workflow Evaluator"),
@@ -186,6 +223,11 @@ def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
             "ship": decisions["ship"],
             "review": decisions["review"],
             "block": decisions["block"],
+        },
+        "calibration": {
+            "labelled": len(calibrated_results),
+            "matches": calibration_matches,
+            "accuracy": calibration_accuracy,
         },
         "results": results,
     }

@@ -50,6 +50,7 @@
         "output": 180
       },
       "latency_ms": 1420,
+      "expected_decision": "ship",
       "human_review": {
         "status": "approved"
       }
@@ -88,6 +89,7 @@
         "output": 210
       },
       "latency_ms": 2310,
+      "expected_decision": "block",
       "human_review": {
         "status": "review_required"
       }
@@ -121,6 +123,7 @@
         "output": 260
       },
       "latency_ms": 5100,
+      "expected_decision": "ship",
       "human_review": {
         "status": "approved"
       }

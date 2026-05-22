@@ -1,0 +1,231 @@
+{
+  "generated_at": "2026-05-22T00:00:00+00:00",
+  "suite": "Portfolio repo summary grounding suite",
+  "summary": {
+    "total": 4,
+    "average_score": 0.8798,
+    "ship": 3,
+    "review": 0,
+    "block": 1
+  },
+  "calibration": {
+    "labelled": 4,
+    "matches": 4,
+    "accuracy": 1.0
+  },
+  "results": [
+    {
+      "id": "repo-marketing-lakehouse",
+      "name": "Marketing ML Lakehouse portfolio card",
+      "model": "portfolio-copy-v1",
+      "workflow": "repo_summary_grounding",
+      "decision": "ship",
+      "overall_score": 0.9579,
+      "scores": {
+        "accuracy": 1.0,
+        "source_grounding": 0.84,
+        "hallucination_control": 1.0,
+        "latency": 1.0,
+        "cost": 0.9537,
+        "human_review": 1.0
+      },
+      "observability": {
+        "latency_ms": 1180,
+        "cost_usd": 0.01185,
+        "input_tokens": 1800,
+        "output_tokens": 190,
+        "review_status": "approved"
+      },
+      "evidence": {
+        "matched_facts": [
+          "turns raw marketing CSVs into a repeatable local analytics and ML workflow",
+          "DuckDB bronze, silver, and gold pipeline",
+          "XGBoost models",
+          "Streamlit dashboard",
+          "make test rebuilds DuckDB/models"
+        ],
+        "missing_facts": [],
+        "forbidden_hits": [],
+        "source_hits": [
+          "R1",
+          "R2"
+        ],
+        "source_term_hits": [
+          "DuckDB",
+          "Streamlit dashboard",
+          "make test"
+        ]
+      },
+      "issues": [],
+      "expected_decision": "ship",
+      "calibrated": true
+    },
+    {
+      "id": "repo-projectlens",
+      "name": "ProjectLens portfolio card",
+      "model": "portfolio-copy-v1",
+      "workflow": "repo_summary_grounding",
+      "decision": "ship",
+      "overall_score": 0.9984,
+      "scores": {
+        "accuracy": 1.0,
+        "source_grounding": 1.0,
+        "hallucination_control": 1.0,
+        "latency": 1.0,
+        "cost": 0.98,
+        "human_review": 1.0
+      },
+      "observability": {
+        "latency_ms": 1250,
+        "cost_usd": 0.0108,
+        "input_tokens": 1650,
+        "output_tokens": 170,
+        "review_status": "approved"
+      },
+      "evidence": {
+        "matched_facts": [
+          "turns project schedule files into delivery-risk reporting",
+          "Flask web interface",
+          "data processing pipeline",
+          "slippage, milestone, changepoint, and forecasting analysis",
+          "Power BI artefacts"
+        ],
+        "missing_facts": [],
+        "forbidden_hits": [],
+        "source_hits": [
+          "R1",
+          "R2"
+        ],
+        "source_term_hits": [
+          "project schedule files",
+          "Flask",
+          "slippage",
+          "forecasting",
+          "Power BI"
+        ]
+      },
+      "issues": [],
+      "expected_decision": "ship",
+      "calibrated": true
+    },
+    {
+      "id": "repo-recommender-overclaim",
+      "name": "Recommendation system overclaim",
+      "model": "portfolio-copy-v1",
+      "workflow": "repo_summary_grounding",
+      "decision": "block",
+      "overall_score": 0.563,
+      "scores": {
+        "accuracy": 0.75,
+        "source_grounding": 0.5,
+        "hallucination_control": 0.0,
+        "latency": 1.0,
+        "cost": 1.0,
+        "human_review": 0.55
+      },
+      "observability": {
+        "latency_ms": 980,
+        "cost_usd": 0.0093,
+        "input_tokens": 1500,
+        "output_tokens": 120,
+        "review_status": "review_required"
+      },
+      "evidence": {
+        "matched_facts": [
+          "ranks unseen profiles from swipe-style implicit feedback",
+          "temporal holdouts",
+          "Top-K metrics"
+        ],
+        "missing_facts": [
+          "offline recommendation exercise"
+        ],
+        "forbidden_hits": [
+          "deployed dating-app recommender",
+          "used in production",
+          "online feedback loops"
+        ],
+        "source_hits": [
+          "R1"
+        ],
+        "source_term_hits": [
+          "swipe-style implicit feedback",
+          "temporal holdouts"
+        ]
+      },
+      "issues": [
+        {
+          "severity": "medium",
+          "type": "missing_facts",
+          "items": [
+            "offline recommendation exercise"
+          ]
+        },
+        {
+          "severity": "high",
+          "type": "forbidden_claims",
+          "items": [
+            "deployed dating-app recommender",
+            "used in production",
+            "online feedback loops"
+          ]
+        },
+        {
+          "severity": "medium",
+          "type": "weak_grounding",
+          "items": [
+            "R1",
+            "R2"
+          ]
+        }
+      ],
+      "expected_decision": "block",
+      "calibrated": true
+    },
+    {
+      "id": "repo-sentence-similarity",
+      "name": "Sentence Similarity portfolio card",
+      "model": "portfolio-copy-v1",
+      "workflow": "repo_summary_grounding",
+      "decision": "ship",
+      "overall_score": 1.0,
+      "scores": {
+        "accuracy": 1.0,
+        "source_grounding": 1.0,
+        "hallucination_control": 1.0,
+        "latency": 1.0,
+        "cost": 1.0,
+        "human_review": 1.0
+      },
+      "observability": {
+        "latency_ms": 1040,
+        "cost_usd": 0.00935,
+        "input_tokens": 1420,
+        "output_tokens": 150,
+        "review_status": "approved"
+      },
+      "evidence": {
+        "matched_facts": [
+          "transformer-based sentence embeddings",
+          "cosine similarity",
+          "101 factual statements",
+          "semantic similarity is not the same thing as factually correct text"
+        ],
+        "missing_facts": [],
+        "forbidden_hits": [],
+        "source_hits": [
+          "R1",
+          "R2"
+        ],
+        "source_term_hits": [
+          "sentence embeddings",
+          "cosine similarity",
+          "101 factual statements",
+          "factually correct"
+        ]
+      },
+      "issues": [],
+      "expected_decision": "ship",
+      "calibrated": true
+    }
+  ]
+}

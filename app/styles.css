@@ -95,6 +95,7 @@ button {
 
 .brand:focus-visible,
 .button:focus-visible,
+.suite-button:focus-visible,
 .filter:focus-visible {
   outline: 2px solid var(--acid);
   outline-offset: 4px;
@@ -339,7 +340,7 @@ h2 {
 .health-metrics dd {
   margin: 8px 0 0;
   color: var(--ink-strong);
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 900;
   font-variant-numeric: tabular-nums;
 }
@@ -397,12 +398,27 @@ h2 {
   border-bottom: 1px solid var(--line);
 }
 
+.toolbar-actions {
+  display: grid;
+  gap: 10px;
+  justify-items: end;
+}
+
+.suite-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  justify-content: flex-end;
 }
 
+.suite-button,
 .filter {
   min-height: 38px;
   padding: 0 13px;
@@ -418,7 +434,9 @@ h2 {
 }
 
 .filter:hover,
-.filter.is-active {
+.filter.is-active,
+.suite-button:hover,
+.suite-button.is-active {
   color: var(--bg);
   background: var(--acid);
   border-color: var(--acid);
@@ -631,6 +649,13 @@ h2 {
   .board-toolbar {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .toolbar-actions,
+  .suite-switcher,
+  .filters {
+    justify-items: start;
+    justify-content: flex-start;
   }
 
   .run-meta {

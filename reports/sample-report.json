@@ -8,6 +8,11 @@
     "review": 0,
     "block": 1
   },
+  "calibration": {
+    "labelled": 3,
+    "matches": 3,
+    "accuracy": 1.0
+  },
   "results": [
     {
       "id": "ai-news-brief-001",
@@ -49,7 +54,9 @@
           "staged"
         ]
       },
-      "issues": []
+      "issues": [],
+      "expected_decision": "ship",
+      "calibrated": true
     },
     {
       "id": "hr-policy-answer-002",
@@ -115,7 +122,9 @@
             "S2"
           ]
         }
-      ]
+      ],
+      "expected_decision": "block",
+      "calibrated": true
     },
     {
       "id": "marketing-recommendation-003",
@@ -164,7 +173,9 @@
             "5100ms"
           ]
         }
-      ]
+      ],
+      "expected_decision": "ship",
+      "calibrated": true
     }
   ]
 }

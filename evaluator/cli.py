@@ -23,7 +23,8 @@ def main() -> None:
     print(
         f"{report['suite']}: {summary['total']} outputs, "
         f"average={summary['average_score']:.2f}, "
-        f"ship={summary['ship']}, review={summary['review']}, block={summary['block']}"
+        f"ship={summary['ship']}, review={summary['review']}, block={summary['block']}, "
+        f"calibration={report['calibration']['accuracy']:.2f}"
     )
 
 

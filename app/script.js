@@ -20,7 +20,13 @@ const decisionCopy = {
   block: "Blocked"
 };
 
+const reportSources = {
+  sample: "../reports/sample-report.json",
+  portfolio: "../reports/portfolio-report.json"
+};
+
 let activeFilter = new URLSearchParams(window.location.search).get("decision") || "all";
+let activeSuite = new URLSearchParams(window.location.search).get("suite") || "sample";
 let report = fallbackReport;
 
 function percent(value) {
@@ -66,6 +72,7 @@ function renderSummary() {
   setText("ship-count", summary.ship);
   setText("review-count", summary.review);
   setText("block-count", summary.block);
+  setText("calibration-score", `${percent(report.calibration?.accuracy)}%`);
   document.getElementById("health-meter")?.style.setProperty("--score", average);
 }
 
@@ -131,6 +138,11 @@ function updateUrlFilter() {
   } else {
     url.searchParams.set("decision", activeFilter);
   }
+  if (activeSuite === "sample") {
+    url.searchParams.delete("suite");
+  } else {
+    url.searchParams.set("suite", activeSuite);
+  }
   window.history.replaceState({}, "", url);
 }
 
@@ -157,9 +169,24 @@ function bindFilters() {
   });
 }
 
+function bindSuites() {
+  document.querySelectorAll(".suite-button").forEach((button) => {
+    const isActive = button.dataset.suite === activeSuite;
+    button.classList.toggle("is-active", isActive);
+
+    button.addEventListener("click", () => {
+      activeSuite = button.dataset.suite;
+      document.querySelectorAll(".suite-button").forEach((item) => item.classList.remove("is-active"));
+      button.classList.add("is-active");
+      updateUrlFilter();
+      loadReport();
+    });
+  });
+}
+
 async function loadReport() {
   try {
-    const response = await fetch("../reports/sample-report.json");
+    const response = await fetch(reportSources[activeSuite] || reportSources.sample);
     if (!response.ok) throw new Error(`Report returned ${response.status}`);
     report = await response.json();
   } catch (error) {
@@ -171,4 +198,5 @@ async function loadReport() {
 }
 
 bindFilters();
+bindSuites();
 loadReport();

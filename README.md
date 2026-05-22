@@ -44,6 +44,23 @@ The sample file at `examples/workflows.json` contains three realistic workflow c
 - a partially unsupported HR policy answer
 - a high-risk analytics recommendation that needs review
 
+The portfolio grounding file at `examples/portfolio-workflows.json` applies the same evaluator to public repo summary copy for:
+
+- Marketing ML Lakehouse
+- ProjectLens
+- Dating App Recommendation System
+- Sentence Similarity Analysis
+
+That suite is designed to catch inflated portfolio claims, for example describing an offline recommender exercise as a deployed production recommender.
+
+## Accuracy Model
+
+This is not an LLM-as-judge benchmark. It is a deterministic quality gate.
+
+The evaluator is accurate when the question is: did the output include required facts, cite or mention required sources, avoid known-bad claims, stay within latency/cost thresholds, and match the expected review decision?
+
+Each item can include an `expected_decision`. Reports include calibration metrics so you can see whether the evaluator's `ship`, `review`, and `block` outcomes match labelled expectations. The included suites currently calibrate against 7 labelled cases: 5 shippable examples and 2 blocked examples, including one deliberate portfolio overclaim.
+
 ## Architecture
 
 ![Architecture](docs/assets/architecture.svg)

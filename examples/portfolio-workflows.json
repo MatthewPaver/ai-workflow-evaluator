@@ -1,0 +1,188 @@
+{
+  "suite": "Portfolio repo summary grounding suite",
+  "generated_at": "2026-05-22T00:00:00+00:00",
+  "config": {
+    "pricing": {
+      "input_per_1k": 0.005,
+      "output_per_1k": 0.015
+    },
+    "thresholds": {
+      "target_latency_ms": 1800,
+      "max_latency_ms": 6000,
+      "target_cost_usd": 0.01,
+      "max_cost_usd": 0.05,
+      "pass_score": 0.78,
+      "block_score": 0.45,
+      "fact_match_threshold": 0.9,
+      "source_match_threshold": 0.9
+    }
+  },
+  "items": [
+    {
+      "id": "repo-marketing-lakehouse",
+      "name": "Marketing ML Lakehouse portfolio card",
+      "workflow": "repo_summary_grounding",
+      "model": "portfolio-copy-v1",
+      "output": "Source R1 supports that Marketing ML Lakehouse turns raw marketing CSVs into a repeatable local analytics and ML workflow. It uses a DuckDB bronze, silver, and gold pipeline, XGBoost models, data-quality checks, and a Streamlit dashboard. Source R2 says make test rebuilds DuckDB/models from demo data, then runs pytest.",
+      "expected_facts": [
+        "turns raw marketing CSVs into a repeatable local analytics and ML workflow",
+        "DuckDB bronze, silver, and gold pipeline",
+        "XGBoost models",
+        "Streamlit dashboard",
+        "make test rebuilds DuckDB/models"
+      ],
+      "forbidden_claims": [
+        "connected to a live ad-platform API",
+        "hosted production SaaS product",
+        "real customer campaign data"
+      ],
+      "required_sources": ["R1", "R2"],
+      "source_terms": ["raw marketing CSVs", "DuckDB", "XGBoost", "Streamlit dashboard", "make test"],
+      "sources": [
+        {
+          "id": "R1",
+          "title": "Marketing ML Lakehouse README status",
+          "text": "This repository contains a local-first marketing analytics stack built around a DuckDB bronze -> silver -> gold pipeline, ML training for performance and pacing, and a Streamlit dashboard."
+        },
+        {
+          "id": "R2",
+          "title": "Marketing ML Lakehouse reviewer pack",
+          "text": "Raw campaign CSVs become an inspectable bronze, silver, and gold lakehouse with model training and dashboard review. make test rebuilds DuckDB/models from demo data, then runs pytest."
+        }
+      ],
+      "tokens": {
+        "input": 1800,
+        "output": 190
+      },
+      "latency_ms": 1180,
+      "expected_decision": "ship",
+      "human_review": {
+        "status": "approved"
+      }
+    },
+    {
+      "id": "repo-projectlens",
+      "name": "ProjectLens portfolio card",
+      "workflow": "repo_summary_grounding",
+      "model": "portfolio-copy-v1",
+      "output": "Source R1 says ProjectLens turns project schedule files into delivery-risk reporting and dashboard outputs. It includes a Flask web interface, a data processing pipeline, and structured data folders. Source R2 supports slippage, milestone, changepoint, and forecasting analysis, with outputs suitable for downstream review and Power BI artefacts. This should be described as a local portfolio application, not production software.",
+      "expected_facts": [
+        "turns project schedule files into delivery-risk reporting",
+        "Flask web interface",
+        "data processing pipeline",
+        "slippage, milestone, changepoint, and forecasting analysis",
+        "Power BI artefacts"
+      ],
+      "forbidden_claims": [
+        "production SaaS",
+        "live customer scheduling platform",
+        "authentication and hardened storage included"
+      ],
+      "required_sources": ["R1", "R2"],
+      "source_terms": ["project schedule files", "Flask", "slippage", "forecasting", "Power BI"],
+      "sources": [
+        {
+          "id": "R1",
+          "title": "ProjectLens README quick read",
+          "text": "Turns project schedule files into delivery-risk reporting and dashboard outputs. ProjectLens combines a Flask web interface, a data processing pipeline, and structured input/output folders."
+        },
+        {
+          "id": "R2",
+          "title": "ProjectLens pipeline description",
+          "text": "Runs slippage, milestone, changepoint, and forecasting analysis. Writes output files suitable for downstream review and Power BI use."
+        }
+      ],
+      "tokens": {
+        "input": 1650,
+        "output": 170
+      },
+      "latency_ms": 1250,
+      "expected_decision": "ship",
+      "human_review": {
+        "status": "approved"
+      }
+    },
+    {
+      "id": "repo-recommender-overclaim",
+      "name": "Recommendation system overclaim",
+      "workflow": "repo_summary_grounding",
+      "model": "portfolio-copy-v1",
+      "output": "Source R1 says this is a deployed dating-app recommender used in production with online feedback loops. It ranks unseen profiles from swipe-style implicit feedback and evaluates temporal holdouts with Top-K metrics.",
+      "expected_facts": [
+        "ranks unseen profiles from swipe-style implicit feedback",
+        "temporal holdouts",
+        "Top-K metrics",
+        "offline recommendation exercise"
+      ],
+      "forbidden_claims": [
+        "deployed dating-app recommender",
+        "used in production",
+        "online feedback loops"
+      ],
+      "required_sources": ["R1", "R2"],
+      "source_terms": ["swipe-style implicit feedback", "temporal holdouts", "Top-K metrics", "offline recommendation exercise"],
+      "sources": [
+        {
+          "id": "R1",
+          "title": "Recommendation README reviewer pack",
+          "text": "Uses swipe-style implicit feedback to rank unseen profiles and evaluate recommendations with temporal holdouts."
+        },
+        {
+          "id": "R2",
+          "title": "Recommendation README notes",
+          "text": "This is an offline recommendation exercise, not a deployed recommender service with online feedback loops."
+        }
+      ],
+      "tokens": {
+        "input": 1500,
+        "output": 120
+      },
+      "latency_ms": 980,
+      "expected_decision": "block",
+      "human_review": {
+        "status": "review_required"
+      }
+    },
+    {
+      "id": "repo-sentence-similarity",
+      "name": "Sentence Similarity portfolio card",
+      "workflow": "repo_summary_grounding",
+      "model": "portfolio-copy-v1",
+      "output": "Source R1 says Sentence Similarity Analysis uses transformer-based sentence embeddings and cosine similarity to rank 101 factual statements against a target sentence. Source R2 highlights the limitation: semantic similarity is not the same thing as factually correct text.",
+      "expected_facts": [
+        "transformer-based sentence embeddings",
+        "cosine similarity",
+        "101 factual statements",
+        "semantic similarity is not the same thing as factually correct text"
+      ],
+      "forbidden_claims": [
+        "fact-checking system",
+        "packaged retrieval API",
+        "guarantees factual agreement"
+      ],
+      "required_sources": ["R1", "R2"],
+      "source_terms": ["sentence embeddings", "cosine similarity", "101 factual statements", "factually correct"],
+      "sources": [
+        {
+          "id": "R1",
+          "title": "Sentence Similarity README overview",
+          "text": "It uses transformer-based sentence embeddings and cosine similarity to rank a corpus of 101 factual statements against a target sentence."
+        },
+        {
+          "id": "R2",
+          "title": "Sentence Similarity README limitation",
+          "text": "Semantically similar text is not the same thing as factually correct text. Focused concept demo; not a packaged retrieval API or fact-checking system."
+        }
+      ],
+      "tokens": {
+        "input": 1420,
+        "output": 150
+      },
+      "latency_ms": 1040,
+      "expected_decision": "ship",
+      "human_review": {
+        "status": "approved"
+      }
+    }
+  ]
+}
