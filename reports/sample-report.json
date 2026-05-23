@@ -9,7 +9,15 @@
   "scorers": {
     "version": "deterministic-v1",
     "type": "deterministic",
-    "count": 6
+    "count": 12,
+    "agents": [
+      "reviewer_agent",
+      "source_grounding_agent",
+      "hallucination_agent",
+      "cost_agent",
+      "latency_agent",
+      "policy_agent"
+    ]
   },
   "baseline": {
     "label": "Previous prompt pass",
@@ -102,7 +110,62 @@
       },
       "issues": [],
       "expected_decision": "ship",
-      "calibrated": true
+      "calibrated": true,
+      "agent_reviews": [
+        {
+          "agent": "reviewer_agent",
+          "status": "pass",
+          "message": "Human review state supports shipping",
+          "evidence": [
+            "decision=ship",
+            "human_review=approved",
+            "workflow=reader_summary"
+          ]
+        },
+        {
+          "agent": "source_grounding_agent",
+          "status": "pass",
+          "message": "Source grounding is strong",
+          "evidence": [
+            "grounding=1.00",
+            "missing_sources=none"
+          ]
+        },
+        {
+          "agent": "hallucination_agent",
+          "status": "pass",
+          "message": "No blocked claims found",
+          "evidence": [
+            "forbidden_claims=0"
+          ]
+        },
+        {
+          "agent": "cost_agent",
+          "status": "pass",
+          "message": "Cost is within workflow threshold",
+          "evidence": [
+            "cost_usd=0.007300",
+            "score=1.00"
+          ]
+        },
+        {
+          "agent": "latency_agent",
+          "status": "pass",
+          "message": "Latency is within workflow threshold",
+          "evidence": [
+            "latency_ms=1420",
+            "score=1.00"
+          ]
+        },
+        {
+          "agent": "policy_agent",
+          "status": "pass",
+          "message": "No high-severity policy issues",
+          "evidence": [
+            "high_severity_issues=0"
+          ]
+        }
+      ]
     },
     {
       "id": "hr-policy-answer-002",
@@ -210,7 +273,62 @@
         }
       ],
       "expected_decision": "block",
-      "calibrated": true
+      "calibrated": true,
+      "agent_reviews": [
+        {
+          "agent": "reviewer_agent",
+          "status": "review",
+          "message": "Human review or decision state needs attention",
+          "evidence": [
+            "decision=block",
+            "human_review=review_required",
+            "workflow=internal_qa"
+          ]
+        },
+        {
+          "agent": "source_grounding_agent",
+          "status": "review",
+          "message": "Source grounding is weak",
+          "evidence": [
+            "grounding=0.57",
+            "missing_sources=S2"
+          ]
+        },
+        {
+          "agent": "hallucination_agent",
+          "status": "block",
+          "message": "Blocked claims found in output",
+          "evidence": [
+            "annual leave carries over automatically for all staff"
+          ]
+        },
+        {
+          "agent": "cost_agent",
+          "status": "pass",
+          "message": "Cost is within workflow threshold",
+          "evidence": [
+            "cost_usd=0.009650",
+            "score=1.00"
+          ]
+        },
+        {
+          "agent": "latency_agent",
+          "status": "pass",
+          "message": "Latency is within workflow threshold",
+          "evidence": [
+            "latency_ms=2310",
+            "score=0.88"
+          ]
+        },
+        {
+          "agent": "policy_agent",
+          "status": "block",
+          "message": "High-severity issue requires block",
+          "evidence": [
+            "forbidden_claims"
+          ]
+        }
+      ]
     },
     {
       "id": "marketing-recommendation-003",
@@ -287,7 +405,62 @@
         }
       ],
       "expected_decision": "ship",
-      "calibrated": true
+      "calibrated": true,
+      "agent_reviews": [
+        {
+          "agent": "reviewer_agent",
+          "status": "pass",
+          "message": "Human review state supports shipping",
+          "evidence": [
+            "decision=ship",
+            "human_review=approved",
+            "workflow=analytics_recommendation"
+          ]
+        },
+        {
+          "agent": "source_grounding_agent",
+          "status": "pass",
+          "message": "Source grounding is strong",
+          "evidence": [
+            "grounding=1.00",
+            "missing_sources=none"
+          ]
+        },
+        {
+          "agent": "hallucination_agent",
+          "status": "pass",
+          "message": "No blocked claims found",
+          "evidence": [
+            "forbidden_claims=0"
+          ]
+        },
+        {
+          "agent": "cost_agent",
+          "status": "pass",
+          "message": "Cost is within workflow threshold",
+          "evidence": [
+            "cost_usd=0.014400",
+            "score=0.89"
+          ]
+        },
+        {
+          "agent": "latency_agent",
+          "status": "review",
+          "message": "Latency is outside workflow threshold",
+          "evidence": [
+            "latency_ms=5100",
+            "score=0.21"
+          ]
+        },
+        {
+          "agent": "policy_agent",
+          "status": "pass",
+          "message": "No high-severity policy issues",
+          "evidence": [
+            "high_severity_issues=0"
+          ]
+        }
+      ]
     }
   ]
 }

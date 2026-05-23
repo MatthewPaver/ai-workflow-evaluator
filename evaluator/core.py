@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from typing import Any
 import re
 from difflib import SequenceMatcher
+from evaluator.agents import run_agent_reviews
 
 
 DEFAULT_WEIGHTS = {
@@ -230,7 +231,7 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
     else:
         decision = "ship"
 
-    return {
+    result = {
         "id": item["id"],
         "name": item["name"],
         "model": item.get("model", "unknown"),
@@ -278,6 +279,8 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
         "expected_decision": item.get("expected_decision"),
         "calibrated": item.get("expected_decision") in {None, decision},
     }
+    result["agent_reviews"] = run_agent_reviews(item, result)
+    return result
 
 
 def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
@@ -302,7 +305,15 @@ def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
         "scorers": {
             "version": scorer_version,
             "type": "deterministic",
-            "count": 6,
+            "count": 12,
+            "agents": [
+                "reviewer_agent",
+                "source_grounding_agent",
+                "hallucination_agent",
+                "cost_agent",
+                "latency_agent",
+                "policy_agent",
+            ],
         },
         "baseline": {
             "label": baseline.get("label", "Previous accepted run"),

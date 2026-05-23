@@ -76,6 +76,8 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual(len(report["results"]), 3)
         self.assertIn(report["results"][0]["decision"], {"ship", "review", "block"})
         self.assertIn("trace", report["results"][0])
+        self.assertEqual(len(report["results"][0]["agent_reviews"]), 6)
+        self.assertIn("source_grounding_agent", report["scorers"]["agents"])
 
     def test_portfolio_dataset_catches_overclaim(self) -> None:
         payload = json.loads(Path("examples/portfolio-workflows.json").read_text())
@@ -87,6 +89,7 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual(decisions["repo-recommender-overclaim"], "block")
         self.assertEqual(report["dataset"]["id"], "portfolio-copy-grounding")
         self.assertTrue(any(item["type"] == "forbidden_claim" for item in overclaim["trace"]["explanations"]))
+        self.assertTrue(any(item["agent"] == "policy_agent" for item in overclaim["agent_reviews"]))
 
 
 if __name__ == "__main__":

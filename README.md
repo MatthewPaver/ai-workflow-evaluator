@@ -153,6 +153,19 @@ flowchart LR
 | Cost | Estimated model cost from token counts |
 | Human review | Whether the output can ship, needs review, or should be blocked |
 
+## Specialist Review Agents
+
+Every evaluated item now includes six deterministic agent reviews:
+
+- `reviewer_agent` checks the human-review state against the final decision.
+- `source_grounding_agent` checks citations and required source coverage.
+- `hallucination_agent` checks blocked claims.
+- `cost_agent` checks token-cost thresholds.
+- `latency_agent` checks workflow timing.
+- `policy_agent` escalates high-severity issues.
+
+These are named review stages rather than autonomous chat agents, so the quality gate stays reproducible and easy to inspect.
+
 ## Limitations
 
 - This is a deterministic evaluation harness, not a replacement for expert review.
