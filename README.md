@@ -194,9 +194,9 @@ flowchart LR
 | Human review | Whether the output can ship, needs review, or should be blocked |
 | Routing | Whether to use a small model, stronger model, human review, context retrieval, compression, async queueing, or block/rewrite |
 
-## Specialist Review Agents
+## Specialist Review Stages
 
-Every evaluated item now includes six deterministic agent reviews:
+Every evaluated item includes 14 deterministic checks and 8 named review stages:
 
 - `reviewer_agent` checks the human-review state against the final decision.
 - `source_grounding_agent` checks citations and required source coverage.

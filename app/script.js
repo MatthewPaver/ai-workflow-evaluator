@@ -3,7 +3,21 @@ const fallbackReport = {
   generated_at: "2026-05-22T00:00:00+00:00",
   summary: { total: 0, average_score: 0, ship: 0, review: 0, block: 0 },
   dataset: { id: "pending", version: "v1", items: 0 },
-  scorers: { version: "pending", type: "deterministic", count: 6 },
+  scorers: {
+    version: "pending",
+    type: "deterministic",
+    count: 14,
+    agents: [
+      "reviewer_agent",
+      "source_grounding_agent",
+      "hallucination_agent",
+      "cost_agent",
+      "latency_agent",
+      "policy_agent",
+      "model_router_agent",
+      "multimodal_cost_agent"
+    ]
+  },
   ai_ops: { total_run_cost_usd: 0, projected_monthly_cost_usd: 0, multimodal_items: 0, routes: {} },
   baseline: { label: "Previous accepted run", average_score: 0, ship: 0, review: 0, block: 0, calibration: 0 },
   results: []
@@ -94,6 +108,11 @@ function setText(id, value) {
   if (element) element.textContent = value;
 }
 
+function reviewStageCount() {
+  const agents = report.scorers?.agents;
+  return Array.isArray(agents) ? agents.length : 8;
+}
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replaceAll("&", "&amp;")
@@ -146,7 +165,10 @@ function renderSummary() {
   setText("run-note", note.body);
   setText("baseline-label", baseline.label || "Previous accepted run");
   setText("dataset-version", `${report.dataset?.id || "dataset"} · ${report.dataset?.version || "v1"} · ${report.dataset?.items || summary.total} cases`);
-  setText("scorer-version", `${report.scorers?.version || "deterministic-v1"} · ${report.scorers?.count || 6} scorers`);
+  setText(
+    "scorer-version",
+    `${report.scorers?.version || "deterministic-v1"} · ${report.scorers?.count || 14} checks · ${reviewStageCount()} review stages`
+  );
   setDelta("score-delta", average - percent(baseline.average_score), " pts");
   setDelta("ship-delta", Number(summary.ship || 0) - Number(baseline.ship || 0));
   setDelta("block-delta", Number(summary.block || 0) - Number(baseline.block || 0), "", true);
