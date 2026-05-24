@@ -1,6 +1,6 @@
 # AI Workflow Evaluator
 
-AI Ops control layer for deciding whether AI work is accurate, grounded, affordable, fast enough, and safe enough to ship.
+AI Ops control layer for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review.
 
 [![Validate](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml)
 [![Demo](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml)
@@ -165,7 +165,7 @@ This is not an LLM-as-judge benchmark. It is a deterministic quality gate for wo
 
 The evaluator is accurate when the question is: did the output include required facts, cite or mention required sources, avoid known-bad claims, stay within latency/cost thresholds, and match the expected review decision?
 
-Each item can include an `expected_decision`. Reports include calibration metrics so you can see whether the evaluator's `ship`, `review`, and `block` outcomes match labelled expectations. The included suites currently calibrate against 7 labelled cases: 5 shippable examples and 2 blocked examples, including one deliberate portfolio overclaim.
+Each item can include an `expected_decision`. Reports include calibration metrics so you can see whether the evaluator's `ship`, `review`, and `block` outcomes match labelled expectations. The included suites currently calibrate against 11 labelled cases across workflow quality, portfolio grounding, and multimodal AI Ops checks.
 
 ## Architecture
 
