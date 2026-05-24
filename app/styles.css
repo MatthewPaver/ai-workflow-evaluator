@@ -498,13 +498,15 @@ h2 {
   line-height: 1.7;
 }
 
-.history-grid {
+.history-grid,
+.measured-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
 }
 
 .history-grid div,
+.measured-grid div,
 .version-list div {
   padding: 14px;
   background: rgba(0, 0, 0, 0.18);
@@ -513,6 +515,8 @@ h2 {
 
 .history-grid span,
 .history-grid small,
+.measured-grid span,
+.measured-grid small,
 .version-list dt {
   color: var(--dim);
   font-size: 0.68rem;
@@ -521,7 +525,8 @@ h2 {
   text-transform: uppercase;
 }
 
-.history-grid strong {
+.history-grid strong,
+.measured-grid strong {
   display: block;
   margin: 10px 0 8px;
   color: var(--ink-strong);
@@ -890,7 +895,8 @@ h2 {
 
   .registry-grid,
   .score-matrix,
-  .history-grid {
+  .history-grid,
+  .measured-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -922,6 +928,7 @@ h2 {
   .registry-grid,
   .score-matrix,
   .history-grid,
+  .measured-grid,
   .observability {
     grid-template-columns: 1fr;
   }

@@ -20,11 +20,15 @@ def main() -> None:
     args.out.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 
     summary = report["summary"]
+    measured = report["measurable_results"]
     print(
         f"{report['suite']}: {summary['total']} outputs, "
         f"average={summary['average_score']:.2f}, "
         f"ship={summary['ship']}, review={summary['review']}, block={summary['block']}, "
-        f"calibration={report['calibration']['accuracy']:.2f}"
+        f"calibration={report['calibration']['accuracy']:.2f}, "
+        f"score_delta={measured['score_delta_points']:+.1f}pts, "
+        f"calibration_delta={measured['calibration_delta_points']:+.1f}pts, "
+        f"monthly_cost=${measured['projected_monthly_cost_usd']:.2f}"
     )
 
 

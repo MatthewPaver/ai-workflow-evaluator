@@ -399,6 +399,69 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
     return result
 
 
+def decision_matrix(results: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
+    labels = ["ship", "review", "block"]
+    matrix = {expected: {actual: 0 for actual in labels} for expected in labels}
+    for item in results:
+        expected = item.get("expected_decision")
+        actual = item["decision"]
+        if expected in matrix and actual in matrix[expected]:
+            matrix[expected][actual] += 1
+    return matrix
+
+
+def measurable_results(
+    *,
+    results: list[dict[str, Any]],
+    decisions: dict[str, int],
+    avg_score: float,
+    calibration_accuracy: float,
+    baseline: dict[str, Any],
+    total_cost: float,
+    total_monthly_cost: float,
+    multimodal_items: int,
+    routes: dict[str, int],
+) -> dict[str, Any]:
+    total = len(results)
+    labelled_results = [item for item in results if item.get("expected_decision")]
+    matched_results = [item for item in labelled_results if item["calibrated"]]
+    blocked_expected = [item for item in labelled_results if item.get("expected_decision") == "block"]
+    blocked_caught = [item for item in blocked_expected if item["decision"] == "block"]
+    review_or_block = decisions["review"] + decisions["block"]
+    baseline_average = float(baseline.get("average_score", avg_score))
+    baseline_calibration = float(baseline.get("calibration", calibration_accuracy))
+    baseline_review = int(baseline.get("review", decisions["review"]))
+    baseline_block = int(baseline.get("block", decisions["block"]))
+    baseline_ship = int(baseline.get("ship", decisions["ship"]))
+
+    return {
+        "baseline_label": baseline.get("label", "Previous accepted run"),
+        "score_delta_points": round((avg_score - baseline_average) * 100, 1),
+        "calibration_delta_points": round((calibration_accuracy - baseline_calibration) * 100, 1),
+        "labelled_decision_accuracy": calibration_accuracy,
+        "labelled_matches": len(matched_results),
+        "labelled_total": len(labelled_results),
+        "incorrect_labelled_decisions": len(labelled_results) - len(matched_results),
+        "decision_mix": decisions,
+        "decision_delta": {
+            "ship": decisions["ship"] - baseline_ship,
+            "review": decisions["review"] - baseline_review,
+            "block": decisions["block"] - baseline_block,
+        },
+        "automation_rate": score_ratio(decisions["ship"], total),
+        "intervention_rate": score_ratio(review_or_block, total),
+        "blocked_expected_count": len(blocked_expected),
+        "blocked_expected_caught": len(blocked_caught),
+        "blocked_expected_catch_rate": score_ratio(len(blocked_caught), len(blocked_expected)),
+        "review_queue_delta": decisions["review"] - baseline_review,
+        "estimated_run_cost_usd": total_cost,
+        "projected_monthly_cost_usd": total_monthly_cost,
+        "multimodal_items": multimodal_items,
+        "route_count": routes,
+        "decision_matrix": decision_matrix(results),
+    }
+
+
 def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
     config = payload.get("config", {})
     results = [evaluate_item(item, config) for item in payload.get("items", [])]
@@ -421,6 +484,14 @@ def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
     dataset_id = config.get("dataset_id", normalise(payload.get("suite", "ai-workflow-evaluator")).replace(" ", "-"))
     scorer_version = config.get("scorer_version", DEFAULT_SCORER_VERSION)
     baseline = config.get("baseline", {})
+    baseline_report = {
+        "label": baseline.get("label", "Previous accepted run"),
+        "average_score": float(baseline.get("average_score", avg_score)),
+        "ship": int(baseline.get("ship", decisions["ship"])),
+        "review": int(baseline.get("review", decisions["review"])),
+        "block": int(baseline.get("block", decisions["block"])),
+        "calibration": float(baseline.get("calibration", calibration_accuracy)),
+    }
     return {
         "generated_at": payload.get("generated_at", datetime.now(timezone.utc).isoformat()),
         "suite": payload.get("suite", "AI Workflow Evaluator"),
@@ -444,14 +515,7 @@ def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
                 "multimodal_cost_agent",
             ],
         },
-        "baseline": {
-            "label": baseline.get("label", "Previous accepted run"),
-            "average_score": float(baseline.get("average_score", avg_score)),
-            "ship": int(baseline.get("ship", decisions["ship"])),
-            "review": int(baseline.get("review", decisions["review"])),
-            "block": int(baseline.get("block", decisions["block"])),
-            "calibration": float(baseline.get("calibration", calibration_accuracy)),
-        },
+        "baseline": baseline_report,
         "summary": {
             "total": len(results),
             "average_score": avg_score,
@@ -470,5 +534,16 @@ def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
             "matches": calibration_matches,
             "accuracy": calibration_accuracy,
         },
+        "measurable_results": measurable_results(
+            results=results,
+            decisions=decisions,
+            avg_score=avg_score,
+            calibration_accuracy=calibration_accuracy,
+            baseline=baseline_report,
+            total_cost=total_cost,
+            total_monthly_cost=total_monthly_cost,
+            multimodal_items=multimodal_items,
+            routes=routes,
+        ),
         "results": results,
     }

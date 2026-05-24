@@ -143,6 +143,7 @@ function renderSummary() {
   const labelled = Number(report.calibration?.labelled || 0);
   const matches = Number(report.calibration?.matches || 0);
   const baseline = report.baseline || fallbackReport.baseline;
+  const measured = report.measurable_results || {};
   const avgLatency = report.results.reduce((total, item) => total + item.observability.latency_ms, 0) / Math.max(report.results.length, 1);
   const avgCost = report.results.reduce((total, item) => total + item.observability.cost_usd, 0) / Math.max(report.results.length, 1);
   const monthlyCost = report.ai_ops?.projected_monthly_cost_usd || 0;
@@ -173,6 +174,14 @@ function renderSummary() {
   setDelta("ship-delta", Number(summary.ship || 0) - Number(baseline.ship || 0));
   setDelta("block-delta", Number(summary.block || 0) - Number(baseline.block || 0), "", true);
   setDelta("calibration-delta", percent(report.calibration?.accuracy) - percent(baseline.calibration), " pts");
+  setText("labelled-accuracy", `${percent(measured.labelled_decision_accuracy)}%`);
+  setText("labelled-detail", `${measured.labelled_matches ?? matches} / ${measured.labelled_total ?? labelled} matched`);
+  setText("automation-rate", `${percent(measured.automation_rate)}%`);
+  setText("intervention-rate", `${percent(measured.intervention_rate)}%`);
+  setText("block-catch-rate", `${percent(measured.blocked_expected_catch_rate)}%`);
+  setText("block-catch-detail", `${measured.blocked_expected_caught ?? 0} / ${measured.blocked_expected_count ?? 0} blocked cases`);
+  setText("measured-cost", formatMonthlyCost(measured.projected_monthly_cost_usd ?? monthlyCost));
+  setText("route-count", Object.keys(measured.route_count || report.ai_ops?.routes || {}).length);
   document.getElementById("health-meter")?.style.setProperty("--score", average);
 }
 

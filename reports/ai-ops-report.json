@@ -52,6 +52,57 @@
     "matches": 4,
     "accuracy": 1.0
   },
+  "measurable_results": {
+    "baseline_label": "Manual review spreadsheet",
+    "score_delta_points": 7.8,
+    "calibration_delta_points": 25.0,
+    "labelled_decision_accuracy": 1.0,
+    "labelled_matches": 4,
+    "labelled_total": 4,
+    "incorrect_labelled_decisions": 0,
+    "decision_mix": {
+      "ship": 2,
+      "review": 1,
+      "block": 1
+    },
+    "decision_delta": {
+      "ship": 1,
+      "review": -1,
+      "block": 0
+    },
+    "automation_rate": 0.5,
+    "intervention_rate": 0.5,
+    "blocked_expected_count": 1,
+    "blocked_expected_caught": 1,
+    "blocked_expected_catch_rate": 1.0,
+    "review_queue_delta": -1,
+    "estimated_run_cost_usd": 0.13966,
+    "projected_monthly_cost_usd": 75.8724,
+    "multimodal_items": 4,
+    "route_count": {
+      "block_or_rewrite": 1,
+      "compress_inputs_or_use_cheaper_model": 1,
+      "standard_model_review_gate": 1,
+      "strong_model_plus_human_review": 1
+    },
+    "decision_matrix": {
+      "ship": {
+        "ship": 2,
+        "review": 0,
+        "block": 0
+      },
+      "review": {
+        "ship": 0,
+        "review": 1,
+        "block": 0
+      },
+      "block": {
+        "ship": 0,
+        "review": 0,
+        "block": 1
+      }
+    }
+  },
   "results": [
     {
       "id": "screen-support-001",

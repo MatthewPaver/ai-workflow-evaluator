@@ -97,6 +97,20 @@ python -m evaluator.cli path/to/workflows.json --out reports/my-report.json
 
 Reports include dataset/scorer versions, baseline deltas, calibration, trace evidence, and the final `ship`, `review`, or `block` decision.
 
+## Measurable Results
+
+The evaluator now writes a `measurable_results` block into every report. That gives you numbers to inspect or quote instead of relying on a dashboard impression.
+
+Current checked suites:
+
+| Suite | Labelled accuracy | Score delta | Calibration delta | Decisions | Cost exposure |
+|:---|---:|---:|---:|:---|---:|
+| Workflow Quality | 100% (3/3) | +5.9 pts | +33.0 pts | 2 ship · 0 review · 1 block | $0.00/month |
+| Portfolio Grounding | 100% (4/4) | +14.0 pts | +25.0 pts | 3 ship · 0 review · 1 block | $0.00/month |
+| AI Ops Multimodal | 100% (4/4) | +7.8 pts | +25.0 pts | 2 ship · 1 review · 1 block | $75.87/month |
+
+The portfolio suite catches the deliberate recommender overclaim and blocks it. The AI Ops suite routes four multimodal workflows across standard review, human review, input compression, and block/rewrite paths.
+
 ## AI Ops Controls
 
 Each workflow can now declare:
