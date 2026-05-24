@@ -115,6 +115,8 @@ The evaluator reports:
 - route reason
 - deterministic review-agent findings
 
+The included prices are configurable demonstration rates, not a live provider billing feed. Replace them with the current rates from your chosen model provider before using the numbers for planning.
+
 Example routes include:
 
 | Route | Meaning |

@@ -261,17 +261,22 @@ function renderResults() {
 
   const visible = report.results.filter((item) => activeFilter === "all" || item.decision === activeFilter);
   grid.innerHTML = visible.map(renderCard).join("");
+  const emptyState = document.getElementById("empty-state");
+  if (emptyState) emptyState.hidden = visible.length > 0;
 }
 
 function bindFilters() {
   document.querySelectorAll(".filter").forEach((button) => {
     const isActive = button.dataset.filter === activeFilter;
     button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
 
     button.addEventListener("click", () => {
       activeFilter = button.dataset.filter;
       document.querySelectorAll(".filter").forEach((item) => item.classList.remove("is-active"));
+      document.querySelectorAll(".filter").forEach((item) => item.setAttribute("aria-pressed", "false"));
       button.classList.add("is-active");
+      button.setAttribute("aria-pressed", "true");
       updateUrlFilter();
       renderResults();
     });
@@ -282,11 +287,14 @@ function bindSuites() {
   document.querySelectorAll(".suite-button").forEach((button) => {
     const isActive = button.dataset.suite === activeSuite;
     button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
 
     button.addEventListener("click", () => {
       activeSuite = button.dataset.suite;
       document.querySelectorAll(".suite-button").forEach((item) => item.classList.remove("is-active"));
+      document.querySelectorAll(".suite-button").forEach((item) => item.setAttribute("aria-pressed", "false"));
       button.classList.add("is-active");
+      button.setAttribute("aria-pressed", "true");
       updateUrlFilter();
       loadReport();
     });

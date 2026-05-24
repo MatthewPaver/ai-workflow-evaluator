@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#0d0f0c">
     <meta
       name="description"
-      content="Evidence gate for AI-generated outputs with source grounding, blocked claims, baseline deltas, trace evidence, latency, cost, and human review decisions."
+      content="AI Ops control layer for AI workflows with source grounding, blocked claims, multimodal cost, latency, routing, and human review decisions."
     >
     <title>AI Workflow Evaluator</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0f0c'/%3E%3Cpath d='M13 38h10l5-20 8 30 6-12h9' fill='none' stroke='%23f8f3e7' stroke-width='5' stroke-linejoin='round'/%3E%3Ccircle cx='47' cy='16' r='5' fill='%23d9ff8c'/%3E%3C/svg%3E">
@@ -27,15 +27,15 @@
 
         <nav class="suite-nav" aria-label="Evaluation suites">
           <p class="nav-label">Suites</p>
-          <button class="suite-button is-active" type="button" data-suite="sample">
+          <button class="suite-button is-active" type="button" data-suite="sample" aria-pressed="true">
             <span>Workflow Quality</span>
             <small>LLM output gates</small>
           </button>
-          <button class="suite-button" type="button" data-suite="portfolio">
+          <button class="suite-button" type="button" data-suite="portfolio" aria-pressed="false">
             <span>Portfolio Grounding</span>
             <small>Repo summary claims</small>
           </button>
-          <button class="suite-button" type="button" data-suite="aiops">
+          <button class="suite-button" type="button" data-suite="aiops" aria-pressed="false">
             <span>AI Ops Control</span>
             <small>Multimodal cost gates</small>
           </button>
@@ -217,12 +217,13 @@
               <h2 id="board-title">Outputs, Scores, and Evidence</h2>
             </div>
             <div class="filters" role="group" aria-label="Filter decisions">
-              <button class="filter is-active" type="button" data-filter="all">All</button>
-              <button class="filter" type="button" data-filter="ship">Ship</button>
-              <button class="filter" type="button" data-filter="review">Review</button>
-              <button class="filter" type="button" data-filter="block">Block</button>
+              <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">All</button>
+              <button class="filter" type="button" data-filter="ship" aria-pressed="false">Ship</button>
+              <button class="filter" type="button" data-filter="review" aria-pressed="false">Review</button>
+              <button class="filter" type="button" data-filter="block" aria-pressed="false">Block</button>
             </div>
           </div>
+          <p class="empty-state" id="empty-state" hidden>No outputs match that decision filter.</p>
           <div class="run-list" id="result-grid" aria-live="polite"></div>
         </section>
       </main>

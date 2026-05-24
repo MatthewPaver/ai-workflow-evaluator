@@ -585,6 +585,15 @@ h2 {
   padding-top: 18px;
 }
 
+.empty-state {
+  margin: 18px 0 0;
+  padding: 18px;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px dashed var(--line-strong);
+  font-weight: 750;
+}
+
 .run-card {
   display: grid;
   grid-template-columns: 42px minmax(190px, 0.78fr) minmax(310px, 1.25fr) minmax(230px, 0.82fr);
