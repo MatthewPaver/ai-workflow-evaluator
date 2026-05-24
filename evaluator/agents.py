@@ -79,6 +79,36 @@ def policy_agent(result: dict[str, Any]) -> AgentReview:
     )
 
 
+def model_router_agent(result: dict[str, Any]) -> AgentReview:
+    route = result["observability"]["route"]
+    status = "review" if route in {"strong_model_plus_human_review", "retrieve_more_context"} else "pass"
+    if route == "block_or_rewrite":
+        status = "block"
+    return AgentReview(
+        "model_router_agent",
+        status,
+        "Routing recommendation is available for this workflow",
+        [f"route={route}", result["observability"]["route_reason"]],
+    )
+
+
+def multimodal_cost_agent(result: dict[str, Any]) -> AgentReview:
+    multimodal_cost = result["observability"]["multimodal_cost_usd"]
+    monthly_cost = result["observability"]["monthly_cost_usd"]
+    modalities = result["observability"].get("modalities", ["text"])
+    status = "review" if multimodal_cost > result["observability"]["token_cost_usd"] and monthly_cost > 25 else "pass"
+    return AgentReview(
+        "multimodal_cost_agent",
+        status,
+        "Multimodal spend is visible and within review bounds" if status == "pass" else "Multimodal spend should be reviewed before scale-up",
+        [
+            f"modalities={', '.join(modalities)}",
+            f"multimodal_cost_usd={multimodal_cost:.6f}",
+            f"monthly_cost_usd={monthly_cost:.4f}",
+        ],
+    )
+
+
 def run_agent_reviews(item: dict[str, Any], result: dict[str, Any]) -> list[dict[str, Any]]:
     reviews = [
         reviewer_agent(item, result),
@@ -87,5 +117,7 @@ def run_agent_reviews(item: dict[str, Any], result: dict[str, Any]) -> list[dict
         cost_agent(result),
         latency_agent(result),
         policy_agent(result),
+        model_router_agent(result),
+        multimodal_cost_agent(result),
     ]
     return [review.__dict__ for review in reviews]

@@ -24,6 +24,10 @@ DEFAULT_SCORER_VERSION = "deterministic-v1"
 class Pricing:
     input_per_1k: float
     output_per_1k: float
+    image_usd: float = 0.002
+    screenshot_usd: float = 0.002
+    pdf_page_usd: float = 0.0004
+    audio_minute_usd: float = 0.006
 
 
 def normalise(text: str) -> str:
@@ -72,6 +76,87 @@ def estimate_cost(tokens: dict[str, int], pricing: Pricing) -> float:
     output_tokens = int(tokens.get("output", 0))
     cost = (input_tokens / 1000) * pricing.input_per_1k + (output_tokens / 1000) * pricing.output_per_1k
     return round(cost, 6)
+
+
+def estimate_multimodal_cost(modalities: dict[str, Any], pricing: Pricing) -> float:
+    images = int(modalities.get("images", 0))
+    screenshots = int(modalities.get("screenshots", 0))
+    pdf_pages = int(modalities.get("pdf_pages", 0))
+    audio_minutes = float(modalities.get("audio_minutes", 0))
+    cost = (
+        images * pricing.image_usd
+        + screenshots * pricing.screenshot_usd
+        + pdf_pages * pricing.pdf_page_usd
+        + audio_minutes * pricing.audio_minute_usd
+    )
+    return round(cost, 6)
+
+
+def estimate_monthly_cost(per_run_cost: float, volume: dict[str, Any]) -> float:
+    monthly_runs = int(volume.get("monthly_runs", 0))
+    return round(per_run_cost * monthly_runs, 4)
+
+
+def modality_summary(modalities: dict[str, Any]) -> list[str]:
+    summary = []
+    if modalities.get("text", True):
+        summary.append("text")
+    for key, label in [
+        ("images", "images"),
+        ("screenshots", "screenshots"),
+        ("pdf_pages", "PDF pages"),
+        ("audio_minutes", "audio minutes"),
+    ]:
+        value = modalities.get(key, 0)
+        if value:
+            summary.append(f"{value} {label}")
+    return summary or ["text"]
+
+
+def recommend_route(
+    *,
+    decision: str,
+    risk_level: str,
+    grounding: float,
+    cost: float,
+    latency: float,
+    review_status: str,
+    has_multimodal_input: bool,
+) -> dict[str, str]:
+    if decision == "block":
+        return {
+            "route": "block_or_rewrite",
+            "reason": "Blocked claim, weak score, or policy issue means this should not reach users.",
+        }
+    if risk_level == "high" or review_status != "approved":
+        return {
+            "route": "strong_model_plus_human_review",
+            "reason": "High-risk or unapproved workflow needs stronger reasoning and explicit sign-off.",
+        }
+    if grounding < 0.75:
+        return {
+            "route": "retrieve_more_context",
+            "reason": "Evidence coverage is too weak for a confident answer.",
+        }
+    if has_multimodal_input and cost < 0.5:
+        return {
+            "route": "compress_inputs_or_use_cheaper_model",
+            "reason": "Multimodal inputs are driving spend above the workflow threshold.",
+        }
+    if latency < 0.5:
+        return {
+            "route": "async_queue_or_faster_model",
+            "reason": "Latency is too high for an interactive workflow.",
+        }
+    if risk_level == "low" and cost >= 0.75 and latency >= 0.75:
+        return {
+            "route": "small_model_auto_gate",
+            "reason": "Low-risk workflow is grounded, cheap, and fast enough for automated gating.",
+        }
+    return {
+        "route": "standard_model_review_gate",
+        "reason": "Workflow can run through the normal quality gate before shipping.",
+    }
 
 
 def score_latency(latency_ms: int, target_ms: int, max_ms: int) -> float:
@@ -157,6 +242,10 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
     pricing = Pricing(
         input_per_1k=float(pricing_data.get("input_per_1k", 0.005)),
         output_per_1k=float(pricing_data.get("output_per_1k", 0.015)),
+        image_usd=float(pricing_data.get("image_usd", 0.002)),
+        screenshot_usd=float(pricing_data.get("screenshot_usd", 0.002)),
+        pdf_page_usd=float(pricing_data.get("pdf_page_usd", 0.0004)),
+        audio_minute_usd=float(pricing_data.get("audio_minute_usd", 0.006)),
     )
     thresholds = item.get("thresholds", config.get("thresholds", {}))
     target_latency = int(thresholds.get("target_latency_ms", 1800))
@@ -195,7 +284,10 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
 
     latency_ms = int(item.get("latency_ms", 0))
     latency = score_latency(latency_ms, target_latency, max_latency)
-    cost_usd = estimate_cost(item.get("tokens", {}), pricing)
+    modalities = item.get("modalities", {"text": True})
+    token_cost_usd = estimate_cost(item.get("tokens", {}), pricing)
+    multimodal_cost_usd = estimate_multimodal_cost(modalities, pricing)
+    cost_usd = round(token_cost_usd + multimodal_cost_usd, 6)
     cost = score_cost(cost_usd, target_cost, max_cost)
 
     review_status = item.get("human_review", {}).get("status", "not_reviewed")
@@ -231,6 +323,20 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
     else:
         decision = "ship"
 
+    volume = item.get("volume", {})
+    monthly_cost_usd = estimate_monthly_cost(cost_usd, volume)
+    has_multimodal_input = any(float(modalities.get(key, 0)) > 0 for key in ["images", "screenshots", "pdf_pages", "audio_minutes"])
+    risk_level = item.get("risk_level", "medium")
+    route = recommend_route(
+        decision=decision,
+        risk_level=risk_level,
+        grounding=grounding,
+        cost=cost,
+        latency=latency,
+        review_status=review_status,
+        has_multimodal_input=has_multimodal_input,
+    )
+
     result = {
         "id": item["id"],
         "name": item["name"],
@@ -249,9 +355,17 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
         "observability": {
             "latency_ms": latency_ms,
             "cost_usd": cost_usd,
+            "token_cost_usd": token_cost_usd,
+            "multimodal_cost_usd": multimodal_cost_usd,
+            "monthly_cost_usd": monthly_cost_usd,
             "input_tokens": int(item.get("tokens", {}).get("input", 0)),
             "output_tokens": int(item.get("tokens", {}).get("output", 0)),
             "review_status": review_status,
+            "risk_level": risk_level,
+            "monthly_runs": int(volume.get("monthly_runs", 0)),
+            "modalities": modality_summary(modalities),
+            "route": route["route"],
+            "route_reason": route["reason"],
         },
         "evidence": {
             "matched_facts": fact_hits,
@@ -266,6 +380,8 @@ def evaluate_item(item: dict[str, Any], config: dict[str, Any] | None = None) ->
             "forbidden_claims": forbidden_claims,
             "required_sources": required_sources,
             "source_titles": [f"{source.get('id', '')}: {source.get('title', '')}".strip() for source in sources],
+            "modalities": modality_summary(modalities),
+            "route": route,
             "explanations": issue_explanations(
                 output=output,
                 missing_facts=missing_facts,
@@ -288,6 +404,17 @@ def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
     results = [evaluate_item(item, config) for item in payload.get("items", [])]
     decisions = {name: sum(1 for item in results if item["decision"] == name) for name in ["ship", "review", "block"]}
     avg_score = round(sum(item["overall_score"] for item in results) / max(len(results), 1), 4)
+    total_cost = round(sum(item["observability"]["cost_usd"] for item in results), 6)
+    total_monthly_cost = round(sum(item["observability"]["monthly_cost_usd"] for item in results), 4)
+    multimodal_items = sum(
+        1
+        for item in results
+        if any(label != "text" for label in item["observability"].get("modalities", []))
+    )
+    routes = {
+        route: sum(1 for item in results if item["observability"].get("route") == route)
+        for route in sorted({item["observability"].get("route") for item in results})
+    }
     calibrated_results = [item for item in results if item.get("expected_decision")]
     calibration_matches = sum(1 for item in calibrated_results if item["calibrated"])
     calibration_accuracy = score_ratio(calibration_matches, len(calibrated_results))
@@ -305,7 +432,7 @@ def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
         "scorers": {
             "version": scorer_version,
             "type": "deterministic",
-            "count": 12,
+            "count": 14,
             "agents": [
                 "reviewer_agent",
                 "source_grounding_agent",
@@ -313,6 +440,8 @@ def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
                 "cost_agent",
                 "latency_agent",
                 "policy_agent",
+                "model_router_agent",
+                "multimodal_cost_agent",
             ],
         },
         "baseline": {
@@ -329,6 +458,12 @@ def evaluate_dataset(payload: dict[str, Any]) -> dict[str, Any]:
             "ship": decisions["ship"],
             "review": decisions["review"],
             "block": decisions["block"],
+        },
+        "ai_ops": {
+            "total_run_cost_usd": total_cost,
+            "projected_monthly_cost_usd": total_monthly_cost,
+            "multimodal_items": multimodal_items,
+            "routes": routes,
         },
         "calibration": {
             "labelled": len(calibrated_results),

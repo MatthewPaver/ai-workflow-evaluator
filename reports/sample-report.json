@@ -9,14 +9,16 @@
   "scorers": {
     "version": "deterministic-v1",
     "type": "deterministic",
-    "count": 12,
+    "count": 14,
     "agents": [
       "reviewer_agent",
       "source_grounding_agent",
       "hallucination_agent",
       "cost_agent",
       "latency_agent",
-      "policy_agent"
+      "policy_agent",
+      "model_router_agent",
+      "multimodal_cost_agent"
     ]
   },
   "baseline": {
@@ -33,6 +35,16 @@
     "ship": 2,
     "review": 0,
     "block": 1
+  },
+  "ai_ops": {
+    "total_run_cost_usd": 0.03135,
+    "projected_monthly_cost_usd": 0.0,
+    "multimodal_items": 0,
+    "routes": {
+      "async_queue_or_faster_model": 1,
+      "block_or_rewrite": 1,
+      "standard_model_review_gate": 1
+    }
   },
   "calibration": {
     "labelled": 3,
@@ -58,9 +70,19 @@
       "observability": {
         "latency_ms": 1420,
         "cost_usd": 0.0073,
+        "token_cost_usd": 0.0073,
+        "multimodal_cost_usd": 0.0,
+        "monthly_cost_usd": 0.0,
         "input_tokens": 920,
         "output_tokens": 180,
-        "review_status": "approved"
+        "review_status": "approved",
+        "risk_level": "medium",
+        "monthly_runs": 0,
+        "modalities": [
+          "text"
+        ],
+        "route": "standard_model_review_gate",
+        "route_reason": "Workflow can run through the normal quality gate before shipping."
       },
       "evidence": {
         "matched_facts": [
@@ -99,6 +121,13 @@
           "S1: Model update notes",
           "S2: Rollout status"
         ],
+        "modalities": [
+          "text"
+        ],
+        "route": {
+          "route": "standard_model_review_gate",
+          "reason": "Workflow can run through the normal quality gate before shipping."
+        },
         "explanations": [
           {
             "type": "passed",
@@ -164,6 +193,25 @@
           "evidence": [
             "high_severity_issues=0"
           ]
+        },
+        {
+          "agent": "model_router_agent",
+          "status": "pass",
+          "message": "Routing recommendation is available for this workflow",
+          "evidence": [
+            "route=standard_model_review_gate",
+            "Workflow can run through the normal quality gate before shipping."
+          ]
+        },
+        {
+          "agent": "multimodal_cost_agent",
+          "status": "pass",
+          "message": "Multimodal spend is visible and within review bounds",
+          "evidence": [
+            "modalities=text",
+            "multimodal_cost_usd=0.000000",
+            "monthly_cost_usd=0.0000"
+          ]
         }
       ]
     },
@@ -185,9 +233,19 @@
       "observability": {
         "latency_ms": 2310,
         "cost_usd": 0.00965,
+        "token_cost_usd": 0.00965,
+        "multimodal_cost_usd": 0.0,
+        "monthly_cost_usd": 0.0,
         "input_tokens": 1300,
         "output_tokens": 210,
-        "review_status": "review_required"
+        "review_status": "review_required",
+        "risk_level": "medium",
+        "monthly_runs": 0,
+        "modalities": [
+          "text"
+        ],
+        "route": "block_or_rewrite",
+        "route_reason": "Blocked claim, weak score, or policy issue means this should not reach users."
       },
       "evidence": {
         "matched_facts": [
@@ -227,6 +285,13 @@
           "S1: Access policy",
           "S2: Exception handling"
         ],
+        "modalities": [
+          "text"
+        ],
+        "route": {
+          "route": "block_or_rewrite",
+          "reason": "Blocked claim, weak score, or policy issue means this should not reach users."
+        },
         "explanations": [
           {
             "type": "missing_fact",
@@ -327,6 +392,25 @@
           "evidence": [
             "forbidden_claims"
           ]
+        },
+        {
+          "agent": "model_router_agent",
+          "status": "block",
+          "message": "Routing recommendation is available for this workflow",
+          "evidence": [
+            "route=block_or_rewrite",
+            "Blocked claim, weak score, or policy issue means this should not reach users."
+          ]
+        },
+        {
+          "agent": "multimodal_cost_agent",
+          "status": "pass",
+          "message": "Multimodal spend is visible and within review bounds",
+          "evidence": [
+            "modalities=text",
+            "multimodal_cost_usd=0.000000",
+            "monthly_cost_usd=0.0000"
+          ]
         }
       ]
     },
@@ -348,9 +432,19 @@
       "observability": {
         "latency_ms": 5100,
         "cost_usd": 0.0144,
+        "token_cost_usd": 0.0144,
+        "multimodal_cost_usd": 0.0,
+        "monthly_cost_usd": 0.0,
         "input_tokens": 2100,
         "output_tokens": 260,
-        "review_status": "approved"
+        "review_status": "approved",
+        "risk_level": "medium",
+        "monthly_runs": 0,
+        "modalities": [
+          "text"
+        ],
+        "route": "async_queue_or_faster_model",
+        "route_reason": "Latency is too high for an interactive workflow."
       },
       "evidence": {
         "matched_facts": [
@@ -386,6 +480,13 @@
         "source_titles": [
           "S1: Marketing lakehouse dashboard"
         ],
+        "modalities": [
+          "text"
+        ],
+        "route": {
+          "route": "async_queue_or_faster_model",
+          "reason": "Latency is too high for an interactive workflow."
+        },
         "explanations": [
           {
             "type": "passed",
@@ -458,6 +559,25 @@
           "message": "No high-severity policy issues",
           "evidence": [
             "high_severity_issues=0"
+          ]
+        },
+        {
+          "agent": "model_router_agent",
+          "status": "pass",
+          "message": "Routing recommendation is available for this workflow",
+          "evidence": [
+            "route=async_queue_or_faster_model",
+            "Latency is too high for an interactive workflow."
+          ]
+        },
+        {
+          "agent": "multimodal_cost_agent",
+          "status": "pass",
+          "message": "Multimodal spend is visible and within review bounds",
+          "evidence": [
+            "modalities=text",
+            "multimodal_cost_usd=0.000000",
+            "monthly_cost_usd=0.0000"
           ]
         }
       ]

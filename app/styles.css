@@ -256,6 +256,15 @@ button {
   min-width: 0;
 }
 
+.main-panel > *,
+.process-strip article,
+.score-card,
+.decision-grid article,
+.registry-grid div,
+.run-card > * {
+  min-width: 0;
+}
+
 .run-header,
 .panel,
 .score-card,
@@ -379,7 +388,7 @@ h2 {
 
 .scoreboard {
   display: grid;
-  grid-template-columns: 1.25fr repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 12px;
 }
 
@@ -387,14 +396,17 @@ h2 {
   display: grid;
   align-content: space-between;
   min-height: 150px;
+  overflow: hidden;
   padding: 18px;
 }
 
 .score-card strong {
+  max-width: 100%;
   color: var(--ink-strong);
-  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-size: clamp(1.45rem, 3vw, 3.1rem);
   line-height: 1;
   font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 
 .hero-score strong {
@@ -460,7 +472,7 @@ h2 {
 
 .registry-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
 }
 

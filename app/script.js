@@ -4,6 +4,7 @@ const fallbackReport = {
   summary: { total: 0, average_score: 0, ship: 0, review: 0, block: 0 },
   dataset: { id: "pending", version: "v1", items: 0 },
   scorers: { version: "pending", type: "deterministic", count: 6 },
+  ai_ops: { total_run_cost_usd: 0, projected_monthly_cost_usd: 0, multimodal_items: 0, routes: {} },
   baseline: { label: "Previous accepted run", average_score: 0, ship: 0, review: 0, block: 0, calibration: 0 },
   results: []
 };
@@ -25,7 +26,8 @@ const decisionCopy = {
 
 const reportSources = {
   sample: "../reports/sample-report.json",
-  portfolio: "../reports/portfolio-report.json"
+  portfolio: "../reports/portfolio-report.json",
+  aiops: "../reports/ai-ops-report.json"
 };
 
 const suiteNotes = {
@@ -38,6 +40,11 @@ const suiteNotes = {
     title: "Portfolio claim grounding",
     body:
       "This suite tests whether generated repo summaries stay faithful to the README evidence and blocks inflated claims such as describing an offline recommender as production software."
+  },
+  aiops: {
+    title: "AI Ops control layer",
+    body:
+      "This suite models the company problem: text, screenshots, PDFs, images, and audio need quality checks, cost controls, latency thresholds, routing rules, and human sign-off before scale."
   }
 };
 
@@ -59,6 +66,15 @@ function formatCost(value) {
     currency: "USD",
     minimumFractionDigits: 4,
     maximumFractionDigits: 4
+  }).format(Number(value || 0));
+}
+
+function formatMonthlyCost(value) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
   }).format(Number(value || 0));
 }
 
@@ -110,6 +126,7 @@ function renderSummary() {
   const baseline = report.baseline || fallbackReport.baseline;
   const avgLatency = report.results.reduce((total, item) => total + item.observability.latency_ms, 0) / Math.max(report.results.length, 1);
   const avgCost = report.results.reduce((total, item) => total + item.observability.cost_usd, 0) / Math.max(report.results.length, 1);
+  const monthlyCost = report.ai_ops?.projected_monthly_cost_usd || 0;
   const note = suiteNotes[activeSuite] || suiteNotes.sample;
 
   setText("suite-name", report.suite);
@@ -124,6 +141,7 @@ function renderSummary() {
   setText("calibration-detail", `${matches} / ${labelled} expected decisions`);
   setText("avg-latency", `${Math.round(avgLatency)}ms`);
   setText("avg-cost", formatCost(avgCost));
+  setText("monthly-cost", formatMonthlyCost(monthlyCost));
   setText("run-note-title", note.title);
   setText("run-note", note.body);
   setText("baseline-label", baseline.label || "Previous accepted run");
@@ -192,6 +210,8 @@ function renderScores(item) {
 }
 
 function renderCard(item, index) {
+  const route = item.observability.route || "standard_model_review_gate";
+  const modalities = item.observability.modalities || ["text"];
   return `
     <article class="run-card" data-decision="${item.decision}">
       <div class="run-index">${String(index + 1).padStart(2, "0")}</div>
@@ -205,7 +225,10 @@ function renderCard(item, index) {
         <div class="observability" aria-label="Observability">
           <div><span>Latency</span><strong>${item.observability.latency_ms}ms</strong></div>
           <div><span>Cost</span><strong>${formatCost(item.observability.cost_usd)}</strong></div>
+          <div><span>Monthly</span><strong>${formatMonthlyCost(item.observability.monthly_cost_usd)}</strong></div>
           <div><span>Review</span><strong>${titleCase(item.observability.review_status)}</strong></div>
+          <div><span>Inputs</span><strong>${escapeHtml(modalities.join(", "))}</strong></div>
+          <div><span>Route</span><strong>${escapeHtml(titleCase(route))}</strong></div>
         </div>
         <div class="evidence">
           <span class="evidence-title">Evidence Notes</span>

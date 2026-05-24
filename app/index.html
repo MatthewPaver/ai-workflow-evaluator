@@ -35,6 +35,10 @@
             <span>Portfolio Grounding</span>
             <small>Repo summary claims</small>
           </button>
+          <button class="suite-button" type="button" data-suite="aiops">
+            <span>AI Ops Control</span>
+            <small>Multimodal cost gates</small>
+          </button>
         </nav>
 
         <section class="sidebar-panel" aria-labelledby="scope-title">
@@ -54,8 +58,8 @@
             <p class="eyebrow">Evaluation Run</p>
             <h1 id="suite-name">Loading…</h1>
             <p class="run-intro">
-              Check an AI output against source evidence, required facts, blocked claims,
-              runtime thresholds, and human review status before it reaches a customer.
+              Check an AI workflow against source evidence, blocked claims, token and multimodal
+              cost, runtime thresholds, model-routing rules, and human review status.
             </p>
           </div>
           <div class="run-meta" aria-label="Run metadata">
@@ -67,8 +71,8 @@
         <section class="process-strip" aria-label="Evaluation workflow">
           <article>
             <span>01</span>
-            <strong>AI Output</strong>
-            <p>Summary, answer, recommendation, or generated portfolio copy.</p>
+            <strong>Workflow Input</strong>
+            <p>Text, PDF pages, screenshots, images, audio, or generated portfolio copy.</p>
           </article>
           <article>
             <span>02</span>
@@ -82,8 +86,8 @@
           </article>
           <article>
             <span>04</span>
-            <strong>Decision</strong>
-            <p>Ship, review, or block with visible reasons for the call.</p>
+            <strong>Decision & Route</strong>
+            <p>Ship, review, block, compress input, switch model, or ask for sign-off.</p>
           </article>
         </section>
 
@@ -106,7 +110,12 @@
           <article class="score-card">
             <span>Avg Cost</span>
             <strong id="avg-cost">$0.0000</strong>
-            <small>estimated token spend</small>
+            <small>token + multimodal spend</small>
+          </article>
+          <article class="score-card">
+            <span>Monthly Cost</span>
+            <strong id="monthly-cost">$0.00</strong>
+            <small>projected from declared volume</small>
           </article>
         </section>
 
@@ -183,8 +192,9 @@
               <div><strong>Grounding</strong><span>Source IDs and source terms</span></div>
               <div><strong>Hallucination</strong><span>Known-bad claims absent</span></div>
               <div><strong>Latency</strong><span>Target and max thresholds</span></div>
-              <div><strong>Cost</strong><span>Token spend estimate</span></div>
+              <div><strong>Cost</strong><span>Token and multimodal spend</span></div>
               <div><strong>Review</strong><span>Human approval state</span></div>
+              <div><strong>Routing</strong><span>Model or review path</span></div>
             </div>
           </article>
 

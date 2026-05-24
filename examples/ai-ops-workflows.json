@@ -1,0 +1,223 @@
+{
+  "suite": "AI Ops multimodal cost and quality suite",
+  "generated_at": "2026-05-24T00:00:00+00:00",
+  "config": {
+    "dataset_id": "ai-ops-multimodal-cost-quality",
+    "dataset_version": "v1",
+    "scorer_version": "deterministic-v2-ai-ops",
+    "baseline": {
+      "label": "Manual review spreadsheet",
+      "average_score": 0.71,
+      "ship": 1,
+      "review": 2,
+      "block": 1,
+      "calibration": 0.75
+    },
+    "pricing": {
+      "input_per_1k": 0.003,
+      "output_per_1k": 0.012,
+      "image_usd": 0.002,
+      "screenshot_usd": 0.002,
+      "pdf_page_usd": 0.0004,
+      "audio_minute_usd": 0.006
+    },
+    "thresholds": {
+      "target_latency_ms": 2200,
+      "max_latency_ms": 7000,
+      "target_cost_usd": 0.015,
+      "max_cost_usd": 0.08,
+      "pass_score": 0.78,
+      "block_score": 0.45
+    }
+  },
+  "items": [
+    {
+      "id": "screen-support-001",
+      "name": "Screenshot to support-ticket summary",
+      "workflow": "support_ticket_triage",
+      "model": "gpt-4.1-mini",
+      "risk_level": "medium",
+      "output": "Source S1 shows checkout failed after payment authorisation. Source S2 says the user has one pending order and support should retry fulfilment before refunding.",
+      "expected_facts": [
+        "checkout failed after payment authorisation",
+        "one pending order",
+        "retry fulfilment before refunding"
+      ],
+      "forbidden_claims": [
+        "refund has already been issued",
+        "payment was declined"
+      ],
+      "required_sources": ["S1", "S2"],
+      "source_terms": ["payment authorisation", "pending order", "retry fulfilment"],
+      "sources": [
+        {
+          "id": "S1",
+          "title": "Checkout screenshot OCR",
+          "text": "Checkout failed after payment authorisation. Error code FULFILMENT_PENDING."
+        },
+        {
+          "id": "S2",
+          "title": "Order system snapshot",
+          "text": "The customer has one pending order. Support should retry fulfilment before refunding."
+        }
+      ],
+      "modalities": {
+        "text": true,
+        "screenshots": 2
+      },
+      "tokens": {
+        "input": 1600,
+        "output": 220
+      },
+      "volume": {
+        "monthly_runs": 1800
+      },
+      "latency_ms": 1900,
+      "expected_decision": "ship",
+      "human_review": {
+        "status": "approved"
+      }
+    },
+    {
+      "id": "pdf-policy-002",
+      "name": "PDF policy answer",
+      "workflow": "policy_question_answering",
+      "model": "gpt-4.1",
+      "risk_level": "high",
+      "output": "Source P1 says contractors must complete security training before access. It does not confirm exceptions, so this should go to the policy owner for review.",
+      "expected_facts": [
+        "contractors must complete security training",
+        "before access",
+        "go to the policy owner for review"
+      ],
+      "forbidden_claims": [
+        "exceptions are automatically approved",
+        "security training is optional"
+      ],
+      "required_sources": ["P1", "P2"],
+      "source_terms": ["security training", "policy owner", "exceptions"],
+      "sources": [
+        {
+          "id": "P1",
+          "title": "Access policy PDF",
+          "text": "Contractors must complete security training before access."
+        },
+        {
+          "id": "P2",
+          "title": "Exceptions procedure",
+          "text": "The policy owner reviews exceptions before access is granted."
+        }
+      ],
+      "modalities": {
+        "text": true,
+        "pdf_pages": 18
+      },
+      "tokens": {
+        "input": 6200,
+        "output": 260
+      },
+      "volume": {
+        "monthly_runs": 350
+      },
+      "latency_ms": 4200,
+      "expected_decision": "review",
+      "human_review": {
+        "status": "review_required"
+      }
+    },
+    {
+      "id": "meeting-audio-003",
+      "name": "Audio transcript to action list",
+      "workflow": "meeting_actions",
+      "model": "gpt-4.1-mini",
+      "risk_level": "low",
+      "output": "Source A1 says Sam owns the data export by Friday. Source A2 says the dashboard refresh stays weekly. The action list should keep reporting weekly.",
+      "expected_facts": [
+        "Sam owns the data export by Friday",
+        "dashboard refresh stays weekly",
+        "keep reporting weekly"
+      ],
+      "forbidden_claims": [
+        "new daily report is required",
+        "Alex owns the data export"
+      ],
+      "required_sources": ["A1", "A2"],
+      "source_terms": ["data export", "Friday", "weekly"],
+      "sources": [
+        {
+          "id": "A1",
+          "title": "Transcript segment",
+          "text": "Sam owns the data export by Friday."
+        },
+        {
+          "id": "A2",
+          "title": "Meeting notes",
+          "text": "The dashboard refresh remains weekly. There is no daily reporting commitment."
+        }
+      ],
+      "modalities": {
+        "text": true,
+        "audio_minutes": 12
+      },
+      "tokens": {
+        "input": 3400,
+        "output": 210
+      },
+      "volume": {
+        "monthly_runs": 120
+      },
+      "latency_ms": 2600,
+      "expected_decision": "ship",
+      "human_review": {
+        "status": "approved"
+      }
+    },
+    {
+      "id": "product-image-004",
+      "name": "Product image listing draft",
+      "workflow": "product_listing_generation",
+      "model": "gpt-4.1-mini",
+      "risk_level": "medium",
+      "output": "Source I1 shows a black insulated bottle. The draft claims it is dishwasher safe and keeps drinks cold for 48 hours.",
+      "expected_facts": [
+        "black insulated bottle",
+        "material is stainless steel",
+        "capacity is 750ml"
+      ],
+      "forbidden_claims": [
+        "dishwasher safe",
+        "keeps drinks cold for 48 hours"
+      ],
+      "required_sources": ["I1", "I2"],
+      "source_terms": ["black insulated bottle", "stainless steel", "750ml"],
+      "sources": [
+        {
+          "id": "I1",
+          "title": "Product image labels",
+          "text": "The image shows a black insulated bottle."
+        },
+        {
+          "id": "I2",
+          "title": "Product data row",
+          "text": "Material is stainless steel. Capacity is 750ml. No dishwasher claim is approved."
+        }
+      ],
+      "modalities": {
+        "text": true,
+        "images": 3
+      },
+      "tokens": {
+        "input": 2100,
+        "output": 190
+      },
+      "volume": {
+        "monthly_runs": 2400
+      },
+      "latency_ms": 3100,
+      "expected_decision": "block",
+      "human_review": {
+        "status": "review_required"
+      }
+    }
+  ]
+}

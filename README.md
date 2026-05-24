@@ -1,6 +1,6 @@
 # AI Workflow Evaluator
 
-Evidence gates for AI-generated outputs before they reach users.
+AI Ops control layer for deciding whether AI work is accurate, grounded, affordable, fast enough, and safe enough to ship.
 
 [![Validate](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml)
 [![Demo](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml)
@@ -11,9 +11,9 @@ Evidence gates for AI-generated outputs before they reach users.
 
 ## What It Solves
 
-LLM demos often stop at a good-looking answer. Real workflows need a clearer decision: can this output ship, does it need review, or should it be blocked?
+LLM demos often stop at a good-looking answer. Real workflows need a clearer decision: can this output ship, does it need review, should it be blocked, or should it be routed to a cheaper/faster/stronger model path?
 
-This project checks whether an AI-generated summary, answer, recommendation, or repo description is accurate, grounded in supplied sources, cheap enough to run, fast enough for the workflow, and ready for human approval.
+This project checks whether an AI-generated summary, answer, recommendation, repo description, screenshot summary, PDF answer, product-listing draft, or audio-transcript action list is accurate, grounded in supplied sources, cheap enough to run, fast enough for the workflow, and ready for human approval.
 
 It is intentionally deterministic. No paid API key is required to run the evaluator.
 
@@ -23,6 +23,7 @@ Good fits:
 - Support or operations summaries checked against source notes.
 - Product copy drafts checked against approved claims.
 - Internal assistant answers checked before a human signs them off.
+- Multimodal workflows where screenshots, PDFs, images, or audio change the cost and review path.
 
 Poor fits:
 
@@ -96,6 +97,36 @@ python -m evaluator.cli path/to/workflows.json --out reports/my-report.json
 
 Reports include dataset/scorer versions, baseline deltas, calibration, trace evidence, and the final `ship`, `review`, or `block` decision.
 
+## AI Ops Controls
+
+Each workflow can now declare:
+
+- input modalities: text, screenshots, images, PDF pages, and audio minutes
+- token usage and per-modality pricing
+- monthly run volume for spend projection
+- risk level for routing decisions
+- latency and cost thresholds
+
+The evaluator reports:
+
+- token cost and multimodal cost per run
+- projected monthly cost
+- model-routing recommendation
+- route reason
+- deterministic review-agent findings
+
+Example routes include:
+
+| Route | Meaning |
+|:---|:---|
+| `small_model_auto_gate` | Low-risk, grounded, cheap, and fast enough for automated gating. |
+| `standard_model_review_gate` | Normal quality gate before shipping. |
+| `strong_model_plus_human_review` | High-risk or unapproved workflow needs stronger reasoning and sign-off. |
+| `retrieve_more_context` | Evidence coverage is too weak. |
+| `compress_inputs_or_use_cheaper_model` | Multimodal spend is too high for the threshold. |
+| `async_queue_or_faster_model` | Latency is too high for an interactive workflow. |
+| `block_or_rewrite` | Policy, overclaim, or quality issue means the output should not ship. |
+
 ## Tests
 
 ```bash
@@ -118,6 +149,13 @@ The portfolio grounding file at `examples/portfolio-workflows.json` applies the 
 - Sentence Similarity Analysis
 
 That suite is designed to catch inflated portfolio claims, for example describing an offline recommender exercise as a deployed production recommender.
+
+The AI Ops file at `examples/ai-ops-workflows.json` adds four multimodal workflow checks:
+
+- screenshot to support-ticket summary
+- PDF policy answer
+- audio transcript to action list
+- product image listing draft
 
 ## Accuracy Model
 
@@ -150,8 +188,9 @@ flowchart LR
 | Hallucination risk | Forbidden or unsupported claims |
 | Source grounding | Required source citations and source terms |
 | Latency | Whether response time meets workflow limits |
-| Cost | Estimated model cost from token counts |
+| Cost | Estimated token and multimodal cost |
 | Human review | Whether the output can ship, needs review, or should be blocked |
+| Routing | Whether to use a small model, stronger model, human review, context retrieval, compression, async queueing, or block/rewrite |
 
 ## Specialist Review Agents
 
@@ -163,6 +202,8 @@ Every evaluated item now includes six deterministic agent reviews:
 - `cost_agent` checks token-cost thresholds.
 - `latency_agent` checks workflow timing.
 - `policy_agent` escalates high-severity issues.
+- `model_router_agent` recommends the operating path for the workflow.
+- `multimodal_cost_agent` checks whether multimodal spend needs review before scale-up.
 
 These are named review stages rather than autonomous chat agents, so the quality gate stays reproducible and easy to inspect.
 

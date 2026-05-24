@@ -76,8 +76,9 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual(len(report["results"]), 3)
         self.assertIn(report["results"][0]["decision"], {"ship", "review", "block"})
         self.assertIn("trace", report["results"][0])
-        self.assertEqual(len(report["results"][0]["agent_reviews"]), 6)
+        self.assertEqual(len(report["results"][0]["agent_reviews"]), 8)
         self.assertIn("source_grounding_agent", report["scorers"]["agents"])
+        self.assertIn("model_router_agent", report["scorers"]["agents"])
 
     def test_portfolio_dataset_catches_overclaim(self) -> None:
         payload = json.loads(Path("examples/portfolio-workflows.json").read_text())
@@ -90,6 +91,23 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual(report["dataset"]["id"], "portfolio-copy-grounding")
         self.assertTrue(any(item["type"] == "forbidden_claim" for item in overclaim["trace"]["explanations"]))
         self.assertTrue(any(item["agent"] == "policy_agent" for item in overclaim["agent_reviews"]))
+
+    def test_ai_ops_dataset_tracks_multimodal_cost_and_routing(self) -> None:
+        payload = json.loads(Path("examples/ai-ops-workflows.json").read_text())
+        report = evaluate_dataset(payload)
+        decisions = {item["id"]: item["decision"] for item in report["results"]}
+        screenshot_item = next(item for item in report["results"] if item["id"] == "screen-support-001")
+        blocked_item = next(item for item in report["results"] if item["id"] == "product-image-004")
+
+        self.assertEqual(report["summary"]["total"], 4)
+        self.assertEqual(report["dataset"]["id"], "ai-ops-multimodal-cost-quality")
+        self.assertEqual(report["ai_ops"]["multimodal_items"], 4)
+        self.assertGreater(report["ai_ops"]["projected_monthly_cost_usd"], 0)
+        self.assertEqual(decisions["product-image-004"], "block")
+        self.assertIn("screenshots", " ".join(screenshot_item["observability"]["modalities"]))
+        self.assertGreater(screenshot_item["observability"]["multimodal_cost_usd"], 0)
+        self.assertEqual(blocked_item["observability"]["route"], "block_or_rewrite")
+        self.assertTrue(any(item["agent"] == "multimodal_cost_agent" for item in screenshot_item["agent_reviews"]))
 
 
 if __name__ == "__main__":
