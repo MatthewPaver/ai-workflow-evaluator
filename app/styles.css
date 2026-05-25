@@ -373,6 +373,67 @@ h2 {
   line-height: 1.45;
 }
 
+.practical-panel {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
+  gap: 18px;
+  padding: 22px;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+  box-shadow: var(--shadow);
+}
+
+.practical-panel .eyebrow {
+  color: var(--mint);
+}
+
+.practical-panel h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.8rem, 3vw, 3.2rem);
+}
+
+.practical-panel h2,
+.practical-panel p {
+  color: var(--surface);
+}
+
+.practical-panel p {
+  max-width: 620px;
+  margin-bottom: 0;
+  line-height: 1.55;
+}
+
+.practical-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  align-self: stretch;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.practical-grid article {
+  min-height: 164px;
+  padding: 16px;
+  background: #1f1f1f;
+}
+
+.practical-grid span {
+  display: block;
+  margin-bottom: 14px;
+  color: var(--mint);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.practical-grid strong {
+  color: var(--surface);
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
 .scoreboard {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -879,14 +940,16 @@ h2 {
   .decision-grid,
   .insight-grid,
   .run-context,
-  .process-strip {
+  .process-strip,
+  .practical-panel {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .registry-grid,
   .score-matrix,
   .history-grid,
-  .measured-grid {
+  .measured-grid,
+  .practical-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -915,6 +978,8 @@ h2 {
   .insight-grid,
   .run-context,
   .process-strip,
+  .practical-panel,
+  .practical-grid,
   .registry-grid,
   .score-matrix,
   .history-grid,

@@ -48,17 +48,17 @@ const suiteNotes = {
   sample: {
     title: "Workflow quality gate",
     body:
-      "This suite checks logged LLM outputs against facts, citations, blocked claims, latency, token cost, and reviewer status."
+      "This suite checks whether a logged AI answer includes the required facts, cites the expected sources, avoids blocked claims, stays within limits, and has the right review status."
   },
   portfolio: {
     title: "Portfolio claim grounding",
     body:
-      "This suite checks whether repo summaries stay faithful to README evidence and blocks inflated claims, such as describing an offline recommender as production software."
+      "This suite checks portfolio copy before it is published. It catches inflated claims, such as describing an offline recommender as production software."
   },
   aiops: {
-    title: "AI Ops control layer",
+    title: "AI workflow pre-flight check",
     body:
-      "This suite models a real operating problem: text, screenshots, PDFs, images, and audio need quality checks, cost controls, latency thresholds, routing rules, and human sign-off before scale."
+      "This suite shows the practical use case: AI outputs from text, screenshots, PDFs, images, and audio need evidence checks, cost controls, latency limits, routing rules, and human sign-off before scale."
   }
 };
 

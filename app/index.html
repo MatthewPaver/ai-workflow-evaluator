@@ -44,8 +44,8 @@
         <section class="sidebar-panel" aria-labelledby="scope-title">
           <p class="nav-label" id="scope-title">Scope</p>
           <p>
-            Use this when an AI output needs a clear answer: ship it, review it,
-            block it, or route it through a cheaper or stronger path.
+            Use this after an AI workflow has produced an output and you need a repeatable
+            check before it reaches a user, customer, report, or portfolio page.
           </p>
         </section>
 
@@ -58,8 +58,8 @@
             <p class="eyebrow">Evaluation Run</p>
             <h1 id="suite-name">Loading…</h1>
             <p class="run-intro">
-              Replay logged AI outputs against source evidence, blocked claims, token and multimodal
-              cost, runtime thresholds, routing rules, and human review status.
+              This is a regression test for AI outputs. Feed it the answer the model gave,
+              the evidence it was allowed to use, and the limits the workflow must respect.
             </p>
           </div>
           <div class="run-meta" aria-label="Run metadata">
@@ -72,23 +72,49 @@
           <article>
             <span>01</span>
             <strong>Logged Output</strong>
-            <p>Text, PDF pages, screenshots, images, audio, or generated portfolio copy.</p>
+            <p>The model answer, summary, recommendation, ticket note, listing draft, or repo copy.</p>
           </article>
           <article>
             <span>02</span>
-            <strong>Evidence</strong>
-            <p>Source IDs, known facts, blocked claims, latency, cost, review status.</p>
+            <strong>Known Rules</strong>
+            <p>Required facts, source IDs, blocked claims, max cost, max latency, and review status.</p>
           </article>
           <article>
             <span>03</span>
-            <strong>Gate</strong>
-            <p>Deterministic checks turn subjective review into repeatable criteria.</p>
+            <strong>Repeatable Test</strong>
+            <p>Run the same checks every time so quality does not depend on someone skim-reading.</p>
           </article>
           <article>
             <span>04</span>
             <strong>Decision Route</strong>
-            <p>Ship, review, block, compress input, switch model, or ask for sign-off.</p>
+            <p>Ship, review, block, retrieve more evidence, compress input, or switch model path.</p>
           </article>
+        </section>
+
+        <section class="practical-panel" aria-labelledby="practical-title">
+          <div>
+            <p class="eyebrow">Practical Point</p>
+            <h2 id="practical-title">It tests a workflow, not a model.</h2>
+            <p>
+              A model can sound right and still miss a required fact, cite the wrong source,
+              make a blocked claim, cost too much, or need sign-off. This app turns those
+              checks into a repeatable report.
+            </p>
+          </div>
+          <div class="practical-grid" aria-label="Example evaluator flow">
+            <article>
+              <span>Input</span>
+              <strong>“Summarise this support-ticket screenshot.”</strong>
+            </article>
+            <article>
+              <span>Rules</span>
+              <strong>Must mention the ticket ID, cite the screenshot, avoid guessing the policy.</strong>
+            </article>
+            <article>
+              <span>Output</span>
+              <strong>Ship if grounded. Review if evidence is thin. Block if it invents a claim.</strong>
+            </article>
+          </div>
         </section>
 
         <section class="scoreboard" aria-label="Run summary">
