@@ -1,0 +1,223 @@
+{
+  "suite": "Public AI workflow use cases",
+  "generated_at": "2026-05-25T00:00:00+00:00",
+  "config": {
+    "dataset_id": "public-ai-workflow-fixtures",
+    "dataset_version": "v1",
+    "scorer_version": "deterministic-v2-public",
+    "baseline": {
+      "label": "Manual spot check",
+      "average_score": 0.69,
+      "ship": 1,
+      "review": 2,
+      "block": 1,
+      "calibration": 0.75
+    },
+    "pricing": {
+      "input_per_1k": 0.003,
+      "output_per_1k": 0.012,
+      "image_usd": 0.002,
+      "screenshot_usd": 0.002,
+      "pdf_page_usd": 0.0004,
+      "audio_minute_usd": 0.006
+    },
+    "thresholds": {
+      "target_latency_ms": 2000,
+      "max_latency_ms": 6500,
+      "target_cost_usd": 0.012,
+      "max_cost_usd": 0.07,
+      "pass_score": 0.78,
+      "block_score": 0.45
+    }
+  },
+  "items": [
+    {
+      "id": "support-refund-001",
+      "name": "Support refund reply",
+      "workflow": "customer_support_reply",
+      "model": "gpt-4.1-mini",
+      "risk_level": "medium",
+      "output": "Source T1 says the order was delivered late. Source P1 says the customer is eligible for store credit, not a cash refund. Ask support to issue the credit after confirming the account email.",
+      "expected_facts": [
+        "order was delivered late",
+        "eligible for store credit",
+        "confirming the account email"
+      ],
+      "forbidden_claims": [
+        "cash refund approved",
+        "customer caused the delay"
+      ],
+      "required_sources": ["T1", "P1"],
+      "source_terms": ["delivered late", "store credit", "account email"],
+      "sources": [
+        {
+          "id": "T1",
+          "title": "Support ticket",
+          "text": "The order was delivered late. The customer asks for a refund."
+        },
+        {
+          "id": "P1",
+          "title": "Refund policy",
+          "text": "Late delivery qualifies for store credit after the account email is confirmed."
+        }
+      ],
+      "modalities": {
+        "text": true,
+        "screenshots": 1
+      },
+      "tokens": {
+        "input": 1300,
+        "output": 180
+      },
+      "volume": {
+        "monthly_runs": 900
+      },
+      "latency_ms": 1700,
+      "expected_decision": "ship",
+      "human_review": {
+        "status": "approved"
+      }
+    },
+    {
+      "id": "product-copy-002",
+      "name": "Ecommerce product listing",
+      "workflow": "product_copy_review",
+      "model": "gpt-4.1-mini",
+      "risk_level": "medium",
+      "output": "Source C1 says the jar contains 250g of roasted almond butter. The draft also says it is allergen free and approved for toddlers.",
+      "expected_facts": [
+        "250g of roasted almond butter",
+        "glass jar",
+        "contains almonds"
+      ],
+      "forbidden_claims": [
+        "allergen free",
+        "approved for toddlers"
+      ],
+      "required_sources": ["C1", "C2"],
+      "source_terms": ["250g", "glass jar", "contains almonds"],
+      "sources": [
+        {
+          "id": "C1",
+          "title": "Catalogue row",
+          "text": "250g roasted almond butter in a glass jar."
+        },
+        {
+          "id": "C2",
+          "title": "Compliance note",
+          "text": "Contains almonds. No toddler or allergen-free claim is approved."
+        }
+      ],
+      "modalities": {
+        "text": true,
+        "images": 2
+      },
+      "tokens": {
+        "input": 1700,
+        "output": 160
+      },
+      "volume": {
+        "monthly_runs": 1400
+      },
+      "latency_ms": 2400,
+      "expected_decision": "block",
+      "human_review": {
+        "status": "review_required"
+      }
+    },
+    {
+      "id": "meeting-actions-003",
+      "name": "Meeting action list",
+      "workflow": "meeting_action_extraction",
+      "model": "gpt-4.1-mini",
+      "risk_level": "low",
+      "output": "Source M1 says Priya owns the supplier follow-up by Tuesday. Source M2 says the finance check stays with Jordan. The note should keep both owners.",
+      "expected_facts": [
+        "Priya owns the supplier follow-up by Tuesday",
+        "finance check stays with Jordan",
+        "keep both owners"
+      ],
+      "forbidden_claims": [
+        "Alex owns the supplier follow-up",
+        "finance check is cancelled"
+      ],
+      "required_sources": ["M1", "M2"],
+      "source_terms": ["Priya", "Tuesday", "Jordan"],
+      "sources": [
+        {
+          "id": "M1",
+          "title": "Transcript excerpt",
+          "text": "Priya owns the supplier follow-up by Tuesday."
+        },
+        {
+          "id": "M2",
+          "title": "Meeting note",
+          "text": "Jordan keeps the finance check."
+        }
+      ],
+      "modalities": {
+        "text": true,
+        "audio_minutes": 8
+      },
+      "tokens": {
+        "input": 2600,
+        "output": 190
+      },
+      "volume": {
+        "monthly_runs": 160
+      },
+      "latency_ms": 2100,
+      "expected_decision": "ship",
+      "human_review": {
+        "status": "approved"
+      }
+    },
+    {
+      "id": "agency-brief-004",
+      "name": "Client delivery brief",
+      "workflow": "agency_client_summary",
+      "model": "gpt-4.1",
+      "risk_level": "high",
+      "output": "Source B1 says the campaign has launched in beta. Source B2 says conversion data is not yet reliable, so the brief should go to the account lead before sending.",
+      "expected_facts": [
+        "campaign has launched in beta",
+        "conversion data is not yet reliable",
+        "go to the account lead before sending"
+      ],
+      "forbidden_claims": [
+        "campaign beat target",
+        "conversion lift is proven"
+      ],
+      "required_sources": ["B1", "B2"],
+      "source_terms": ["beta", "not yet reliable", "account lead"],
+      "sources": [
+        {
+          "id": "B1",
+          "title": "Launch note",
+          "text": "The campaign has launched in beta."
+        },
+        {
+          "id": "B2",
+          "title": "Analytics note",
+          "text": "Conversion data is not yet reliable. Account lead review is required before the client update."
+        }
+      ],
+      "modalities": {
+        "text": true,
+        "pdf_pages": 6
+      },
+      "tokens": {
+        "input": 4200,
+        "output": 240
+      },
+      "volume": {
+        "monthly_runs": 90
+      },
+      "latency_ms": 3900,
+      "expected_decision": "review",
+      "human_review": {
+        "status": "review_required"
+      }
+    }
+  ]
+}

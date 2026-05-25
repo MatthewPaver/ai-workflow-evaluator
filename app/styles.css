@@ -434,6 +434,79 @@ h2 {
   line-height: 1.35;
 }
 
+.public-fit {
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.fit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.fit-grid article {
+  min-height: 184px;
+  padding: 16px;
+  background:
+    linear-gradient(180deg, rgba(15, 118, 110, 0.08), rgba(15, 118, 110, 0)),
+    var(--surface-3);
+  border: 1px solid var(--line);
+}
+
+.fit-grid span,
+.advantage-strip span {
+  display: block;
+  color: var(--dim);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.fit-grid strong,
+.fit-grid p {
+  display: block;
+}
+
+.fit-grid strong {
+  margin-top: 18px;
+  color: var(--ink-strong);
+  font-size: 1.12rem;
+}
+
+.fit-grid p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.advantage-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  background: var(--line);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.advantage-strip article {
+  min-height: 126px;
+  padding: 18px;
+  background: var(--surface-2);
+}
+
+.advantage-strip strong {
+  display: block;
+  margin-top: 14px;
+  color: var(--ink-strong);
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  line-height: 1.18;
+}
+
 .scoreboard {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -941,7 +1014,9 @@ h2 {
   .insight-grid,
   .run-context,
   .process-strip,
-  .practical-panel {
+  .practical-panel,
+  .fit-grid,
+  .advantage-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -980,6 +1055,8 @@ h2 {
   .process-strip,
   .practical-panel,
   .practical-grid,
+  .fit-grid,
+  .advantage-strip,
   .registry-grid,
   .score-matrix,
   .history-grid,

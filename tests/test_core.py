@@ -122,6 +122,20 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual(blocked_item["observability"]["route"], "block_or_rewrite")
         self.assertTrue(any(item["agent"] == "multimodal_cost_agent" for item in screenshot_item["agent_reviews"]))
 
+    def test_public_use_case_dataset_is_copyable(self) -> None:
+        payload = json.loads(Path("examples/public-use-cases.json").read_text())
+        report = evaluate_dataset(payload)
+        decisions = {item["id"]: item["decision"] for item in report["results"]}
+
+        self.assertEqual(report["summary"]["total"], 4)
+        self.assertEqual(report["dataset"]["id"], "public-ai-workflow-fixtures")
+        self.assertEqual(report["calibration"]["accuracy"], 1.0)
+        self.assertEqual(decisions["support-refund-001"], "ship")
+        self.assertEqual(decisions["product-copy-002"], "block")
+        self.assertEqual(decisions["agency-brief-004"], "review")
+        self.assertGreater(report["measurable_results"]["projected_monthly_cost_usd"], 0)
+        self.assertEqual(report["measurable_results"]["blocked_expected_catch_rate"], 1.0)
+
 
 if __name__ == "__main__":
     unittest.main()

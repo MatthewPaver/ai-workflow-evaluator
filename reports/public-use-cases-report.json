@@ -1,0 +1,827 @@
+{
+  "generated_at": "2026-05-25T00:00:00+00:00",
+  "suite": "Public AI workflow use cases",
+  "dataset": {
+    "id": "public-ai-workflow-fixtures",
+    "version": "v1",
+    "items": 4
+  },
+  "scorers": {
+    "version": "deterministic-v2-public",
+    "type": "deterministic",
+    "count": 14,
+    "agents": [
+      "reviewer_agent",
+      "source_grounding_agent",
+      "hallucination_agent",
+      "cost_agent",
+      "latency_agent",
+      "policy_agent",
+      "model_router_agent",
+      "multimodal_cost_agent"
+    ]
+  },
+  "baseline": {
+    "label": "Manual spot check",
+    "average_score": 0.69,
+    "ship": 1,
+    "review": 2,
+    "block": 1,
+    "calibration": 0.75
+  },
+  "summary": {
+    "total": 4,
+    "average_score": 0.8169,
+    "ship": 2,
+    "review": 1,
+    "block": 1
+  },
+  "ai_ops": {
+    "total_run_cost_usd": 0.09504,
+    "projected_monthly_cost_usd": 33.584,
+    "multimodal_items": 4,
+    "routes": {
+      "block_or_rewrite": 1,
+      "compress_inputs_or_use_cheaper_model": 1,
+      "standard_model_review_gate": 1,
+      "strong_model_plus_human_review": 1
+    }
+  },
+  "calibration": {
+    "labelled": 4,
+    "matches": 4,
+    "accuracy": 1.0
+  },
+  "measurable_results": {
+    "baseline_label": "Manual spot check",
+    "score_delta_points": 12.7,
+    "calibration_delta_points": 25.0,
+    "labelled_decision_accuracy": 1.0,
+    "labelled_matches": 4,
+    "labelled_total": 4,
+    "incorrect_labelled_decisions": 0,
+    "decision_mix": {
+      "ship": 2,
+      "review": 1,
+      "block": 1
+    },
+    "decision_delta": {
+      "ship": 1,
+      "review": -1,
+      "block": 0
+    },
+    "automation_rate": 0.5,
+    "intervention_rate": 0.5,
+    "blocked_expected_count": 1,
+    "blocked_expected_caught": 1,
+    "blocked_expected_catch_rate": 1.0,
+    "review_queue_delta": -1,
+    "estimated_run_cost_usd": 0.09504,
+    "projected_monthly_cost_usd": 33.584,
+    "multimodal_items": 4,
+    "route_count": {
+      "block_or_rewrite": 1,
+      "compress_inputs_or_use_cheaper_model": 1,
+      "standard_model_review_gate": 1,
+      "strong_model_plus_human_review": 1
+    },
+    "decision_matrix": {
+      "ship": {
+        "ship": 2,
+        "review": 0,
+        "block": 0
+      },
+      "review": {
+        "ship": 0,
+        "review": 1,
+        "block": 0
+      },
+      "block": {
+        "ship": 0,
+        "review": 0,
+        "block": 1
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "support-refund-001",
+      "name": "Support refund reply",
+      "model": "gpt-4.1-mini",
+      "workflow": "customer_support_reply",
+      "decision": "ship",
+      "overall_score": 1.0,
+      "scores": {
+        "accuracy": 1.0,
+        "source_grounding": 1.0,
+        "hallucination_control": 1.0,
+        "latency": 1.0,
+        "cost": 1.0,
+        "human_review": 1.0
+      },
+      "observability": {
+        "latency_ms": 1700,
+        "cost_usd": 0.00806,
+        "token_cost_usd": 0.00606,
+        "multimodal_cost_usd": 0.002,
+        "monthly_cost_usd": 7.254,
+        "input_tokens": 1300,
+        "output_tokens": 180,
+        "review_status": "approved",
+        "risk_level": "medium",
+        "monthly_runs": 900,
+        "modalities": [
+          "text",
+          "1 screenshots"
+        ],
+        "route": "standard_model_review_gate",
+        "route_reason": "Workflow can run through the normal quality gate before shipping."
+      },
+      "evidence": {
+        "matched_facts": [
+          "order was delivered late",
+          "eligible for store credit",
+          "confirming the account email"
+        ],
+        "missing_facts": [],
+        "forbidden_hits": [],
+        "source_hits": [
+          "T1",
+          "P1"
+        ],
+        "source_term_hits": [
+          "delivered late",
+          "store credit",
+          "account email"
+        ]
+      },
+      "trace": {
+        "output_excerpt": "Source T1 says the order was delivered late. Source P1 says the customer is eligible for store credit, not a cash refund. Ask support to issue the credit after confirming the account email.",
+        "expected_facts": [
+          "order was delivered late",
+          "eligible for store credit",
+          "confirming the account email"
+        ],
+        "forbidden_claims": [
+          "cash refund approved",
+          "customer caused the delay"
+        ],
+        "required_sources": [
+          "T1",
+          "P1"
+        ],
+        "source_titles": [
+          "T1: Support ticket",
+          "P1: Refund policy"
+        ],
+        "modalities": [
+          "text",
+          "1 screenshots"
+        ],
+        "route": {
+          "route": "standard_model_review_gate",
+          "reason": "Workflow can run through the normal quality gate before shipping."
+        },
+        "explanations": [
+          {
+            "type": "passed",
+            "expected": "Required facts, sources, blocked claims, thresholds, and review status aligned.",
+            "actual": "Source T1 says the order was delivered late. Source P1 says the customer is eligible for store credit, not a cash refund. Ask support to issue the credit after confirming the account email.",
+            "source": "Evaluator checks"
+          }
+        ]
+      },
+      "issues": [],
+      "expected_decision": "ship",
+      "calibrated": true,
+      "agent_reviews": [
+        {
+          "agent": "reviewer_agent",
+          "status": "pass",
+          "message": "Human review state supports shipping",
+          "evidence": [
+            "decision=ship",
+            "human_review=approved",
+            "workflow=customer_support_reply"
+          ]
+        },
+        {
+          "agent": "source_grounding_agent",
+          "status": "pass",
+          "message": "Source grounding is strong",
+          "evidence": [
+            "grounding=1.00",
+            "missing_sources=none"
+          ]
+        },
+        {
+          "agent": "hallucination_agent",
+          "status": "pass",
+          "message": "No blocked claims found",
+          "evidence": [
+            "forbidden_claims=0"
+          ]
+        },
+        {
+          "agent": "cost_agent",
+          "status": "pass",
+          "message": "Cost is within workflow threshold",
+          "evidence": [
+            "cost_usd=0.008060",
+            "score=1.00"
+          ]
+        },
+        {
+          "agent": "latency_agent",
+          "status": "pass",
+          "message": "Latency is within workflow threshold",
+          "evidence": [
+            "latency_ms=1700",
+            "score=1.00"
+          ]
+        },
+        {
+          "agent": "policy_agent",
+          "status": "pass",
+          "message": "No high-severity policy issues",
+          "evidence": [
+            "high_severity_issues=0"
+          ]
+        },
+        {
+          "agent": "model_router_agent",
+          "status": "pass",
+          "message": "Routing recommendation is available for this workflow",
+          "evidence": [
+            "route=standard_model_review_gate",
+            "Workflow can run through the normal quality gate before shipping."
+          ]
+        },
+        {
+          "agent": "multimodal_cost_agent",
+          "status": "pass",
+          "message": "Multimodal spend is visible and within review bounds",
+          "evidence": [
+            "modalities=text, 1 screenshots",
+            "multimodal_cost_usd=0.002000",
+            "monthly_cost_usd=7.2540"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "product-copy-002",
+      "name": "Ecommerce product listing",
+      "model": "gpt-4.1-mini",
+      "workflow": "product_copy_review",
+      "decision": "block",
+      "overall_score": 0.4196,
+      "scores": {
+        "accuracy": 0.3333,
+        "source_grounding": 0.4333,
+        "hallucination_control": 0.0,
+        "latency": 0.9111,
+        "cost": 1.0,
+        "human_review": 0.55
+      },
+      "observability": {
+        "latency_ms": 2400,
+        "cost_usd": 0.01102,
+        "token_cost_usd": 0.00702,
+        "multimodal_cost_usd": 0.004,
+        "monthly_cost_usd": 15.428,
+        "input_tokens": 1700,
+        "output_tokens": 160,
+        "review_status": "review_required",
+        "risk_level": "medium",
+        "monthly_runs": 1400,
+        "modalities": [
+          "text",
+          "2 images"
+        ],
+        "route": "block_or_rewrite",
+        "route_reason": "Blocked claim, weak score, or policy issue means this should not reach users."
+      },
+      "evidence": {
+        "matched_facts": [
+          "250g of roasted almond butter"
+        ],
+        "missing_facts": [
+          "glass jar",
+          "contains almonds"
+        ],
+        "forbidden_hits": [
+          "allergen free",
+          "approved for toddlers"
+        ],
+        "source_hits": [
+          "C1"
+        ],
+        "source_term_hits": [
+          "250g"
+        ]
+      },
+      "trace": {
+        "output_excerpt": "Source C1 says the jar contains 250g of roasted almond butter. The draft also says it is allergen free and approved for toddlers.",
+        "expected_facts": [
+          "250g of roasted almond butter",
+          "glass jar",
+          "contains almonds"
+        ],
+        "forbidden_claims": [
+          "allergen free",
+          "approved for toddlers"
+        ],
+        "required_sources": [
+          "C1",
+          "C2"
+        ],
+        "source_titles": [
+          "C1: Catalogue row",
+          "C2: Compliance note"
+        ],
+        "modalities": [
+          "text",
+          "2 images"
+        ],
+        "route": {
+          "route": "block_or_rewrite",
+          "reason": "Blocked claim, weak score, or policy issue means this should not reach users."
+        },
+        "explanations": [
+          {
+            "type": "missing_fact",
+            "expected": "glass jar",
+            "actual": "Not found in the output.",
+            "source": "Catalogue row"
+          },
+          {
+            "type": "missing_fact",
+            "expected": "contains almonds",
+            "actual": "Not found in the output.",
+            "source": "Compliance note"
+          },
+          {
+            "type": "forbidden_claim",
+            "expected": "Output must not claim: allergen free",
+            "actual": "allergen free",
+            "source": "Blocked claim list"
+          },
+          {
+            "type": "forbidden_claim",
+            "expected": "Output must not claim: approved for toddlers",
+            "actual": "approved for toddlers",
+            "source": "Blocked claim list"
+          },
+          {
+            "type": "missing_source",
+            "expected": "Reference source C2",
+            "actual": "Source ID was not cited in the output.",
+            "source": "Compliance note"
+          }
+        ]
+      },
+      "issues": [
+        {
+          "severity": "medium",
+          "type": "missing_facts",
+          "items": [
+            "glass jar",
+            "contains almonds"
+          ]
+        },
+        {
+          "severity": "high",
+          "type": "forbidden_claims",
+          "items": [
+            "allergen free",
+            "approved for toddlers"
+          ]
+        },
+        {
+          "severity": "medium",
+          "type": "weak_grounding",
+          "items": [
+            "C1",
+            "C2"
+          ]
+        }
+      ],
+      "expected_decision": "block",
+      "calibrated": true,
+      "agent_reviews": [
+        {
+          "agent": "reviewer_agent",
+          "status": "review",
+          "message": "Human review or decision state needs attention",
+          "evidence": [
+            "decision=block",
+            "human_review=review_required",
+            "workflow=product_copy_review"
+          ]
+        },
+        {
+          "agent": "source_grounding_agent",
+          "status": "review",
+          "message": "Source grounding is weak",
+          "evidence": [
+            "grounding=0.43",
+            "missing_sources=C2"
+          ]
+        },
+        {
+          "agent": "hallucination_agent",
+          "status": "block",
+          "message": "Blocked claims found in output",
+          "evidence": [
+            "allergen free",
+            "approved for toddlers"
+          ]
+        },
+        {
+          "agent": "cost_agent",
+          "status": "pass",
+          "message": "Cost is within workflow threshold",
+          "evidence": [
+            "cost_usd=0.011020",
+            "score=1.00"
+          ]
+        },
+        {
+          "agent": "latency_agent",
+          "status": "pass",
+          "message": "Latency is within workflow threshold",
+          "evidence": [
+            "latency_ms=2400",
+            "score=0.91"
+          ]
+        },
+        {
+          "agent": "policy_agent",
+          "status": "block",
+          "message": "High-severity issue requires block",
+          "evidence": [
+            "forbidden_claims"
+          ]
+        },
+        {
+          "agent": "model_router_agent",
+          "status": "block",
+          "message": "Routing recommendation is available for this workflow",
+          "evidence": [
+            "route=block_or_rewrite",
+            "Blocked claim, weak score, or policy issue means this should not reach users."
+          ]
+        },
+        {
+          "agent": "multimodal_cost_agent",
+          "status": "pass",
+          "message": "Multimodal spend is visible and within review bounds",
+          "evidence": [
+            "modalities=text, 2 images",
+            "multimodal_cost_usd=0.004000",
+            "monthly_cost_usd=15.4280"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "meeting-actions-003",
+      "name": "Meeting action list",
+      "model": "gpt-4.1-mini",
+      "workflow": "meeting_action_extraction",
+      "decision": "ship",
+      "overall_score": 0.9338,
+      "scores": {
+        "accuracy": 1.0,
+        "source_grounding": 1.0,
+        "hallucination_control": 1.0,
+        "latency": 0.9778,
+        "cost": 0.2055,
+        "human_review": 1.0
+      },
+      "observability": {
+        "latency_ms": 2100,
+        "cost_usd": 0.05808,
+        "token_cost_usd": 0.01008,
+        "multimodal_cost_usd": 0.048,
+        "monthly_cost_usd": 9.2928,
+        "input_tokens": 2600,
+        "output_tokens": 190,
+        "review_status": "approved",
+        "risk_level": "low",
+        "monthly_runs": 160,
+        "modalities": [
+          "text",
+          "8 audio minutes"
+        ],
+        "route": "compress_inputs_or_use_cheaper_model",
+        "route_reason": "Multimodal inputs are driving spend above the workflow threshold."
+      },
+      "evidence": {
+        "matched_facts": [
+          "Priya owns the supplier follow-up by Tuesday",
+          "finance check stays with Jordan",
+          "keep both owners"
+        ],
+        "missing_facts": [],
+        "forbidden_hits": [],
+        "source_hits": [
+          "M1",
+          "M2"
+        ],
+        "source_term_hits": [
+          "Priya",
+          "Tuesday",
+          "Jordan"
+        ]
+      },
+      "trace": {
+        "output_excerpt": "Source M1 says Priya owns the supplier follow-up by Tuesday. Source M2 says the finance check stays with Jordan. The note should keep both owners.",
+        "expected_facts": [
+          "Priya owns the supplier follow-up by Tuesday",
+          "finance check stays with Jordan",
+          "keep both owners"
+        ],
+        "forbidden_claims": [
+          "Alex owns the supplier follow-up",
+          "finance check is cancelled"
+        ],
+        "required_sources": [
+          "M1",
+          "M2"
+        ],
+        "source_titles": [
+          "M1: Transcript excerpt",
+          "M2: Meeting note"
+        ],
+        "modalities": [
+          "text",
+          "8 audio minutes"
+        ],
+        "route": {
+          "route": "compress_inputs_or_use_cheaper_model",
+          "reason": "Multimodal inputs are driving spend above the workflow threshold."
+        },
+        "explanations": [
+          {
+            "type": "passed",
+            "expected": "Required facts, sources, blocked claims, thresholds, and review status aligned.",
+            "actual": "Source M1 says Priya owns the supplier follow-up by Tuesday. Source M2 says the finance check stays with Jordan. The note should keep both owners.",
+            "source": "Evaluator checks"
+          }
+        ]
+      },
+      "issues": [
+        {
+          "severity": "low",
+          "type": "cost",
+          "items": [
+            "$0.0581"
+          ]
+        }
+      ],
+      "expected_decision": "ship",
+      "calibrated": true,
+      "agent_reviews": [
+        {
+          "agent": "reviewer_agent",
+          "status": "pass",
+          "message": "Human review state supports shipping",
+          "evidence": [
+            "decision=ship",
+            "human_review=approved",
+            "workflow=meeting_action_extraction"
+          ]
+        },
+        {
+          "agent": "source_grounding_agent",
+          "status": "pass",
+          "message": "Source grounding is strong",
+          "evidence": [
+            "grounding=1.00",
+            "missing_sources=none"
+          ]
+        },
+        {
+          "agent": "hallucination_agent",
+          "status": "pass",
+          "message": "No blocked claims found",
+          "evidence": [
+            "forbidden_claims=0"
+          ]
+        },
+        {
+          "agent": "cost_agent",
+          "status": "review",
+          "message": "Cost is outside workflow threshold",
+          "evidence": [
+            "cost_usd=0.058080",
+            "score=0.21"
+          ]
+        },
+        {
+          "agent": "latency_agent",
+          "status": "pass",
+          "message": "Latency is within workflow threshold",
+          "evidence": [
+            "latency_ms=2100",
+            "score=0.98"
+          ]
+        },
+        {
+          "agent": "policy_agent",
+          "status": "pass",
+          "message": "No high-severity policy issues",
+          "evidence": [
+            "high_severity_issues=0"
+          ]
+        },
+        {
+          "agent": "model_router_agent",
+          "status": "pass",
+          "message": "Routing recommendation is available for this workflow",
+          "evidence": [
+            "route=compress_inputs_or_use_cheaper_model",
+            "Multimodal inputs are driving spend above the workflow threshold."
+          ]
+        },
+        {
+          "agent": "multimodal_cost_agent",
+          "status": "pass",
+          "message": "Multimodal spend is visible and within review bounds",
+          "evidence": [
+            "modalities=text, 8 audio minutes",
+            "multimodal_cost_usd=0.048000",
+            "monthly_cost_usd=9.2928"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "agency-brief-004",
+      "name": "Client delivery brief",
+      "model": "gpt-4.1",
+      "workflow": "agency_client_summary",
+      "decision": "review",
+      "overall_score": 0.9142,
+      "scores": {
+        "accuracy": 1.0,
+        "source_grounding": 1.0,
+        "hallucination_control": 1.0,
+        "latency": 0.5778,
+        "cost": 0.8986,
+        "human_review": 0.55
+      },
+      "observability": {
+        "latency_ms": 3900,
+        "cost_usd": 0.01788,
+        "token_cost_usd": 0.01548,
+        "multimodal_cost_usd": 0.0024,
+        "monthly_cost_usd": 1.6092,
+        "input_tokens": 4200,
+        "output_tokens": 240,
+        "review_status": "review_required",
+        "risk_level": "high",
+        "monthly_runs": 90,
+        "modalities": [
+          "text",
+          "6 PDF pages"
+        ],
+        "route": "strong_model_plus_human_review",
+        "route_reason": "High-risk or unapproved workflow needs stronger reasoning and explicit sign-off."
+      },
+      "evidence": {
+        "matched_facts": [
+          "campaign has launched in beta",
+          "conversion data is not yet reliable",
+          "go to the account lead before sending"
+        ],
+        "missing_facts": [],
+        "forbidden_hits": [],
+        "source_hits": [
+          "B1",
+          "B2"
+        ],
+        "source_term_hits": [
+          "beta",
+          "not yet reliable",
+          "account lead"
+        ]
+      },
+      "trace": {
+        "output_excerpt": "Source B1 says the campaign has launched in beta. Source B2 says conversion data is not yet reliable, so the brief should go to the account lead before sending.",
+        "expected_facts": [
+          "campaign has launched in beta",
+          "conversion data is not yet reliable",
+          "go to the account lead before sending"
+        ],
+        "forbidden_claims": [
+          "campaign beat target",
+          "conversion lift is proven"
+        ],
+        "required_sources": [
+          "B1",
+          "B2"
+        ],
+        "source_titles": [
+          "B1: Launch note",
+          "B2: Analytics note"
+        ],
+        "modalities": [
+          "text",
+          "6 PDF pages"
+        ],
+        "route": {
+          "route": "strong_model_plus_human_review",
+          "reason": "High-risk or unapproved workflow needs stronger reasoning and explicit sign-off."
+        },
+        "explanations": [
+          {
+            "type": "passed",
+            "expected": "Required facts, sources, blocked claims, thresholds, and review status aligned.",
+            "actual": "Source B1 says the campaign has launched in beta. Source B2 says conversion data is not yet reliable, so the brief should go to the account lead before sending.",
+            "source": "Evaluator checks"
+          }
+        ]
+      },
+      "issues": [],
+      "expected_decision": "review",
+      "calibrated": true,
+      "agent_reviews": [
+        {
+          "agent": "reviewer_agent",
+          "status": "review",
+          "message": "Human review or decision state needs attention",
+          "evidence": [
+            "decision=review",
+            "human_review=review_required",
+            "workflow=agency_client_summary"
+          ]
+        },
+        {
+          "agent": "source_grounding_agent",
+          "status": "pass",
+          "message": "Source grounding is strong",
+          "evidence": [
+            "grounding=1.00",
+            "missing_sources=none"
+          ]
+        },
+        {
+          "agent": "hallucination_agent",
+          "status": "pass",
+          "message": "No blocked claims found",
+          "evidence": [
+            "forbidden_claims=0"
+          ]
+        },
+        {
+          "agent": "cost_agent",
+          "status": "pass",
+          "message": "Cost is within workflow threshold",
+          "evidence": [
+            "cost_usd=0.017880",
+            "score=0.90"
+          ]
+        },
+        {
+          "agent": "latency_agent",
+          "status": "pass",
+          "message": "Latency is within workflow threshold",
+          "evidence": [
+            "latency_ms=3900",
+            "score=0.58"
+          ]
+        },
+        {
+          "agent": "policy_agent",
+          "status": "pass",
+          "message": "No high-severity policy issues",
+          "evidence": [
+            "high_severity_issues=0"
+          ]
+        },
+        {
+          "agent": "model_router_agent",
+          "status": "review",
+          "message": "Routing recommendation is available for this workflow",
+          "evidence": [
+            "route=strong_model_plus_human_review",
+            "High-risk or unapproved workflow needs stronger reasoning and explicit sign-off."
+          ]
+        },
+        {
+          "agent": "multimodal_cost_agent",
+          "status": "pass",
+          "message": "Multimodal spend is visible and within review bounds",
+          "evidence": [
+            "modalities=text, 6 PDF pages",
+            "multimodal_cost_usd=0.002400",
+            "monthly_cost_usd=1.6092"
+          ]
+        }
+      ]
+    }
+  ]
+}

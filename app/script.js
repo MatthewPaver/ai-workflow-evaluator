@@ -41,7 +41,8 @@ const decisionCopy = {
 const reportSources = {
   sample: "../reports/sample-report.json",
   portfolio: "../reports/portfolio-report.json",
-  aiops: "../reports/ai-ops-report.json"
+  aiops: "../reports/ai-ops-report.json",
+  public: "../reports/public-use-cases-report.json"
 };
 
 const suiteNotes = {
@@ -59,6 +60,11 @@ const suiteNotes = {
     title: "AI workflow pre-flight check",
     body:
       "This suite shows the practical use case: AI outputs from text, screenshots, PDFs, images, and audio need evidence checks, cost controls, latency limits, routing rules, and human sign-off before scale."
+  },
+  public: {
+    title: "Public workflow pack",
+    body:
+      "This suite shows how a support lead, ecommerce operator, agency owner, or solo builder could copy the JSON shape and test their own AI outputs without buying an observability stack first."
   }
 };
 
