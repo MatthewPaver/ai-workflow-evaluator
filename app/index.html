@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#0d0f0c">
+    <meta name="theme-color" content="#fbfaf7">
     <meta
       name="description"
-      content="AI Ops control layer for AI workflows with source grounding, blocked claims, multimodal cost, latency, routing, and human review decisions."
+      content="Quality gate for AI workflows: source grounding, blocked claims, multimodal cost, latency, routing, and human review decisions."
     >
     <title>AI Workflow Evaluator</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d0f0c'/%3E%3Cpath d='M13 38h10l5-20 8 30 6-12h9' fill='none' stroke='%23f8f3e7' stroke-width='5' stroke-linejoin='round'/%3E%3Ccircle cx='47' cy='16' r='5' fill='%23d9ff8c'/%3E%3C/svg%3E">
@@ -21,7 +21,7 @@
           <span class="brand-mark" aria-hidden="true">AE</span>
           <span>
             <strong>AI Workflow Evaluator</strong>
-            <small>Deterministic eval workbench</small>
+            <small>Quality gate for AI work</small>
           </span>
         </a>
 
@@ -44,8 +44,8 @@
         <section class="sidebar-panel" aria-labelledby="scope-title">
           <p class="nav-label" id="scope-title">Scope</p>
           <p>
-            This is a deterministic gate. It checks declared facts, evidence, thresholds,
-            and review labels. It does not replace human judgement or semantic evals.
+            Use this when an AI output needs a clear answer: ship it, review it,
+            block it, or route it through a cheaper or stronger path.
           </p>
         </section>
 
@@ -58,8 +58,8 @@
             <p class="eyebrow">Evaluation Run</p>
             <h1 id="suite-name">Loading…</h1>
             <p class="run-intro">
-              Check an AI workflow against source evidence, blocked claims, token and multimodal
-              cost, runtime thresholds, model-routing rules, and human review status.
+              Replay logged AI outputs against source evidence, blocked claims, token and multimodal
+              cost, runtime thresholds, routing rules, and human review status.
             </p>
           </div>
           <div class="run-meta" aria-label="Run metadata">
@@ -71,7 +71,7 @@
         <section class="process-strip" aria-label="Evaluation workflow">
           <article>
             <span>01</span>
-            <strong>Workflow Input</strong>
+            <strong>Logged Output</strong>
             <p>Text, PDF pages, screenshots, images, audio, or generated portfolio copy.</p>
           </article>
           <article>
@@ -86,14 +86,14 @@
           </article>
           <article>
             <span>04</span>
-            <strong>Decision & Route</strong>
+            <strong>Decision Route</strong>
             <p>Ship, review, block, compress input, switch model, or ask for sign-off.</p>
           </article>
         </section>
 
         <section class="scoreboard" aria-label="Run summary">
           <article class="score-card hero-score">
-            <span>Run Score</span>
+            <span>Quality Score</span>
             <strong id="average-score">0%</strong>
             <div class="meter" id="health-meter" style="--score: 0" aria-hidden="true"><i></i></div>
           </article>
@@ -184,7 +184,7 @@
         <section class="panel measured-panel" aria-labelledby="measured-heading">
           <div class="panel-head">
             <p class="eyebrow">Measured Results</p>
-            <h2 id="measured-heading">What This Run Proves</h2>
+            <h2 id="measured-heading">What This Run Checks</h2>
           </div>
           <div class="measured-grid">
             <div>
@@ -240,7 +240,7 @@
           <article class="panel run-note">
             <div class="panel-head">
               <p class="eyebrow">Sense Check</p>
-              <h2 id="run-note-title">Why this run matters</h2>
+              <h2 id="run-note-title">Why This Run Matters</h2>
             </div>
             <p id="run-note">
               The evaluator turns a subjective review into a repeatable checklist: what was claimed,
@@ -253,7 +253,7 @@
           <div class="board-toolbar">
             <div>
               <p class="eyebrow">Trace Review</p>
-              <h2 id="board-title">Outputs, Scores, and Evidence</h2>
+              <h2 id="board-title">Outputs, Scores & Evidence</h2>
             </div>
             <div class="filters" role="group" aria-label="Filter decisions">
               <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">All</button>

@@ -1,11 +1,11 @@
 # AI Workflow Evaluator
 
-AI Ops control layer for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review.
+Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review.
 
 [![Validate](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml)
 [![Demo](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml)
 
-![AI Workflow Evaluator preview](docs/assets/evaluator-preview.svg)
+![AI Workflow Evaluator preview](docs/assets/evaluator-preview.png)
 
 **Live demo:** [matthewpaver.github.io/ai-workflow-evaluator/app/](https://matthewpaver.github.io/ai-workflow-evaluator/app/)
 
