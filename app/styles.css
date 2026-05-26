@@ -519,6 +519,13 @@ h2 {
   justify-content: space-between;
 }
 
+.builder-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
 .builder-layout {
   display: grid;
   grid-template-columns: minmax(300px, 0.9fr) minmax(360px, 1.1fr);
@@ -546,7 +553,8 @@ h2 {
 }
 
 .builder-form input,
-.builder-form textarea {
+.builder-form textarea,
+.builder-form select {
   width: 100%;
   min-width: 0;
   color: var(--ink);
@@ -555,7 +563,8 @@ h2 {
   font: 500 0.95rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-.builder-form input {
+.builder-form input,
+.builder-form select {
   min-height: 42px;
   padding: 0 12px;
 }
@@ -566,7 +575,8 @@ h2 {
 }
 
 .builder-form input:focus,
-.builder-form textarea:focus {
+.builder-form textarea:focus,
+.builder-form select:focus {
   outline: 2px solid var(--acid);
   outline-offset: 2px;
 }
@@ -613,9 +623,95 @@ h2 {
   border-color: var(--mint);
 }
 
+.action-button.ghost {
+  background: var(--surface);
+}
+
+.live-verdict {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  color: var(--surface);
+  background: #10110f;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.live-verdict strong {
+  display: block;
+  color: var(--surface);
+  font-size: clamp(2.4rem, 7vw, 5.4rem);
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+
+.live-verdict p {
+  max-width: 48ch;
+  margin: 0;
+  color: #d7d2c8;
+  line-height: 1.55;
+}
+
+.live-verdict .meter {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.builder-checks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.builder-checks div,
+.builder-findings article {
+  padding: 12px;
+  background: #1f1f1f;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.builder-checks span,
+.builder-findings span,
+.json-drawer summary {
+  display: block;
+  color: var(--mint);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.builder-checks strong {
+  display: block;
+  margin-top: 7px;
+  color: var(--surface);
+  line-height: 1.35;
+}
+
+.builder-findings {
+  display: grid;
+  gap: 8px;
+}
+
+.builder-findings p {
+  margin: 7px 0 0;
+  color: #d7d2c8;
+  line-height: 1.45;
+}
+
+.json-drawer {
+  display: grid;
+  gap: 12px;
+}
+
+.json-drawer summary {
+  min-height: 44px;
+  padding: 13px 0 0;
+  color: var(--surface);
+  cursor: pointer;
+}
+
 #builder-json {
-  max-height: 560px;
-  min-height: 360px;
+  max-height: 420px;
+  min-height: 260px;
   margin: 0;
   overflow: auto;
   padding: 14px;

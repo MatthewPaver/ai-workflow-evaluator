@@ -169,9 +169,12 @@
           <div class="panel-head builder-head">
             <div>
               <p class="eyebrow">Make Your Own Gate</p>
-              <h2 id="builder-title">Paste one workflow. Get runnable JSON.</h2>
+              <h2 id="builder-title">Paste one workflow. Get a verdict.</h2>
             </div>
-            <button class="action-button" type="button" id="load-builder-example">Load example</button>
+            <div class="builder-actions">
+              <button class="action-button" type="button" id="load-builder-example">Passing example</button>
+              <button class="action-button ghost" type="button" id="load-builder-failure">Failing example</button>
+            </div>
           </div>
           <div class="builder-layout">
             <form class="builder-form" id="suite-builder">
@@ -208,17 +211,54 @@ Support policy: Billing access must be reset by an admin.</textarea>
                   <input id="builder-latency" type="number" min="0" value="1200" />
                 </label>
               </div>
+              <label>
+                <span>Human review status</span>
+                <select id="builder-review">
+                  <option value="approved" selected>Approved</option>
+                  <option value="review_required">Review required</option>
+                  <option value="blocked">Blocked</option>
+                  <option value="not_reviewed">Not reviewed</option>
+                </select>
+              </label>
             </form>
             <aside class="builder-output-panel">
               <div class="builder-result-head">
                 <div>
-                  <span>Starter suite</span>
+                  <span>Live gate result</span>
                   <strong id="builder-summary" aria-live="polite">Ready</strong>
                 </div>
                 <button class="action-button" type="button" id="copy-builder-json">Copy JSON</button>
               </div>
-              <pre id="builder-json" tabindex="0" aria-label="Generated workflow suite JSON"></pre>
-              <code id="builder-command">python3 -m evaluator.cli my-workflow-suite.json --out reports/my-workflow-report.json --min-score 0.80 --fail-on-block --max-monthly-cost 50</code>
+              <div class="live-verdict" id="builder-verdict-card">
+                <span class="decision-pill" id="builder-decision">Needs review</span>
+                <strong id="builder-score">0%</strong>
+                <div class="meter" id="builder-meter" style="--score: 0" aria-hidden="true"><i></i></div>
+                <p id="builder-action">Add an output, facts, and source text to run the gate.</p>
+              </div>
+              <div class="builder-checks" aria-label="Live evaluation checks">
+                <div>
+                  <span>Facts</span>
+                  <strong id="builder-fact-status">0 / 0 matched</strong>
+                </div>
+                <div>
+                  <span>Blocked claims</span>
+                  <strong id="builder-block-status">None found</strong>
+                </div>
+                <div>
+                  <span>Source</span>
+                  <strong id="builder-source-status">Waiting</strong>
+                </div>
+                <div>
+                  <span>Cost / latency</span>
+                  <strong id="builder-ops-status">$0.00 · 0ms</strong>
+                </div>
+              </div>
+              <div class="builder-findings" id="builder-findings"></div>
+              <details class="json-drawer">
+                <summary>Use this in CI</summary>
+                <pre id="builder-json" tabindex="0" aria-label="Generated workflow suite JSON"></pre>
+                <code id="builder-command">python3 -m evaluator.cli my-workflow-suite.json --out reports/my-workflow-report.json --min-score 0.80 --fail-on-block --max-monthly-cost 50</code>
+              </details>
             </aside>
           </div>
         </section>

@@ -71,7 +71,7 @@ Most evaluation platforms are stronger once a team already has traces, datasets,
 - **Cost-aware:** multimodal inputs and monthly run volume are visible before scale-up.
 - **Portable:** teams can run it locally, in CI, or as a small hosted demo.
 
-The browser demo now includes a **Make Your Own Gate** builder. Paste one workflow, add the required facts and blocked claims, then copy a runnable JSON suite.
+The browser demo now includes a **Make Your Own Gate** workspace. Paste one workflow, add the required facts and blocked claims, and it gives a live ship/review/block verdict. Copy the JSON only when you want to keep the check in CI.
 
 Good fits:
 
@@ -96,7 +96,7 @@ make serve
 
 Then open `http://localhost:8017/app/`.
 
-In the app, use **Make Your Own Gate** to generate a starter JSON suite without hand-writing the schema.
+In the app, use **Make Your Own Gate** to test an output immediately, then copy the generated suite if you want to run the same gate locally or in CI.
 
 ## Run Locally
 

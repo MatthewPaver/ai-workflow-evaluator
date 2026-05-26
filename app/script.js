@@ -38,6 +38,22 @@ const decisionCopy = {
   block: "Blocked"
 };
 
+const reviewScores = {
+  approved: 1,
+  review_required: 0.55,
+  blocked: 0,
+  not_reviewed: 0.35
+};
+
+const scoreWeights = {
+  accuracy: 0.28,
+  source_grounding: 0.24,
+  hallucination_control: 0.22,
+  latency: 0.12,
+  cost: 0.08,
+  human_review: 0.06
+};
+
 const reportSources = {
   sample: "../reports/sample-report.json",
   portfolio: "../reports/portfolio-report.json",
@@ -128,6 +144,40 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
+function normaliseText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function containsText(text, phrase) {
+  return normaliseText(text).includes(normaliseText(phrase));
+}
+
+function tokenise(value) {
+  return normaliseText(value)
+    .split(" ")
+    .filter((word) => word.length > 2);
+}
+
+function tokenOverlap(text, phrase) {
+  const textTokens = new Set(tokenise(text));
+  const phraseTokens = tokenise(phrase);
+  if (!phraseTokens.length) return 1;
+  const matches = phraseTokens.filter((token) => textTokens.has(token));
+  return matches.length / phraseTokens.length;
+}
+
+function phraseMatchesText(text, phrase) {
+  return containsText(text, phrase) || tokenOverlap(text, phrase) >= 0.78;
+}
+
+function scoreRatio(matches, total) {
+  return total === 0 ? 1 : Number((matches / total).toFixed(4));
+}
+
 function signedNumber(value, suffix = "") {
   const sign = value > 0 ? "+" : "";
   return `${sign}${value}${suffix}`;
@@ -169,6 +219,7 @@ function buildStarterSuite() {
   const sourceText = document.getElementById("builder-source")?.value.trim() || "";
   const monthlyRuns = Number(document.getElementById("builder-volume")?.value || 0);
   const latencyMs = Number(document.getElementById("builder-latency")?.value || 0);
+  const reviewStatus = document.getElementById("builder-review")?.value || "approved";
 
   return {
     suite: `${titleCase(workflow)} starter gate`,
@@ -215,10 +266,129 @@ function buildStarterSuite() {
         volume: { monthly_runs: monthlyRuns },
         latency_ms: latencyMs,
         expected_decision: "ship",
-        human_review: { status: "approved" }
+        human_review: { status: reviewStatus }
       }
     ]
   };
+}
+
+function scoreLatencyMs(latencyMs) {
+  const target = 2000;
+  const max = 6500;
+  if (latencyMs <= target) return 1;
+  if (latencyMs >= max) return 0;
+  return Number((1 - (latencyMs - target) / (max - target)).toFixed(4));
+}
+
+function scoreCostUsd(cost) {
+  const target = 0.012;
+  const max = 0.07;
+  if (cost <= target) return 1;
+  if (cost >= max) return 0;
+  return Number((1 - (cost - target) / (max - target)).toFixed(4));
+}
+
+function estimateRunCost(item) {
+  const input = Number(item.tokens?.input || 0);
+  const output = Number(item.tokens?.output || 0);
+  return Number(((input / 1000) * 0.003 + (output / 1000) * 0.012).toFixed(6));
+}
+
+function evaluateStarterItem(item) {
+  const output = item.output || "";
+  const sourceText = item.sources?.map((source) => `${source.id} ${source.title} ${source.text}`).join(" ") || "";
+  const facts = item.expected_facts || [];
+  const blocked = item.forbidden_claims || [];
+  const requiredSources = item.required_sources || [];
+  const sourceTerms = item.source_terms || [];
+  const factHits = facts.filter((fact) => phraseMatchesText(output, fact));
+  const missingFacts = facts.filter((fact) => !factHits.includes(fact));
+  const forbiddenHits = blocked.filter((claim) => containsText(output, claim));
+  const sourceHits = requiredSources.filter((sourceId) => containsText(output, sourceId));
+  const sourceTermHits = sourceTerms.filter((term) => phraseMatchesText(output, term) && phraseMatchesText(sourceText, term));
+  const runCost = estimateRunCost(item);
+  const monthlyCost = Number((runCost * Number(item.volume?.monthly_runs || 0)).toFixed(4));
+  const scores = {
+    accuracy: scoreRatio(factHits.length, facts.length),
+    source_grounding: Number(((scoreRatio(sourceHits.length, requiredSources.length) * 0.6) + (scoreRatio(sourceTermHits.length, sourceTerms.length) * 0.4)).toFixed(4)),
+    hallucination_control: Math.max(0, Number((1 - forbiddenHits.length / Math.max(blocked.length, 1)).toFixed(4))),
+    latency: scoreLatencyMs(Number(item.latency_ms || 0)),
+    cost: scoreCostUsd(runCost),
+    human_review: reviewScores[item.human_review?.status] ?? 0.35
+  };
+  const overall = Number(
+    Object.entries(scores)
+      .reduce((total, [key, value]) => total + value * scoreWeights[key], 0)
+      .toFixed(4)
+  );
+  const needsReview =
+    missingFacts.length > 0 || scores.source_grounding < 0.75 || overall < 0.78 || item.human_review?.status !== "approved";
+  const decision = forbiddenHits.length || overall < 0.45 ? "block" : needsReview ? "review" : "ship";
+
+  return {
+    decision,
+    overall,
+    scores,
+    factHits,
+    missingFacts,
+    forbiddenHits,
+    sourceHits,
+    sourceTermHits,
+    runCost,
+    monthlyCost,
+    route:
+      decision === "block"
+        ? "Block or rewrite before anyone sees this."
+        : decision === "review"
+          ? "Send to a human reviewer or retrieve more evidence."
+          : "Safe enough for this gate. Keep the JSON as a repeatable check."
+  };
+}
+
+function renderFinding(type, title, items) {
+  const list = items.length ? items.slice(0, 3).map(escapeHtml).join("; ") : "No issues found.";
+  return `<article><span>${escapeHtml(type)}</span><p><strong>${escapeHtml(title)}</strong><br>${list}</p></article>`;
+}
+
+function renderLiveVerdict(result, item) {
+  const decision = document.getElementById("builder-decision");
+  const score = document.getElementById("builder-score");
+  const meter = document.getElementById("builder-meter");
+  const card = document.getElementById("builder-verdict-card");
+  const findings = document.getElementById("builder-findings");
+  const pct = percent(result.overall);
+
+  if (decision) {
+    decision.textContent = decisionCopy[result.decision] || titleCase(result.decision);
+    decision.className = `decision-pill ${result.decision}`;
+  }
+  if (score) score.textContent = `${pct}%`;
+  if (meter) meter.style.setProperty("--score", pct);
+  if (card) card.dataset.decision = result.decision;
+  setText("builder-action", result.route);
+  setText("builder-fact-status", `${result.factHits.length} / ${item.expected_facts.length} matched`);
+  setText("builder-block-status", result.forbiddenHits.length ? `${result.forbiddenHits.length} found` : "None found");
+  setText(
+    "builder-source-status",
+    `${result.sourceHits.length} / ${item.required_sources.length} source IDs · ${result.sourceTermHits.length} evidence terms`
+  );
+  setText("builder-ops-status", `${formatMonthlyCost(result.monthlyCost)} monthly · ${item.latency_ms}ms`);
+  setText(
+    "builder-summary",
+    `${decisionCopy[result.decision]} · ${pct}% · ${item.expected_facts.length} facts checked`
+  );
+
+  if (findings) {
+    findings.innerHTML = [
+      renderFinding("Missing facts", "Facts the output still needs", result.missingFacts),
+      renderFinding("Blocked claims", "Claims that would stop the output", result.forbiddenHits),
+      renderFinding(
+        "Source coverage",
+        "Source IDs or evidence terms found",
+        [...result.sourceHits, ...result.sourceTermHits].slice(0, 6)
+      )
+    ].join("");
+  }
 }
 
 function renderBuilder() {
@@ -227,11 +397,9 @@ function renderBuilder() {
 
   const suite = buildStarterSuite();
   const item = suite.items[0];
+  const result = evaluateStarterItem(item);
   output.textContent = JSON.stringify(suite, null, 2);
-  setText(
-    "builder-summary",
-    `${item.expected_facts.length} required facts · ${item.forbidden_claims.length} blocked claims · ${item.volume.monthly_runs} monthly runs`
-  );
+  renderLiveVerdict(result, item);
 }
 
 async function copyBuilderJson() {
@@ -275,6 +443,22 @@ function bindBuilder() {
       "README: Local Streamlit and DuckDB analytics app for marketing performance data.\nMakefile: test target runs the project checks.\nDemo data: sample campaigns are included for local use.";
     document.getElementById("builder-volume").value = "120";
     document.getElementById("builder-latency").value = "900";
+    document.getElementById("builder-review").value = "approved";
+    renderBuilder();
+  });
+  document.getElementById("load-builder-failure")?.addEventListener("click", () => {
+    document.getElementById("builder-workflow").value = "support_reply_review";
+    document.getElementById("builder-output").value =
+      "The customer caused the issue and the refund has been approved. We can reset access later.";
+    document.getElementById("builder-facts").value =
+      "customer cannot access billing\nbilling access must be reset by an admin";
+    document.getElementById("builder-blocked").value =
+      "refund approved\ncustomer caused the issue";
+    document.getElementById("builder-source").value =
+      "Ticket note: The customer cannot access billing.\nSupport policy: Billing access must be reset by an admin.";
+    document.getElementById("builder-volume").value = "300";
+    document.getElementById("builder-latency").value = "7200";
+    document.getElementById("builder-review").value = "not_reviewed";
     renderBuilder();
   });
 

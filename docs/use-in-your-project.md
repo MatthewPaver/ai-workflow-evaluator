@@ -11,7 +11,7 @@ It works best as a quality gate for outputs such as:
 - policy answers
 - screenshot, PDF, image, or audio summaries
 
-Fastest path: open the demo app, use **Make Your Own Gate**, paste one output, and copy the generated JSON.
+Fastest path: open the demo app, use **Make Your Own Gate**, paste one output, and check the live verdict. Copy the generated JSON when you want the same gate in your repo.
 
 ## 1. Generate a starter gate
 
@@ -31,7 +31,7 @@ Open `http://localhost:8017/app/`, then fill in:
 - allowed source text
 - monthly volume and latency
 
-Copy the JSON into `my-workflow-suite.json`.
+The page updates the verdict as you type. Copy the JSON into `my-workflow-suite.json` when the gate matches the rule you want to keep.
 
 ## 2. Or copy the template
 
