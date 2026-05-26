@@ -6,6 +6,7 @@ from pathlib import Path
 
 from evaluator.cli import quality_gate_failures
 from evaluator.core import evaluate_dataset, evaluate_item
+from evaluator.ingest_project import build_project_suite
 
 
 class EvaluatorTests(unittest.TestCase):
@@ -158,6 +159,18 @@ class EvaluatorTests(unittest.TestCase):
         report = evaluate_dataset(payload)
 
         self.assertEqual(quality_gate_failures(report, min_score=0.8), [])
+
+    def test_project_ingestion_builds_runnable_suite(self) -> None:
+        suite = build_project_suite(Path("."))
+        report = evaluate_dataset(suite)
+        item = suite["items"][0]
+
+        self.assertEqual(len(suite["items"]), 1)
+        self.assertEqual(item["workflow"], "project_summary_review")
+        self.assertGreaterEqual(len(item["sources"]), 2)
+        self.assertIn("README.md", {source["title"] for source in item["sources"]})
+        self.assertEqual(report["summary"]["block"], 0)
+        self.assertGreaterEqual(report["summary"]["average_score"], 0.8)
 
 
 if __name__ == "__main__":

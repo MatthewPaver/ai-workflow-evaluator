@@ -1,0 +1,75 @@
+{
+  "suite": "AI Workflow Evaluator project summary gate",
+  "generated_at": "2026-05-26T07:56:34+00:00",
+  "config": {
+    "dataset_id": "ai-workflow-evaluator-project-summary-gate",
+    "dataset_version": "v1",
+    "scorer_version": "deterministic-v2-project-ingest",
+    "thresholds": {
+      "target_latency_ms": 2000,
+      "max_latency_ms": 6500,
+      "target_cost_usd": 0.012,
+      "max_cost_usd": 0.07,
+      "pass_score": 0.78,
+      "block_score": 0.45
+    }
+  },
+  "items": [
+    {
+      "id": "ai-workflow-evaluator-summary-001",
+      "name": "Project summary grounding",
+      "workflow": "project_summary_review",
+      "model": "project-summary-draft",
+      "risk_level": "low",
+      "output": "Source S1 describes AI Workflow Evaluator. Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review.",
+      "expected_facts": [
+        "Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review"
+      ],
+      "forbidden_claims": [
+        "production-grade SaaS",
+        "enterprise deployment",
+        "guaranteed accuracy",
+        "fully autonomous"
+      ],
+      "required_sources": [
+        "S1"
+      ],
+      "source_terms": [
+        "AI Workflow Evaluator",
+        "PYTHON"
+      ],
+      "sources": [
+        {
+          "id": "S1",
+          "title": "README.md",
+          "text": "# AI Workflow Evaluator Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review. [![Validate](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml) [![Demo](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml) ![AI Workflow Evaluator preview](docs/assets/evaluator-preview.png) **Live demo:** [matthewpaver.github.io/ai-workflow-evaluator/app/](https://matthewpaver.github.io/ai-workflow-evaluator/app/) ## What It Solves This is not a model leaderboard. It tests one logged AI workflow at a time. The practical question is simple: the model produced an answer, summary, recommendation, ticket note, listing draft, or repo description. Can that output ship, does a human need to review it, should it be blocked, or should the workflow route through a cheaper/faster/stronger model path? This project checks whether an AI-generated summary, answer, recommendation, repo description, screenshot summary, PDF answer, product-listing draft, or audio-transcript action list is accurate, grounded in supplied sources, cheap enough to run, fast enough for the workflow, and ready for human approval."
+        },
+        {
+          "id": "S6",
+          "title": "Makefile",
+          "text": "PYTHON ?= python3 .PHONY: report test serve report: $(PYTHON) -m evaluator.cli examples/workflows.json --out reports/sample-report.json $(PYTHON) -m evaluator.cli examples/portfolio-workflows.json --out reports/portfolio-report.json $(PYTHON) -m evaluator.cli examples/ai-ops-workflows.json --out reports/ai-ops-report.json $(PYTHON) -m evaluator.cli examples/public-use-cases.json --out reports/public-use-cases-report.json $(PYTHON) -m evaluator.cli examples/minimal-workflow-suite.json --out reports/minimal-workflow-report.json $(PYTHON) -m evaluator.ingest_project . --out examples/project-ingest-demo.json $(PYTHON) -m evaluator.cli examples/project-ingest-demo.json --out reports/project-ingest-demo-report.json test: $(PYTHON) -m unittest discover -s tests -v $(PYTHON) -m evaluator.cli examples/workflows.json --out reports/sample-report.json $(PYTHON) -m evaluator.cli examples/portfolio-workflows.json --out reports/portfolio-report.json $(PYTHON) -m evaluator.cli examples/ai-ops-workflows.json --out reports/ai-ops-report.json $(PYTHON) -m evaluator.cli examples/public-use-cases.json --out reports/public-use-cases-report.json $(PYTHON) -m evaluator.cli examples/minimal-workflow-suite.json --out reports/minimal-workflow-report.json --min-score 0.8 --fail-on-block --max-monthly-cost 50 $(PYTHON) -m evaluator.ingest_project . --out examples/project-ingest-demo.json $(PYTHON) -m evalu"
+        },
+        {
+          "id": "S7",
+          "title": "LICENSE",
+          "text": "MIT License Copyright (c) 2026 Matthew Paver Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+        }
+      ],
+      "modalities": {
+        "text": true
+      },
+      "tokens": {
+        "input": 405,
+        "output": 200
+      },
+      "volume": {
+        "monthly_runs": 100
+      },
+      "latency_ms": 1200,
+      "expected_decision": "ship",
+      "human_review": {
+        "status": "approved"
+      }
+    }
+  ]
+}

@@ -127,6 +127,15 @@ python3 -m evaluator.cli my-workflow-suite.json \
 
 See [Use This In Your Project](docs/use-in-your-project.md) and the sample GitHub Actions workflow at [.github/example-workflows/ai-output-gate.yml](.github/example-workflows/ai-output-gate.yml).
 
+You can also ingest a project folder and generate a starter suite from its README, package files, Makefile, requirements, and licence:
+
+```bash
+python3 -m evaluator.ingest_project /path/to/project --out examples/project-ingest-demo.json
+python3 -m evaluator.cli examples/project-ingest-demo.json --out reports/project-ingest-demo-report.json
+```
+
+That is useful for checking AI-written project summaries, README sections, release notes, and portfolio cards against the actual repo evidence.
+
 ## Add Your Own Workflow
 
 Create a JSON file with a suite name, evaluator config, and one or more logged outputs:

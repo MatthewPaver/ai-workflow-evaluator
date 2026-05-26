@@ -34,7 +34,36 @@ Edit the item fields:
 | `volume` | Expected monthly run count for cost projection. |
 | `human_review.status` | `approved`, `review_required`, `blocked`, or `not_reviewed`. |
 
-## 2. Generate a report
+## 2. Or ingest an existing project
+
+If you want to check whether AI-written project copy is grounded in the repo, generate a starter suite from the project folder:
+
+```bash
+python3 -m evaluator.ingest_project /path/to/project --out examples/project-ingest-demo.json
+python3 -m evaluator.cli examples/project-ingest-demo.json --out reports/project-ingest-demo-report.json
+```
+
+The ingester reads common project files:
+
+- `README.md`
+- `docs/README.md`
+- `package.json`
+- `pyproject.toml`
+- `requirements.txt`
+- `Makefile`
+- `LICENSE`
+
+It turns those files into evidence sources and creates one starter check called `Project summary grounding`. Replace the generated `output` field with the AI-written summary, README section, portfolio card, or release note you want to test.
+
+You can also pass the output directly:
+
+```bash
+python3 -m evaluator.ingest_project /path/to/project \
+  --out examples/project-summary-gate.json \
+  --output "Source S1 describes the project as a local analytics app with DuckDB and Streamlit."
+```
+
+## 3. Generate a report
 
 ```bash
 python3 -m evaluator.cli my-workflow-suite.json --out reports/my-workflow-report.json
@@ -49,7 +78,7 @@ The report includes:
 - run cost and projected monthly cost
 - labelled accuracy when `expected_decision` is present
 
-## 3. Use it as a CI gate
+## 4. Use it as a CI gate
 
 For a soft reporting step:
 
@@ -69,7 +98,7 @@ python3 -m evaluator.cli my-workflow-suite.json \
 
 Use `--fail-on-review` only when every output must be fully approved before merging. Many teams will allow review items in staging but block them in production.
 
-## 4. Add GitHub Actions
+## 5. Add GitHub Actions
 
 Copy `.github/example-workflows/ai-output-gate.yml` into your project as `.github/workflows/ai-output-gate.yml`.
 
@@ -79,7 +108,7 @@ The example assumes:
 - the evaluator code is available in the repo
 - reports should be uploaded as CI artifacts
 
-## 5. When not to use it
+## 6. When not to use it
 
 Do not use this to prove a model is generally good. Use it when you can name the facts, sources, blocked claims, budget, and review rule for one workflow.
 
