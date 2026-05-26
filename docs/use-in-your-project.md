@@ -11,7 +11,29 @@ It works best as a quality gate for outputs such as:
 - policy answers
 - screenshot, PDF, image, or audio summaries
 
-## 1. Copy the template
+Fastest path: open the demo app, use **Make Your Own Gate**, paste one output, and copy the generated JSON.
+
+## 1. Generate a starter gate
+
+Run the demo:
+
+```bash
+make report
+make serve
+```
+
+Open `http://localhost:8017/app/`, then fill in:
+
+- workflow name
+- AI output to check
+- required facts
+- blocked claims
+- allowed source text
+- monthly volume and latency
+
+Copy the JSON into `my-workflow-suite.json`.
+
+## 2. Or copy the template
 
 Start with:
 
@@ -34,7 +56,7 @@ Edit the item fields:
 | `volume` | Expected monthly run count for cost projection. |
 | `human_review.status` | `approved`, `review_required`, `blocked`, or `not_reviewed`. |
 
-## 2. Or ingest an existing project
+## 3. Or ingest an existing project
 
 If you want to check whether AI-written project copy is grounded in the repo, generate a starter suite from the project folder:
 
@@ -63,7 +85,7 @@ python3 -m evaluator.ingest_project /path/to/project \
   --output "Source S1 describes the project as a local analytics app with DuckDB and Streamlit."
 ```
 
-## 3. Generate a report
+## 4. Generate a report
 
 ```bash
 python3 -m evaluator.cli my-workflow-suite.json --out reports/my-workflow-report.json
@@ -78,7 +100,7 @@ The report includes:
 - run cost and projected monthly cost
 - labelled accuracy when `expected_decision` is present
 
-## 4. Use it as a CI gate
+## 5. Use it as a CI gate
 
 For a soft reporting step:
 
@@ -98,7 +120,7 @@ python3 -m evaluator.cli my-workflow-suite.json \
 
 Use `--fail-on-review` only when every output must be fully approved before merging. Many teams will allow review items in staging but block them in production.
 
-## 5. Add GitHub Actions
+## 6. Add GitHub Actions
 
 Copy `.github/example-workflows/ai-output-gate.yml` into your project as `.github/workflows/ai-output-gate.yml`.
 
@@ -108,7 +130,7 @@ The example assumes:
 - the evaluator code is available in the repo
 - reports should be uploaded as CI artifacts
 
-## 6. When not to use it
+## 7. When not to use it
 
 Do not use this to prove a model is generally good. Use it when you can name the facts, sources, blocked claims, budget, and review rule for one workflow.
 

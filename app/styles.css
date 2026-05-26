@@ -154,7 +154,8 @@ button {
 }
 
 .suite-button,
-.filter {
+.filter,
+.action-button {
   min-height: 40px;
   color: var(--muted);
   background: var(--surface);
@@ -193,7 +194,8 @@ button {
 .suite-button:hover,
 .suite-button.is-active,
 .filter:hover,
-.filter.is-active {
+.filter.is-active,
+.action-button:hover {
   color: var(--surface);
   background: var(--ink);
   border-color: var(--ink);
@@ -204,13 +206,15 @@ button {
 .suite-button.is-active span,
 .suite-button.is-active small,
 .filter:hover,
-.filter.is-active {
+.filter.is-active,
+.action-button:hover {
   color: var(--surface);
 }
 
 .brand:focus-visible,
 .suite-button:focus-visible,
 .filter:focus-visible,
+.action-button:focus-visible,
 .repo-link:focus-visible {
   outline: 2px solid var(--acid);
   outline-offset: 4px;
@@ -507,6 +511,133 @@ h2 {
   line-height: 1.18;
 }
 
+.builder-head,
+.builder-result-head {
+  display: flex;
+  gap: 16px;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.builder-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.9fr) minmax(360px, 1.1fr);
+  gap: 14px;
+}
+
+.builder-form,
+.builder-output-panel {
+  min-width: 0;
+}
+
+.builder-form {
+  display: grid;
+  gap: 12px;
+}
+
+.builder-form label {
+  display: grid;
+  gap: 7px;
+  color: var(--dim);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.builder-form input,
+.builder-form textarea {
+  width: 100%;
+  min-width: 0;
+  color: var(--ink);
+  background: var(--surface-3);
+  border: 1px solid var(--line);
+  font: 500 0.95rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.builder-form input {
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.builder-form textarea {
+  resize: vertical;
+  padding: 11px 12px;
+}
+
+.builder-form input:focus,
+.builder-form textarea:focus {
+  outline: 2px solid var(--acid);
+  outline-offset: 2px;
+}
+
+.builder-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.builder-output-panel {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  padding: 14px;
+  background: var(--ink);
+  border: 1px solid var(--ink);
+}
+
+.builder-result-head span,
+.builder-output-panel code {
+  color: var(--mint);
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.builder-result-head strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--surface);
+}
+
+.builder-output-panel .action-button {
+  color: var(--ink);
+  background: var(--mint);
+  border-color: var(--mint);
+}
+
+.builder-output-panel .action-button:hover {
+  color: var(--surface);
+  background: transparent;
+  border-color: var(--mint);
+}
+
+#builder-json {
+  max-height: 560px;
+  min-height: 360px;
+  margin: 0;
+  overflow: auto;
+  padding: 14px;
+  color: #f8f3e7;
+  background: #0b0c0a;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font: 500 0.82rem/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre;
+}
+
+.builder-output-panel code {
+  display: block;
+  padding: 12px;
+  overflow-wrap: anywhere;
+  color: var(--surface);
+  background: #1f1f1f;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.45;
+}
+
 .scoreboard {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -703,6 +834,13 @@ h2 {
 
 .filter {
   padding: 0 13px;
+}
+
+.action-button {
+  min-height: 44px;
+  padding: 0 13px;
+  color: var(--ink);
+  font-weight: 850;
 }
 
 .run-list {
@@ -1016,7 +1154,8 @@ h2 {
   .process-strip,
   .practical-panel,
   .fit-grid,
-  .advantage-strip {
+  .advantage-strip,
+  .builder-layout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -1057,6 +1196,8 @@ h2 {
   .practical-grid,
   .fit-grid,
   .advantage-strip,
+  .builder-layout,
+  .builder-row,
   .registry-grid,
   .score-matrix,
   .history-grid,

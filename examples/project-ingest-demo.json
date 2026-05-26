@@ -1,6 +1,6 @@
 {
   "suite": "AI Workflow Evaluator project summary gate",
-  "generated_at": "2026-05-26T07:56:34+00:00",
+  "generated_at": "2026-05-26T08:05:48+00:00",
   "config": {
     "dataset_id": "ai-workflow-evaluator-project-summary-gate",
     "dataset_version": "v1",
@@ -21,9 +21,9 @@
       "workflow": "project_summary_review",
       "model": "project-summary-draft",
       "risk_level": "low",
-      "output": "Source S1 describes AI Workflow Evaluator. Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review.",
+      "output": "Source S1 describes AI Workflow Evaluator. Quality gate for AI outputs that need evidence, cost control, latency limits, and human sign-off.",
       "expected_facts": [
-        "Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review"
+        "Quality gate for AI outputs that need evidence, cost control, latency limits, and human sign-off"
       ],
       "forbidden_claims": [
         "production-grade SaaS",
@@ -42,7 +42,7 @@
         {
           "id": "S1",
           "title": "README.md",
-          "text": "# AI Workflow Evaluator Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review. [![Validate](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml) [![Demo](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml) ![AI Workflow Evaluator preview](docs/assets/evaluator-preview.png) **Live demo:** [matthewpaver.github.io/ai-workflow-evaluator/app/](https://matthewpaver.github.io/ai-workflow-evaluator/app/) ## What It Solves This is not a model leaderboard. It tests one logged AI workflow at a time. The practical question is simple: the model produced an answer, summary, recommendation, ticket note, listing draft, or repo description. Can that output ship, does a human need to review it, should it be blocked, or should the workflow route through a cheaper/faster/stronger model path? This project checks whether an AI-generated summary, answer, recommendation, repo description, screenshot summary, PDF answer, product-listing draft, or audio-transcript action list is accurate, grounded in supplied sources, cheap enough to run, fast enough for the workflow, and ready for human approval."
+          "text": "# AI Workflow Evaluator Quality gate for AI outputs that need evidence, cost control, latency limits, and human sign-off. [![Validate](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml) [![Demo](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml) ![AI Workflow Evaluator preview](docs/assets/evaluator-preview.png) **Live demo:** [matthewpaver.github.io/ai-workflow-evaluator/app/](https://matthewpaver.github.io/ai-workflow-evaluator/app/) ## What It Solves This is not a model leaderboard. It tests one logged AI workflow at a time. The practical question is simple: the model produced an answer, summary, recommendation, ticket note, listing draft, or repo description. Can that output ship, does a human need to review it, should it be blocked, or should the workflow route through a cheaper/faster/stronger model path? It is intentionally deterministic. No paid API key is required to run the evaluator. ## Practical Test Use it when you already know what \u201cgood enough to ship\u201d means for a workflow. Example: - **Workflow:** turn a support-ticket screenshot into a triage note. - **Required facts:** ticket ID, customer issue, affected pr"
         },
         {
           "id": "S6",
@@ -59,7 +59,7 @@
         "text": true
       },
       "tokens": {
-        "input": 405,
+        "input": 414,
         "output": 200
       },
       "volume": {

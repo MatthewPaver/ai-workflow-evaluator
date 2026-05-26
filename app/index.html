@@ -165,6 +165,64 @@
           </article>
         </section>
 
+        <section class="starter-builder panel" aria-labelledby="builder-title">
+          <div class="panel-head builder-head">
+            <div>
+              <p class="eyebrow">Make Your Own Gate</p>
+              <h2 id="builder-title">Paste one workflow. Get runnable JSON.</h2>
+            </div>
+            <button class="action-button" type="button" id="load-builder-example">Load example</button>
+          </div>
+          <div class="builder-layout">
+            <form class="builder-form" id="suite-builder">
+              <label>
+                <span>Workflow name</span>
+                <input id="builder-workflow" type="text" value="support_reply_review" />
+              </label>
+              <label>
+                <span>AI output to check</span>
+                <textarea id="builder-output" rows="5">Source S1 says the customer cannot access billing. Source P1 says billing access must be reset by an admin.</textarea>
+              </label>
+              <label>
+                <span>Required facts, one per line</span>
+                <textarea id="builder-facts" rows="4">customer cannot access billing
+billing access must be reset by an admin</textarea>
+              </label>
+              <label>
+                <span>Blocked claims, one per line</span>
+                <textarea id="builder-blocked" rows="3">refund approved
+customer caused the issue</textarea>
+              </label>
+              <label>
+                <span>Allowed source text</span>
+                <textarea id="builder-source" rows="5">Ticket note: The customer cannot access billing.
+Support policy: Billing access must be reset by an admin.</textarea>
+              </label>
+              <div class="builder-row">
+                <label>
+                  <span>Monthly runs</span>
+                  <input id="builder-volume" type="number" min="0" value="300" />
+                </label>
+                <label>
+                  <span>Latency ms</span>
+                  <input id="builder-latency" type="number" min="0" value="1200" />
+                </label>
+              </div>
+            </form>
+            <aside class="builder-output-panel">
+              <div class="builder-result-head">
+                <div>
+                  <span>Starter suite</span>
+                  <strong id="builder-summary" aria-live="polite">Ready</strong>
+                </div>
+                <button class="action-button" type="button" id="copy-builder-json">Copy JSON</button>
+              </div>
+              <pre id="builder-json" tabindex="0" aria-label="Generated workflow suite JSON"></pre>
+              <code id="builder-command">python3 -m evaluator.cli my-workflow-suite.json --out reports/my-workflow-report.json --min-score 0.80 --fail-on-block --max-monthly-cost 50</code>
+            </aside>
+          </div>
+        </section>
+
         <section class="scoreboard" aria-label="Run summary">
           <article class="score-card hero-score">
             <span>Quality Score</span>

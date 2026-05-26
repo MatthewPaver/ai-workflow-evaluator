@@ -133,6 +133,154 @@ function signedNumber(value, suffix = "") {
   return `${sign}${value}${suffix}`;
 }
 
+function lines(value) {
+  return String(value || "")
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
+function estimateTokens(text) {
+  const words = String(text || "")
+    .split(/\s+/)
+    .filter(Boolean).length;
+  return Math.max(80, Math.round(words * 1.4));
+}
+
+function safeWorkflowName(value) {
+  return (
+    String(value || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "") || "ai_output_review"
+  );
+}
+
+function sourceTermsFromFacts(facts) {
+  const words = facts.join(" ").toLowerCase().match(/[a-z][a-z0-9-]{3,}/g) || [];
+  return [...new Set(words)].slice(0, 8);
+}
+
+function buildStarterSuite() {
+  const workflow = safeWorkflowName(document.getElementById("builder-workflow")?.value);
+  const output = document.getElementById("builder-output")?.value.trim() || "";
+  const facts = lines(document.getElementById("builder-facts")?.value);
+  const blocked = lines(document.getElementById("builder-blocked")?.value);
+  const sourceText = document.getElementById("builder-source")?.value.trim() || "";
+  const monthlyRuns = Number(document.getElementById("builder-volume")?.value || 0);
+  const latencyMs = Number(document.getElementById("builder-latency")?.value || 0);
+
+  return {
+    suite: `${titleCase(workflow)} starter gate`,
+    generated_at: new Date().toISOString(),
+    config: {
+      dataset_id: `${workflow.replace(/_/g, "-")}-starter-gate`,
+      dataset_version: "v1",
+      scorer_version: "deterministic-v2-browser-starter",
+      pricing: {
+        input_per_1k: 0.003,
+        output_per_1k: 0.012,
+        image_usd: 0.002,
+        screenshot_usd: 0.002,
+        pdf_page_usd: 0.0004,
+        audio_minute_usd: 0.006
+      },
+      thresholds: {
+        target_latency_ms: 2000,
+        max_latency_ms: 6500,
+        target_cost_usd: 0.012,
+        max_cost_usd: 0.07,
+        pass_score: 0.78,
+        block_score: 0.45
+      }
+    },
+    items: [
+      {
+        id: `${workflow}-001`,
+        name: titleCase(workflow),
+        workflow,
+        model: "your-model",
+        risk_level: "medium",
+        output,
+        expected_facts: facts,
+        forbidden_claims: blocked,
+        required_sources: ["S1"],
+        source_terms: sourceTermsFromFacts(facts),
+        sources: [{ id: "S1", title: "Allowed evidence", text: sourceText }],
+        modalities: { text: true },
+        tokens: {
+          input: estimateTokens(sourceText),
+          output: estimateTokens(output)
+        },
+        volume: { monthly_runs: monthlyRuns },
+        latency_ms: latencyMs,
+        expected_decision: "ship",
+        human_review: { status: "approved" }
+      }
+    ]
+  };
+}
+
+function renderBuilder() {
+  const output = document.getElementById("builder-json");
+  if (!output) return;
+
+  const suite = buildStarterSuite();
+  const item = suite.items[0];
+  output.textContent = JSON.stringify(suite, null, 2);
+  setText(
+    "builder-summary",
+    `${item.expected_facts.length} required facts · ${item.forbidden_claims.length} blocked claims · ${item.volume.monthly_runs} monthly runs`
+  );
+}
+
+async function copyBuilderJson() {
+  const output = document.getElementById("builder-json");
+  const button = document.getElementById("copy-builder-json");
+  if (!output || !button) return;
+
+  try {
+    await navigator.clipboard.writeText(output.textContent);
+    button.textContent = "Copied";
+  } catch {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(output);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    button.textContent = "Select JSON";
+  }
+
+  window.setTimeout(() => {
+    button.textContent = "Copy JSON";
+  }, 1600);
+}
+
+function bindBuilder() {
+  const form = document.getElementById("suite-builder");
+  if (!form) return;
+
+  form.addEventListener("submit", (event) => event.preventDefault());
+  form.addEventListener("input", renderBuilder);
+  document.getElementById("copy-builder-json")?.addEventListener("click", copyBuilderJson);
+  document.getElementById("load-builder-example")?.addEventListener("click", () => {
+    document.getElementById("builder-workflow").value = "portfolio_claim_review";
+    document.getElementById("builder-output").value =
+      "Source S1 says the project is a local Streamlit and DuckDB analytics app. The README lists demo data and a Makefile test command.";
+    document.getElementById("builder-facts").value =
+      "project is a local Streamlit and DuckDB analytics app\nREADME lists demo data\nMakefile includes a test command";
+    document.getElementById("builder-blocked").value =
+      "used in production by paying customers\nreplaces a full analytics team";
+    document.getElementById("builder-source").value =
+      "README: Local Streamlit and DuckDB analytics app for marketing performance data.\nMakefile: test target runs the project checks.\nDemo data: sample campaigns are included for local use.";
+    document.getElementById("builder-volume").value = "120";
+    document.getElementById("builder-latency").value = "900";
+    renderBuilder();
+  });
+
+  renderBuilder();
+}
+
 function setDelta(id, value, suffix = "", invert = false) {
   const element = document.getElementById(id);
   if (!element) return;
@@ -353,4 +501,5 @@ async function loadReport() {
 
 bindFilters();
 bindSuites();
+bindBuilder();
 loadReport();

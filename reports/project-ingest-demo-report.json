@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T07:56:34+00:00",
+  "generated_at": "2026-05-26T08:05:48+00:00",
   "suite": "AI Workflow Evaluator project summary gate",
   "dataset": {
     "id": "ai-workflow-evaluator-project-summary-gate",
@@ -37,8 +37,8 @@
     "block": 0
   },
   "ai_ops": {
-    "total_run_cost_usd": 0.005025,
-    "projected_monthly_cost_usd": 0.5025,
+    "total_run_cost_usd": 0.00507,
+    "projected_monthly_cost_usd": 0.507,
     "multimodal_items": 0,
     "routes": {
       "small_model_auto_gate": 1
@@ -73,8 +73,8 @@
     "blocked_expected_caught": 0,
     "blocked_expected_catch_rate": 1.0,
     "review_queue_delta": 0,
-    "estimated_run_cost_usd": 0.005025,
-    "projected_monthly_cost_usd": 0.5025,
+    "estimated_run_cost_usd": 0.00507,
+    "projected_monthly_cost_usd": 0.507,
     "multimodal_items": 0,
     "route_count": {
       "small_model_auto_gate": 1
@@ -115,11 +115,11 @@
       },
       "observability": {
         "latency_ms": 1200,
-        "cost_usd": 0.005025,
-        "token_cost_usd": 0.005025,
+        "cost_usd": 0.00507,
+        "token_cost_usd": 0.00507,
         "multimodal_cost_usd": 0.0,
-        "monthly_cost_usd": 0.5025,
-        "input_tokens": 405,
+        "monthly_cost_usd": 0.507,
+        "input_tokens": 414,
         "output_tokens": 200,
         "review_status": "approved",
         "risk_level": "low",
@@ -132,7 +132,7 @@
       },
       "evidence": {
         "matched_facts": [
-          "Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review"
+          "Quality gate for AI outputs that need evidence, cost control, latency limits, and human sign-off"
         ],
         "missing_facts": [],
         "forbidden_hits": [],
@@ -144,9 +144,9 @@
         ]
       },
       "trace": {
-        "output_excerpt": "Source S1 describes AI Workflow Evaluator. Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review.",
+        "output_excerpt": "Source S1 describes AI Workflow Evaluator. Quality gate for AI outputs that need evidence, cost control, latency limits, and human sign-off.",
         "expected_facts": [
-          "Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review"
+          "Quality gate for AI outputs that need evidence, cost control, latency limits, and human sign-off"
         ],
         "forbidden_claims": [
           "production-grade SaaS",
@@ -173,7 +173,7 @@
           {
             "type": "passed",
             "expected": "Required facts, sources, blocked claims, thresholds, and review status aligned.",
-            "actual": "Source S1 describes AI Workflow Evaluator. Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review.",
+            "actual": "Source S1 describes AI Workflow Evaluator. Quality gate for AI outputs that need evidence, cost control, latency limits, and human sign-off.",
             "source": "Evaluator checks"
           }
         ]
@@ -214,7 +214,7 @@
           "status": "pass",
           "message": "Cost is within workflow threshold",
           "evidence": [
-            "cost_usd=0.005025",
+            "cost_usd=0.005070",
             "score=1.00"
           ]
         },
@@ -251,7 +251,7 @@
           "evidence": [
             "modalities=text",
             "multimodal_cost_usd=0.000000",
-            "monthly_cost_usd=0.5025"
+            "monthly_cost_usd=0.5070"
           ]
         }
       ]

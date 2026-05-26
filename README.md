@@ -1,6 +1,6 @@
 # AI Workflow Evaluator
 
-Quality gate for deciding whether AI work is accurate, grounded, affordable, fast enough, and ready for review.
+Quality gate for AI outputs that need evidence, cost control, latency limits, and human sign-off.
 
 [![Validate](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/validate.yml)
 [![Demo](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml/badge.svg)](https://github.com/MatthewPaver/ai-workflow-evaluator/actions/workflows/pages.yml)
@@ -14,8 +14,6 @@ Quality gate for deciding whether AI work is accurate, grounded, affordable, fas
 This is not a model leaderboard. It tests one logged AI workflow at a time.
 
 The practical question is simple: the model produced an answer, summary, recommendation, ticket note, listing draft, or repo description. Can that output ship, does a human need to review it, should it be blocked, or should the workflow route through a cheaper/faster/stronger model path?
-
-This project checks whether an AI-generated summary, answer, recommendation, repo description, screenshot summary, PDF answer, product-listing draft, or audio-transcript action list is accurate, grounded in supplied sources, cheap enough to run, fast enough for the workflow, and ready for human approval.
 
 It is intentionally deterministic. No paid API key is required to run the evaluator.
 
@@ -32,7 +30,7 @@ Example:
 - **Limits:** max latency, max cost, required review status.
 - **Decision:** ship if grounded, review if evidence is thin, block if it invents a claim.
 
-That is the point of the app: it converts an AI output into an auditable decision instead of leaving someone to skim the answer and hope it is fine.
+That is the point: turn “looks fine” into an auditable decision.
 
 ## Does It Meet The Brief?
 
@@ -73,7 +71,7 @@ Most evaluation platforms are stronger once a team already has traces, datasets,
 - **Cost-aware:** multimodal inputs and monthly run volume are visible before scale-up.
 - **Portable:** teams can run it locally, in CI, or as a small hosted demo.
 
-The next step for a public product would be a “paste an output” screen that generates the JSON behind the scenes. That would move it from developer-friendly to non-technical-user-friendly.
+The browser demo now includes a **Make Your Own Gate** builder. Paste one workflow, add the required facts and blocked claims, then copy a runnable JSON suite.
 
 Good fits:
 
@@ -97,6 +95,8 @@ make serve
 ```
 
 Then open `http://localhost:8017/app/`.
+
+In the app, use **Make Your Own Gate** to generate a starter JSON suite without hand-writing the schema.
 
 ## Run Locally
 
