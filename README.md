@@ -101,8 +101,31 @@ Then open `http://localhost:8017/app/`.
 ## Run Locally
 
 ```bash
-python -m evaluator.cli examples/workflows.json --out reports/sample-report.json
+python3 -m evaluator.cli examples/workflows.json --out reports/sample-report.json
 ```
+
+## Use In Another Project
+
+Yes: copy the template, log the output from your AI workflow, and run the evaluator as a local or CI quality gate.
+
+Start with:
+
+```bash
+cp examples/minimal-workflow-suite.json my-workflow-suite.json
+python3 -m evaluator.cli my-workflow-suite.json --out reports/my-workflow-report.json
+```
+
+For CI:
+
+```bash
+python3 -m evaluator.cli my-workflow-suite.json \
+  --out reports/my-workflow-report.json \
+  --min-score 0.80 \
+  --fail-on-block \
+  --max-monthly-cost 50
+```
+
+See [Use This In Your Project](docs/use-in-your-project.md) and the sample GitHub Actions workflow at [.github/example-workflows/ai-output-gate.yml](.github/example-workflows/ai-output-gate.yml).
 
 ## Add Your Own Workflow
 
@@ -150,7 +173,7 @@ Create a JSON file with a suite name, evaluator config, and one or more logged o
 Then run:
 
 ```bash
-python -m evaluator.cli path/to/workflows.json --out reports/my-report.json
+python3 -m evaluator.cli path/to/workflows.json --out reports/my-report.json
 ```
 
 Reports include dataset/scorer versions, baseline deltas, calibration, trace evidence, and the final `ship`, `review`, or `block` decision.

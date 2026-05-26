@@ -1,0 +1,32 @@
+name: AI Output Gate
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  evaluate-ai-outputs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Run AI workflow evaluator
+        run: |
+          python3 -m evaluator.cli examples/minimal-workflow-suite.json \
+            --out reports/ai-output-gate-report.json \
+            --min-score 0.80 \
+            --fail-on-block \
+            --max-monthly-cost 50
+
+      - name: Upload evaluator report
+        uses: actions/upload-artifact@v5
+        if: always()
+        with:
+          name: ai-output-gate-report
+          path: reports/ai-output-gate-report.json

@@ -4,6 +4,7 @@ import json
 import unittest
 from pathlib import Path
 
+from evaluator.cli import quality_gate_failures
 from evaluator.core import evaluate_dataset, evaluate_item
 
 
@@ -135,6 +136,28 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual(decisions["agency-brief-004"], "review")
         self.assertGreater(report["measurable_results"]["projected_monthly_cost_usd"], 0)
         self.assertEqual(report["measurable_results"]["blocked_expected_catch_rate"], 1.0)
+
+    def test_quality_gate_flags_ci_failures(self) -> None:
+        payload = json.loads(Path("examples/public-use-cases.json").read_text())
+        report = evaluate_dataset(payload)
+        failures = quality_gate_failures(
+            report,
+            min_score=0.9,
+            fail_on_review=True,
+            fail_on_block=True,
+            max_monthly_cost=10,
+        )
+
+        self.assertTrue(any("average score" in failure for failure in failures))
+        self.assertTrue(any("need review" in failure for failure in failures))
+        self.assertTrue(any("blocked" in failure for failure in failures))
+        self.assertTrue(any("monthly cost" in failure for failure in failures))
+
+    def test_quality_gate_allows_passing_suite(self) -> None:
+        payload = json.loads(Path("examples/workflows.json").read_text())
+        report = evaluate_dataset(payload)
+
+        self.assertEqual(quality_gate_failures(report, min_score=0.8), [])
 
 
 if __name__ == "__main__":

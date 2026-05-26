@@ -1,0 +1,262 @@
+{
+  "generated_at": "2026-05-26T00:00:00+00:00",
+  "suite": "My project AI output gate",
+  "dataset": {
+    "id": "my-project-ai-output-gate",
+    "version": "v1",
+    "items": 1
+  },
+  "scorers": {
+    "version": "deterministic-v2",
+    "type": "deterministic",
+    "count": 14,
+    "agents": [
+      "reviewer_agent",
+      "source_grounding_agent",
+      "hallucination_agent",
+      "cost_agent",
+      "latency_agent",
+      "policy_agent",
+      "model_router_agent",
+      "multimodal_cost_agent"
+    ]
+  },
+  "baseline": {
+    "label": "Previous accepted run",
+    "average_score": 1.0,
+    "ship": 1,
+    "review": 0,
+    "block": 0,
+    "calibration": 1.0
+  },
+  "summary": {
+    "total": 1,
+    "average_score": 1.0,
+    "ship": 1,
+    "review": 0,
+    "block": 0
+  },
+  "ai_ops": {
+    "total_run_cost_usd": 0.00438,
+    "projected_monthly_cost_usd": 1.314,
+    "multimodal_items": 0,
+    "routes": {
+      "standard_model_review_gate": 1
+    }
+  },
+  "calibration": {
+    "labelled": 1,
+    "matches": 1,
+    "accuracy": 1.0
+  },
+  "measurable_results": {
+    "baseline_label": "Previous accepted run",
+    "score_delta_points": 0.0,
+    "calibration_delta_points": 0.0,
+    "labelled_decision_accuracy": 1.0,
+    "labelled_matches": 1,
+    "labelled_total": 1,
+    "incorrect_labelled_decisions": 0,
+    "decision_mix": {
+      "ship": 1,
+      "review": 0,
+      "block": 0
+    },
+    "decision_delta": {
+      "ship": 0,
+      "review": 0,
+      "block": 0
+    },
+    "automation_rate": 1.0,
+    "intervention_rate": 0.0,
+    "blocked_expected_count": 0,
+    "blocked_expected_caught": 0,
+    "blocked_expected_catch_rate": 1.0,
+    "review_queue_delta": 0,
+    "estimated_run_cost_usd": 0.00438,
+    "projected_monthly_cost_usd": 1.314,
+    "multimodal_items": 0,
+    "route_count": {
+      "standard_model_review_gate": 1
+    },
+    "decision_matrix": {
+      "ship": {
+        "ship": 1,
+        "review": 0,
+        "block": 0
+      },
+      "review": {
+        "ship": 0,
+        "review": 0,
+        "block": 0
+      },
+      "block": {
+        "ship": 0,
+        "review": 0,
+        "block": 0
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "support-summary-001",
+      "name": "Support ticket summary",
+      "model": "your-model-name",
+      "workflow": "support_summary",
+      "decision": "ship",
+      "overall_score": 1.0,
+      "scores": {
+        "accuracy": 1.0,
+        "source_grounding": 1.0,
+        "hallucination_control": 1.0,
+        "latency": 1.0,
+        "cost": 1.0,
+        "human_review": 1.0
+      },
+      "observability": {
+        "latency_ms": 1200,
+        "cost_usd": 0.00438,
+        "token_cost_usd": 0.00438,
+        "multimodal_cost_usd": 0.0,
+        "monthly_cost_usd": 1.314,
+        "input_tokens": 900,
+        "output_tokens": 140,
+        "review_status": "approved",
+        "risk_level": "medium",
+        "monthly_runs": 300,
+        "modalities": [
+          "text"
+        ],
+        "route": "standard_model_review_gate",
+        "route_reason": "Workflow can run through the normal quality gate before shipping."
+      },
+      "evidence": {
+        "matched_facts": [
+          "customer cannot access billing",
+          "billing access must be reset by an admin"
+        ],
+        "missing_facts": [],
+        "forbidden_hits": [],
+        "source_hits": [
+          "T1",
+          "P1"
+        ],
+        "source_term_hits": [
+          "billing",
+          "admin"
+        ]
+      },
+      "trace": {
+        "output_excerpt": "Source T1 says the customer cannot access billing. Source P1 says billing access must be reset by an admin.",
+        "expected_facts": [
+          "customer cannot access billing",
+          "billing access must be reset by an admin"
+        ],
+        "forbidden_claims": [
+          "refund approved",
+          "customer caused the issue"
+        ],
+        "required_sources": [
+          "T1",
+          "P1"
+        ],
+        "source_titles": [
+          "T1: Ticket note",
+          "P1: Support policy"
+        ],
+        "modalities": [
+          "text"
+        ],
+        "route": {
+          "route": "standard_model_review_gate",
+          "reason": "Workflow can run through the normal quality gate before shipping."
+        },
+        "explanations": [
+          {
+            "type": "passed",
+            "expected": "Required facts, sources, blocked claims, thresholds, and review status aligned.",
+            "actual": "Source T1 says the customer cannot access billing. Source P1 says billing access must be reset by an admin.",
+            "source": "Evaluator checks"
+          }
+        ]
+      },
+      "issues": [],
+      "expected_decision": "ship",
+      "calibrated": true,
+      "agent_reviews": [
+        {
+          "agent": "reviewer_agent",
+          "status": "pass",
+          "message": "Human review state supports shipping",
+          "evidence": [
+            "decision=ship",
+            "human_review=approved",
+            "workflow=support_summary"
+          ]
+        },
+        {
+          "agent": "source_grounding_agent",
+          "status": "pass",
+          "message": "Source grounding is strong",
+          "evidence": [
+            "grounding=1.00",
+            "missing_sources=none"
+          ]
+        },
+        {
+          "agent": "hallucination_agent",
+          "status": "pass",
+          "message": "No blocked claims found",
+          "evidence": [
+            "forbidden_claims=0"
+          ]
+        },
+        {
+          "agent": "cost_agent",
+          "status": "pass",
+          "message": "Cost is within workflow threshold",
+          "evidence": [
+            "cost_usd=0.004380",
+            "score=1.00"
+          ]
+        },
+        {
+          "agent": "latency_agent",
+          "status": "pass",
+          "message": "Latency is within workflow threshold",
+          "evidence": [
+            "latency_ms=1200",
+            "score=1.00"
+          ]
+        },
+        {
+          "agent": "policy_agent",
+          "status": "pass",
+          "message": "No high-severity policy issues",
+          "evidence": [
+            "high_severity_issues=0"
+          ]
+        },
+        {
+          "agent": "model_router_agent",
+          "status": "pass",
+          "message": "Routing recommendation is available for this workflow",
+          "evidence": [
+            "route=standard_model_review_gate",
+            "Workflow can run through the normal quality gate before shipping."
+          ]
+        },
+        {
+          "agent": "multimodal_cost_agent",
+          "status": "pass",
+          "message": "Multimodal spend is visible and within review bounds",
+          "evidence": [
+            "modalities=text",
+            "multimodal_cost_usd=0.000000",
+            "monthly_cost_usd=1.3140"
+          ]
+        }
+      ]
+    }
+  ]
+}

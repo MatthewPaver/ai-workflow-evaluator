@@ -1,0 +1,72 @@
+{
+  "suite": "My project AI output gate",
+  "generated_at": "2026-05-26T00:00:00+00:00",
+  "config": {
+    "dataset_id": "my-project-ai-output-gate",
+    "dataset_version": "v1",
+    "scorer_version": "deterministic-v2",
+    "pricing": {
+      "input_per_1k": 0.003,
+      "output_per_1k": 0.012,
+      "image_usd": 0.002,
+      "screenshot_usd": 0.002,
+      "pdf_page_usd": 0.0004,
+      "audio_minute_usd": 0.006
+    },
+    "thresholds": {
+      "target_latency_ms": 2000,
+      "max_latency_ms": 6500,
+      "target_cost_usd": 0.012,
+      "max_cost_usd": 0.07,
+      "pass_score": 0.78,
+      "block_score": 0.45
+    }
+  },
+  "items": [
+    {
+      "id": "support-summary-001",
+      "name": "Support ticket summary",
+      "workflow": "support_summary",
+      "model": "your-model-name",
+      "risk_level": "medium",
+      "output": "Source T1 says the customer cannot access billing. Source P1 says billing access must be reset by an admin.",
+      "expected_facts": [
+        "customer cannot access billing",
+        "billing access must be reset by an admin"
+      ],
+      "forbidden_claims": [
+        "refund approved",
+        "customer caused the issue"
+      ],
+      "required_sources": ["T1", "P1"],
+      "source_terms": ["billing", "admin"],
+      "sources": [
+        {
+          "id": "T1",
+          "title": "Ticket note",
+          "text": "The customer cannot access billing."
+        },
+        {
+          "id": "P1",
+          "title": "Support policy",
+          "text": "Billing access must be reset by an admin."
+        }
+      ],
+      "modalities": {
+        "text": true
+      },
+      "tokens": {
+        "input": 900,
+        "output": 140
+      },
+      "volume": {
+        "monthly_runs": 300
+      },
+      "latency_ms": 1200,
+      "expected_decision": "ship",
+      "human_review": {
+        "status": "approved"
+      }
+    }
+  ]
+}
